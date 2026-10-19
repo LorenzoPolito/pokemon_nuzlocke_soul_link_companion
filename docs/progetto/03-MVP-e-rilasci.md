@@ -20,7 +20,7 @@ L'MVP copre il ciclo base di una run Soul Link sui quattro giochi della quinta g
 | Lotte | — | Helper, motore dei tipi, override (0.3); calcolatore danni (0.4) |
 | Randomizer | — | 0.3, insieme agli override |
 | Installazione | Docker su qualsiasi server, solo HTTP (HTTPS eventuale con un reverse proxy esterno), database locale, backup documentato | Turso online (1.0) |
-| Lingue | Italiano e inglese | — |
+| Lingue | Italiano e inglese; nomi di aree e medaglie solo in inglese ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)) | — |
 
 ## PBI dell'MVP e criteri di uscita
 
@@ -45,6 +45,8 @@ L'MVP è pronto quando:
 - [ ] Non ci sono bug Bloccanti o Alti aperti.
 
 ## Rilasci dopo l'MVP
+
+Giochi per rilascio ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md), deciso il 19 ottobre 2026): la **0.1** ha Bianco, Nero, Bianco 2 e Nero 2; la **0.5** i 17 giochi per cui nuzlocke.data ha già aree e boss (generazioni 1–4, X e Y, Rubino Omega e Zaffiro Alpha, Sole e Luna, Ultrasole e Ultraluna, Spada e Scudo, Diamante Lucente e Perla Splendente, Scarlatto e Violetto); la **1.0** Let's Go, Leggende: Arceus e Leggende: Z-A, compilati a mano. Le espansioni sono aree in coda al gioco base.
 
 &#91;embedded content: rilasci · dalla 0.1 alla 1.0\]
 

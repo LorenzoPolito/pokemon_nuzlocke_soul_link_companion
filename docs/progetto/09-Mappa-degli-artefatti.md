@@ -4,7 +4,7 @@ Oct 3, 2026 · @Lorenzo
 
 Questa mappa è l'elenco unico di tutto ciò che il progetto produce: ogni sessione parte da qui, e un nuovo artefatto esiste solo dopo essere stato aggiunto a questa tabella.
 
-Dal 3 ottobre 2026 la documentazione nel repository è l'unica fonte valida ([decisione 21](../decisioni.md#21-la-documentazione-nel-repository-è-lunica-fonte-valida)): backlog, bug e registro sessioni sono file in `docs/backlog/` e si aggiornano con le pull request. I percorsi sono relativi alla radice del repository.
+Dal 3 ottobre 2026 la documentazione nel repository è l'unica fonte valida ([decisione 21](../adr/0001-decisioni-di-progetto.md#21-la-documentazione-nel-repository-è-lunica-fonte-valida)): backlog, bug e registro sessioni sono file in `docs/backlog/` e si aggiornano con le pull request. I percorsi sono relativi alla radice del repository.
 
 ## Artefatti
 
@@ -21,7 +21,7 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | [Regole di lavoro](04-Regole-di-lavoro.md) | Documento | Ruoli, flusso, protocollo di sessione, verifica, test, bug, stime | Fase 0 | Il product owner approva una modifica alle regole | Esiste |
 | [Linee guida di sviluppo](05-Linee-guida-di-sviluppo.md) | Documento | Moduli, livelli, codice atomico e antifragile, convenzioni, checklist di revisione | Fase 0 | Il product owner approva una modifica alle linee guida | Esiste |
 | [Configurazione di GitHub](08-Configurazione-di-GitHub.md) | Documento | Repository privato, git flow, protezione di main e develop, verifica locale, immagini, accesso dell'agente | Fase 0, poi P3-12 | Cambia un'impostazione o un permesso | Esiste |
-| [Registro delle decisioni](../decisioni.md) | Documento | Decisioni di progetto in stile ADR: contesto, decisione, alternative, conseguenze | P3-12 (preparazione del repository) | Il product owner prende o cambia una decisione | Esiste |
+| [ADR](../adr/README.md) | Cartella | Decisioni di progetto: l'ADR 0001 con le prime 26 e una ADR per ogni decisione successiva (contesto, decisione, alternative, conseguenze) | P3-12, P1-19, poi ogni PBI che prende una decisione | Il product owner prende o cambia una decisione | Esiste |
 | [Design System](../design-system/README.md) | Design system | Token di colore, tipografia, spazi e forme in `docs/design-system/tokens.json`; manuale di stile | Fase 0 | Cambia un token o una regola visiva | Esiste |
 | [Mockup](https://claude.ai/artifact/4W1JWddYcx4VzH1EDXtB6r) | Canvas di design | Schermate per telefono e tablet, con più giocatori, stati vuoti, errori e tema scuro. Sorgenti in `docs/mockup/`; si visualizzano solo nel canvas su claude.ai | Fase 0, poi P2-12 e P2-13 | Nasce o cambia una schermata | Esiste |
 | Mappa degli artefatti | Documento | Questo elenco | Fase 0 | Nasce, cambia o si ritira un artefatto | Esiste |
@@ -33,6 +33,7 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | [Dati di gioco: aree, medaglie, level cap](11-Dati-di-gioco.md) | Documento | Fonti, formato e processo dei dati di progressione, prima per Bianco, Nero, Bianco 2, Nero 2 | P1-06, P1-07 | Durante la fase 1; poi a ogni modifica dei file di gioco | Esiste (P1-06 e P1-07 fatti) |
 | File dei dati di gioco | Dati | `data/games/<game_id>.json` (aree in ordine, incontri speciali, medaglie e level cap) e lo schema `data/games/game.schema.json` | P1-06, P1-07, poi un file per ogni nuovo gioco | Si aggiunge un gioco o si corregge un dato, con `dataVersion` incrementata | Esiste (quinta generazione) |
 | Meccaniche per generazione | Documento | Tabelle dei tipi e regole di calcolo | P1-08, P1-09 | Durante la fase 1 | Da creare |
+| [Domande aperte](12-Domande-aperte.md) | Documento | Le domande di P1-19 con proposta e risposta del product owner: rete instabile e quanto emerso dai PBI di fase 1 | P1-19 | Storico: non si aggiorna più (le nuove domande vanno in ADR "Proposta") | Esiste |
 | Prove di fattibilità dello stack | Documento | Esiti e misure delle prove tecniche | P1-11–P1-17 | Durante la fase 1 | Da creare |
 | Architettura e API | Documento | Permessi, catalogo API, eventi SSE e lock | P2-08–P2-10 | Ogni modifica a un endpoint o evento | Da creare |
 | Flussi e schermate | Documento | Percorsi utente e bozze delle schermate | P2-11–P2-13 | Ogni modifica a un flusso | Da creare |
@@ -45,4 +46,4 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | Verifica locale | Script e hook | `npm run verify` e hook pre-push in `.githooks/pre-push`; fino a P3-11 l'hook blocca solo i push su `main` e `develop` | P3-12, P3-11 | Ogni nuovo livello o strumento di test | Parziale |
 | Immagine Docker | Rilascio | Immagine con tag di versione, costruita sul server | P7-07 e ogni rilascio | A ogni rilascio | Da creare |
 
-Repository e immagini sono ospitati su GitHub, come descritto nella [Configurazione di GitHub](08-Configurazione-di-GitHub.md). Non c'è CI ([decisione 13](../decisioni.md#13-repository-privato-senza-ci-verifica-locale)); GitHub Actions esegue solo il controllo dei branch ([decisione 23](../decisioni.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)).
+Repository e immagini sono ospitati su GitHub, come descritto nella [Configurazione di GitHub](08-Configurazione-di-GitHub.md). Non c'è CI ([decisione 13](../adr/0001-decisioni-di-progetto.md#13-repository-privato-senza-ci-verifica-locale)); GitHub Actions esegue solo il controllo dei branch ([decisione 23](../adr/0001-decisioni-di-progetto.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)).

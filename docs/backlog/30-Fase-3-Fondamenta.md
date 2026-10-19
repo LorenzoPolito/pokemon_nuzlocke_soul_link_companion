@@ -105,8 +105,9 @@ Output: repository dell'app.
 
 - [ ] Il comando npm run verify esegue lint, controllo dei tipi, test di unità e di sistema e build dell'immagine.
 - [ ] Un hook pre-push blocca il push se la verifica fallisce o se il ramo è main o develop; la pull request riporta l'esito della verifica.
+- [ ] `npm audit --audit-level=high` eseguito come avviso che non blocca il push e non fallisce a rete assente ([ADR 0005](../adr/0005-adr-e-scelte-di-processo.md)).
 
-Modifica dei criteri, 19 ottobre 2026: aggiunto `develop` al criterio dell'hook (git flow, [decisione 22](../decisioni.md#22-git-flow-main-e-develop)); il blocco su `main` e `develop` esiste già dalla preparazione del repository (P3-12).
+Modifica dei criteri, 19 ottobre 2026: aggiunto `develop` al criterio dell'hook (git flow, [decisione 22](../adr/0001-decisioni-di-progetto.md#22-git-flow-main-e-develop)); il blocco su `main` e `develop` esiste già dalla preparazione del repository (P3-12).
 
 ## P3-12 Configurazione di GitHub
 
@@ -115,8 +116,8 @@ Output: repository su GitHub, Configurazione di GitHub.
 - [ ] Repository privato creato con nome e impostazioni del documento Configurazione di GitHub.
 - [ ] App Claude per GitHub installata sul repository, provata aprendo la pull request di preparazione del repository.
 
-Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituito da quello sull'app Claude per GitHub ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)); il nome effettivo del repository è `pokemon_nuzlocke_soul_link_companion`, diverso dalla proposta del documento Configurazione di GitHub, che è stato aggiornato. Aggiunto il criterio su git flow (decisioni 22 e 23), su richiesta del product owner.
-- [x] ~~Dependabot attivo.~~ Non attivato, per scelta del product owner (19 ottobre 2026, [decisione 26](../decisioni.md#26-impostazioni-di-github-lasciate-come-sono)).
+Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituito da quello sull'app Claude per GitHub ([decisione 14](../adr/0001-decisioni-di-progetto.md#14-agente-app-claude-per-github)); il nome effettivo del repository è `pokemon_nuzlocke_soul_link_companion`, diverso dalla proposta del documento Configurazione di GitHub, che è stato aggiornato. Aggiunto il criterio su git flow (decisioni 22 e 23), su richiesta del product owner.
+- [x] ~~Dependabot attivo.~~ Non attivato, per scelta del product owner (19 ottobre 2026, [decisione 26](../adr/0001-decisioni-di-progetto.md#26-impostazioni-di-github-lasciate-come-sono)).
 - [ ] Git flow configurato: ramo `develop` creato, hook che blocca `main` e `develop`, controllo `branch-policy` su GitHub Actions entro i minuti gratuiti, hook di Claude Code e di git al posto delle protezioni di GitHub (decisione 25).
 - [ ] Licenza aggiunta appena decisa dopo P1-10.
 

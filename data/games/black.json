@@ -2,7 +2,7 @@
   "$schema": "./game.schema.json",
   "schemaVersion": 1,
   "gameId": "black",
-  "dataVersion": "2026.10.19-2",
+  "dataVersion": "2026.10.19-3",
   "generation": 5,
   "versionGroup": "black-white",
   "region": "unova",
@@ -47,9 +47,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:4",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 1"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 1",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "farfetchd"
+      ]
     },
     {
       "key": "unova-route-2",
@@ -61,9 +65,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:6",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 2"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 2",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "wynaut"
+      ]
     },
     {
       "key": "striaton-city",
@@ -103,9 +111,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:12",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 3"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 3",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "volbeat"
+      ]
     },
     {
       "key": "wellspring-cave",
@@ -173,9 +185,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:22",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "hippopotas"
+      ]
     },
     {
       "key": "desert-resort",
@@ -187,9 +203,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:24",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "darmanitan"
+      ]
     },
     {
       "key": "relic-castle",
@@ -215,9 +235,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:28",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 6"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 6",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "smeargle"
+      ]
     },
     {
       "key": "driftveil-drawbridge",
@@ -271,9 +295,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:35",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "plusle"
+      ]
     },
     {
       "key": "mistralton-cave",
@@ -299,10 +327,11 @@
       "phase": "story",
       "source": {
         "entry": "pokeapi@6fd69df locations",
-        "note": "Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo",
+        "note": "Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003)",
         "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "parentAreaKey": "mistralton-cave"
     },
     {
       "key": "chargestone-cave",
@@ -328,9 +357,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:39",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "sentret"
+      ]
     },
     {
       "key": "celestial-tower",
@@ -371,9 +404,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:43",
-        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "exeggcute"
+      ]
     },
     {
       "key": "p2-laboratory",
@@ -441,9 +478,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:50",
-        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "croagunk"
+      ]
     },
     {
       "key": "moor-of-icirrus",
@@ -469,9 +510,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:53",
-        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "houndour"
+      ]
     },
     {
       "key": "unova-route-10",
@@ -483,9 +528,13 @@
       "phase": "story",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:55",
-        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "tyrogue"
+      ]
     },
     {
       "key": "unova-victory-road",
@@ -511,10 +560,11 @@
       "phase": "story",
       "source": {
         "entry": "pokeapi@6fd69df locations",
-        "note": "Assente in nuzlocke.data; stanza di Victory Road, messa subito dopo",
+        "note": "Assente in nuzlocke.data; stanza di Victory Road, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003)",
         "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "parentAreaKey": "unova-victory-road"
     },
     {
       "key": "ns-castle",
@@ -556,9 +606,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:70",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "shroomish"
+      ]
     },
     {
       "key": "village-bridge",
@@ -584,9 +638,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:72",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "doduo"
+      ]
     },
     {
       "key": "unova-route-13",
@@ -598,9 +656,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:73",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "shuppet"
+      ]
     },
     {
       "key": "giant-chasm",
@@ -655,9 +717,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:77",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 17"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 17",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "yanma"
+      ]
     },
     {
       "key": "abundant-shrine",
@@ -683,9 +749,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:80",
-        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18",
+        "note": "additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "mankey"
+      ]
     },
     {
       "key": "marvelous-bridge",
@@ -711,10 +781,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:82",
-        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore",
+        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore. additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)",
         "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "seaking"
+      ]
     },
     {
       "key": "liberty-garden",
@@ -741,10 +814,13 @@
       "phase": "postgame",
       "source": {
         "entry": "nuzlocke.data@baf5df5 routes/bl.txt:84",
-        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore",
+        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore. additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004)",
         "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "additionalSpecies": [
+        "pineco"
+      ]
     }
   ],
   "specialEncounters": [

@@ -13,7 +13,7 @@ La documentazione in `docs/` è l'unica fonte valida (le copie su claude.ai non 
 | Cosa | Dove |
 | --- | --- |
 | Indice della documentazione | `docs/README.md` |
-| Registro delle decisioni (ADR) | `docs/decisioni.md` |
+| Decisioni (ADR; indice e modello in `README.md`; le prime 26 nella 0001) | `docs/adr/` |
 | Requisiti e stack | `docs/progetto/01-Specifica-dei-requisiti.md` |
 | Fasi e gate | `docs/progetto/02-Piano-di-progetto.md` |
 | MVP e rilasci | `docs/progetto/03-MVP-e-rilasci.md` |
@@ -47,7 +47,7 @@ I PDF in `docs/progetto/pdf/` sono copie storiche con i diagrammi: non si aggior
 - Informazione mancante o fonti in conflitto: non inventare. Annota la fonte, segnala il conflitto e, se blocca, chiedi al PO.
 - Risorsa di rete necessaria ma irraggiungibile: dillo al PO invece di aggirare il problema.
 - Prima di azioni distruttive (cancellare file, riscrivere la cronologia) chiedi.
-- Le decisioni in `docs/decisioni.md` non si rimettono in discussione senza chiedere al PO.
+- Le decisioni in `docs/adr/` non si rimettono in discussione senza chiedere al PO. Una decisione nuova è una ADR separata, in stato "Proposta" finché il PO non risponde.
 - Nessun artefatto nasce senza una riga nella mappa degli artefatti.
 - Nessun segreto nel repository: solo `.env.example`.
 
@@ -71,7 +71,7 @@ Chiusura:
 ## Come trovare il prossimo PBI avviabile
 
 1. Apri i file di fase in `docs/backlog/` in ordine (10, 20, 30, …) e leggi la tabella in testa a ciascuno.
-2. Un PBI è avviabile se è "Da iniziare" e tutte le voci di "Dipende da" sono completate. Poiché i PBI di sviluppo si verificano a gruppi a fine rilascio, per loro si considera completata una dipendenza "In verifica" con la PR unita su `develop` (interpretazione da confermare con il PO).
+2. Un PBI è avviabile se è "Da iniziare" e tutte le voci di "Dipende da" sono completate. Poiché i PBI di sviluppo si verificano a gruppi a fine rilascio, per loro si considera completata una dipendenza "In verifica" con la PR unita su `develop` (confermato, ADR 0005).
 3. Tra gli avviabili scegli per fase, poi per ordine della tabella (che riflette la priorità), salvo indicazione del PO; per l'MVP vale l'ordine di `03-MVP-e-rilasci.md`.
 4. Non partono PBI di una fase che dipendono da un gate non ancora approvato (P1-18, P2-14).
 5. Quando le dipendenze sono PR non ancora unite, parti dal branch della PR da cui dipendi e dichiaralo nella descrizione della nuova PR.
@@ -91,4 +91,4 @@ Architettura, moduli e convenzioni di codice: `docs/progetto/05-Linee-guida-di-s
 
 ## Decisioni
 
-Le decisioni già prese (25 al 19 ottobre 2026), con contesto, alternative e conseguenze, sono in `docs/decisioni.md`. Una decisione nuova o cambiata si aggiunge lì, solo con l'approvazione del PO.
+Le decisioni prese sono in `docs/adr/` (ADR 0001: le prime 26; 0002–0005: rete instabile, giochi e impostazioni della run, fonti dei dati, processo). Una decisione nuova o cambiata è una ADR nuova, con la risposta del PO; le ADR accettate non si riscrivono, si sostituiscono.

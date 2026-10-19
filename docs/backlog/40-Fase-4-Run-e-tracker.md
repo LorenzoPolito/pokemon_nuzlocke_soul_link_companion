@@ -28,7 +28,7 @@
 
 ## P4-01 Creazione di una run con regole
 
-- [ ] Si scelgono nome, gioco e regole opzionali (dupes clause, tipo primario, regali separati, randomizer, calcolatore).
+- [ ] Si scelgono nome, gioco e regole opzionali (dupes clause, tipo primario, regali separati, randomizer, calcolatore, stanze interne come aree separate, accesa di base); per Nero 2 e Bianco 2 anche la difficoltà, normale di default ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 - [ ] Le regole base e Soul Link sono sempre attive e non disattivabili.
 - [ ] Chi crea la run ne diventa proprietario.
 
@@ -42,10 +42,12 @@
 
 - [ ] Il gioco si sceglie alla creazione della run ed è lo stesso per tutti i giocatori; impostazioni e regole valgono per tutti.
 - [ ] Il gioco non si può cambiare dopo il primo incontro registrato.
+- [ ] Il gioco è una versione (Nero, Bianco, Nero 2, Bianco 2) ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 
 ## P4-04 Lista delle aree in ordine di progressione
 
-- [ ] Aree mostrate nell'ordine dei dati di gioco, con lo stato di ogni giocatore affiancato.
+- [ ] Aree mostrate nell'ordine dei dati di gioco, con lo stato di ogni giocatore affiancato; l'ordine è solo di visualizzazione e ogni area si registra quando si vuole ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [ ] Con la regola "stanze interne come aree separate" spenta, gli incontri in una stanza contano nell'area principale.
 - [ ] L'admin può aggiungere aree personalizzate a un gioco.
 - [ ] Senza flag randomizer, ogni area mostra le specie incontrabili come suggerimento.
 
@@ -79,6 +81,7 @@
 
 - [ ] Modificabili: soprannome, livello, natura, abilità effettiva, 4 mosse.
 - [ ] Abilità e mosse proposte dai dati effettivi (Pokédex o override), con scelta libera dall'elenco completo.
+- [ ] Ciò che si sta scrivendo resta compilato se la rete cade o la pagina si chiude: bozza nel browser, per modulo, fino al salvataggio o per 24 ore ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 ## P4-11 Team e box con posizione condivisa
 
@@ -104,8 +107,8 @@
 
 ## P4-15 Medaglie e level cap
 
-- [ ] Medaglie del gioco selezionabili per ogni giocatore.
-- [ ] Level cap mostrato dal prossimo capopalestra, modificabile per run.
+- [ ] Tappe del gioco (medaglie, Superquattro, boss della storia) selezionabili per ogni giocatore.
+- [ ] Level cap per giocatore, dalla prima tappa non superata e con la difficoltà della run; un solo override manuale per la run ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 
 ## P4-16 Timeline degli eventi
 
@@ -120,6 +123,8 @@
 
 - [ ] Ogni modifica compare agli altri partecipanti collegati entro 2 secondi, senza ricaricare.
 - [ ] Dopo una riconnessione la pagina mostra lo stato aggiornato.
+- [ ] Con la connessione persa compare un avviso e i pulsanti di salvataggio sono disattivati, senza coda ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [ ] Le modifiche semplici si vedono subito, con "in invio"; le azioni Soul Link attendono la risposta del server.
 
 ## P4-19 Creazione di una run già iniziata
 
@@ -139,6 +144,7 @@
 - [ ] Il lock è un lease di 60 secondi rinnovato ogni 20 secondi mentre il modulo è aperto; si rilascia al salvataggio, all'annullamento, alla chiusura della pagina o alla scadenza.
 - [ ] Se due giocatori salvano lo stesso dato, vince l'ultimo salvataggio; chi è stato sovrascritto riceve un avviso con il valore nuovo.
 - [ ] Presa e rilascio dei lock arrivano agli altri giocatori in tempo reale.
+- [ ] Alla riconnessione il client riprende i lock dei moduli aperti ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 * [ ] Ogni dato modificabile ha un numero di versione; il valore sovrascritto resta nel diario della run.
 * [ ] I lock vivono nella memoria del server e un riavvio li azzera senza errori.

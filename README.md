@@ -20,7 +20,7 @@ Tutta la documentazione è in [`docs/`](docs/README.md) ed è l'unica fonte vali
 | [MVP e rilasci](docs/progetto/03-MVP-e-rilasci.md) | Cosa entra nella 0.1 e nei rilasci successivi |
 | [Regole di lavoro](docs/progetto/04-Regole-di-lavoro.md) | Sessioni, verifica locale, test, bug, stime |
 | [Backlog](docs/backlog/00-Backlog-regole-DoD-riepilogo.md) | PBI per fase, registro bug, registro sessioni |
-| [Registro delle decisioni](docs/decisioni.md) | Le decisioni già prese, con contesto e alternative |
+| [ADR](docs/adr/README.md) | Le decisioni prese, una ADR per decisione (le prime 26 nella [0001](docs/adr/0001-decisioni-di-progetto.md)) |
 | [Mappa degli artefatti](docs/progetto/09-Mappa-degli-artefatti.md) | L'elenco di tutto ciò che il progetto produce |
 
 Per contribuire: [`CONTRIBUTING.md`](CONTRIBUTING.md). Le istruzioni per l'agente sono in [`CLAUDE.md`](CLAUDE.md).

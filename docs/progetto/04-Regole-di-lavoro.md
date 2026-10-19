@@ -11,7 +11,7 @@ Il product owner decide e approva; l'agente AI esegue e documenta.
 | Ruolo | Chi | Responsabilità |
 | --- | --- | --- |
 | Product owner | Utente | Priorità del backlog, approvazione dei gate, verifica dei PBI "In verifica", gravità finale dei bug, modifiche a queste regole |
-| Agente AI | Claude Code, che lavora sul repository tramite l'app Claude per GitHub ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)) | Sviluppo dei PBI, test, apertura dei bug, aggiornamento di backlog, registro sessioni e documenti; apre pull request, ma non unisce e non crea tag |
+| Agente AI | Claude Code, che lavora sul repository tramite l'app Claude per GitHub ([decisione 14](../adr/0001-decisioni-di-progetto.md#14-agente-app-claude-per-github)) | Sviluppo dei PBI, test, apertura dei bug, aggiornamento di backlog, registro sessioni e documenti; apre pull request, ma non unisce e non crea tag |
 
 L'agente porta un PBI a "In verifica" e il product owner lo chiude, con due eccezioni per alleggerire il lavoro: i PBI di analisi di taglia XS e S li chiude l'agente, e le verifiche dei PBI di sviluppo si fanno a gruppi alla fine di ogni rilascio.
 
@@ -43,15 +43,15 @@ Una sessione che supera il 150% del budget si ferma, registra lo stato e propone
 
 ## Repository e verifica locale
 
-Il progetto segue git flow ([decisione 22](../decisioni.md#22-git-flow-main-e-develop)). `main` contiene solo i rilasci ed è sempre rilasciabile; `develop` è il ramo di integrazione. A entrambi si arriva solo con una pull request verde: verso `develop` da un branch di lavoro, verso `main` solo da `develop`.
+Il progetto segue git flow ([decisione 22](../adr/0001-decisioni-di-progetto.md#22-git-flow-main-e-develop)). `main` contiene solo i rilasci ed è sempre rilasciabile; `develop` è il ramo di integrazione. A entrambi si arriva solo con una pull request verde: verso `develop` da un branch di lavoro, verso `main` solo da `develop`.
 
 - **Branch**: uno per PBI o bug, creato da `develop` aggiornato, con l'ID nel nome: `pbi/P4-06-link-soullink`, `bug/BUG-007-morte-partner`; `chore/…` per la manutenzione del repository. Non si usano branch `release/…` né `hotfix/…`.
 - **Commit**: in formato Conventional Commits con l'ID, per esempio `feat(P4-06): collega gli incontri della stessa area`.
-- **Pull request**: verso `develop`, con titolo con l'ID e descrizione con i criteri di accettazione spuntati e i test aggiunti. Il controllo `branch-policy` di GitHub Actions verifica il branch di partenza ([decisione 23](../decisioni.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)): una pull request con il controllo rosso non si unisce.
+- **Pull request**: verso `develop`, con titolo con l'ID e descrizione con i criteri di accettazione spuntati e i test aggiunti. Il controllo `branch-policy` di GitHub Actions verifica il branch di partenza ([decisione 23](../adr/0001-decisioni-di-progetto.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)): una pull request con il controllo rosso non si unisce.
 - **Verifica locale: npm run verify esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine. Un hook pre-push blocca il push se la verifica fallisce o se il ramo di destinazione è `main` o `develop`; l'esito va riportato nella pull request. Non c'è CI**.
-- **Hook** ([decisione 25](../decisioni.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)): GitHub non può proteggere i rami di questo repository, quindi le regole le applicano gli hook di git (`pre-commit`, `commit-msg`, `pre-push`) e, per l'agente, gli hook di Claude Code. L'agente non li salta mai; il product owner può farlo con `--no-verify` quando serve.
+- **Hook** ([decisione 25](../adr/0001-decisioni-di-progetto.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)): GitHub non può proteggere i rami di questo repository, quindi le regole le applicano gli hook di git (`pre-commit`, `commit-msg`, `pre-push`) e, per l'agente, gli hook di Claude Code. L'agente non li salta mai; il product owner può farlo con `--no-verify` quando serve.
 - **Verifica su `develop`**: dopo ogni unione l'agente esegue in locale la verifica più i test end-to-end.
-- **Approvazione**: l'agente può approvare le proprie pull request con una revisione di tipo commento che comincia con "Approvata dall'agente", con la checklist di revisione e l'esito della verifica ([decisione 24](../decisioni.md#24-lagente-può-approvare-le-proprie-pull-request)): GitHub non permette l'approvazione formale perché l'agente usa l'account del product owner.
+- **Approvazione**: l'agente può approvare le proprie pull request con una revisione di tipo commento che comincia con "Approvata dall'agente", con la checklist di revisione e l'esito della verifica ([decisione 24](../adr/0001-decisioni-di-progetto.md#24-lagente-può-approvare-le-proprie-pull-request)): GitHub non permette l'approvazione formale perché l'agente usa l'account del product owner.
 - **Unione**: squash merge verso `develop`, un commit per PBI; merge commit (non squash) per la pull request di rilascio da `develop` a `main`, così i due rami non divergono. Unisce solo il product owner; l'agente apre le pull request, anche quella di rilascio, e non fa mai push su `main` o `develop`.
 
 ## Test
@@ -116,6 +116,7 @@ I valori sono ipotesi iniziali. Il tempo è quello di lavoro dell'agente, senza 
 La [Mappa degli artefatti](09-Mappa-degli-artefatti.md) dice quale documento si aggiorna e quando; nessun artefatto nasce senza essere aggiunto alla mappa.
 
 - **Gate**: alla fine di ogni fase il product owner verifica la checklist del gate nel Piano di progetto. Fino all'approvazione non partono PBI della fase successiva che dipendono dal gate.
+- **Decisioni**: ogni scelta difficile da cambiare è una ADR in [`docs/adr/`](../adr/README.md), nella stessa pull request che la applica. L'agente la scrive in stato "Proposta" e la accetta solo con la risposta del product owner ([ADR 0005](../adr/0005-adr-e-scelte-di-processo.md)).
 - **Versioni**: Semantic Versioning (`1.0.0`, `1.1.0`, `1.1.1`). Ogni rilascio ha un tag Git, un'immagine Docker con lo stesso tag e una voce nel `CHANGELOG.md`.
 - **Rilascio**: nessun bug Bloccante o Alto aperto, test end-to-end verdi su `develop`, Guida di installazione aggiornata. L'agente apre la pull request da `develop` a `main`; il product owner la unisce con un merge commit e crea il tag su `main`.
 
@@ -127,6 +128,7 @@ Le regole cambiano solo con l'approvazione del product owner; ogni modifica si a
 | --- | --- | --- |
 | 3 ottobre 2026 | Prima versione | Avvio del progetto |
 | 3 ottobre 2026 | Niente CI: verifica locale e hook pre-push. L'agente chiude i PBI di analisi XS e S; verifiche dei PBI di sviluppo a gruppi per rilascio; prima ricalibrazione dopo 5 PBI. | Assessment del progetto: repository privato senza CI e product owner troppo coinvolto |
-| 19 ottobre 2026 | Backlog, bug e registro sessioni sono file in `docs/backlog/`, aggiornati con le pull request; l'agente lavora tramite l'app Claude per GitHub e non unisce. | Decisioni 13, 14 e 21 del [registro delle decisioni](../decisioni.md), applicate con la preparazione del repository (P3-12) |
+| 19 ottobre 2026 | Backlog, bug e registro sessioni sono file in `docs/backlog/`, aggiornati con le pull request; l'agente lavora tramite l'app Claude per GitHub e non unisce. | Decisioni 13, 14 e 21 del [registro delle decisioni](../adr/0001-decisioni-di-progetto.md), applicate con la preparazione del repository (P3-12) |
 | 19 ottobre 2026 | Git flow con `main` e `develop`; GitHub Actions solo per il controllo dei branch delle pull request; l'agente può approvare le proprie pull request (non unirle). | Richiesta del product owner; decisioni 22, 23 e 24 |
+| 19 ottobre 2026 | Le decisioni sono ADR in `docs/adr/`; una dipendenza "In verifica" con la PR unita su `develop` conta come completata per i PBI di sviluppo. | Risposte del product owner a P1-19; [ADR 0005](../adr/0005-adr-e-scelte-di-processo.md) |
 | 19 ottobre 2026 | Protezioni di `main` e `develop` affidate agli hook di Claude Code e di git; messaggi di commit controllati dall'hook `commit-msg`. | GitHub non applica le protezioni sui repository privati senza un account Team o Enterprise; decisione 25 |

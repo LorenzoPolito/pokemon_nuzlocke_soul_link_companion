@@ -47,6 +47,8 @@
 ## P6-07 Nomi localizzati nel Pokédex
 
 - [ ] Nomi di specie, mosse, abilità e aree nella lingua scelta, con riserva in inglese.
+
+Modifica dei criteri, 19 ottobre 2026 ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)): i nomi delle aree restano in inglese nell'MVP, quindi il criterio riguarda specie, mosse e abilità.
 - [ ] Cambiare lingua aggiorna i nomi dopo la ricarica della pagina, restando sulla stessa scheda.
 
 ## P6-08 Collegamenti dal tracker e dall'helper

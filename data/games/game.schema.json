@@ -72,6 +72,8 @@
         "phase": { "enum": ["story", "postgame"] },
         "hasWildEncounters": { "type": "boolean", "description": "PokéAPI ha incontri selvatici per l'area in questa versione" },
         "starters": { "type": "array", "items": { "$ref": "#/$defs/key" }, "description": "Solo per l'area starter" },
+        "parentAreaKey": { "$ref": "#/$defs/key", "description": "Solo per le stanze interne: area della grotta principale. Con la regola separateRooms spenta un incontro nella stanza conta in quest'area (ADR 0003)" },
+        "additionalSpecies": { "type": "array", "items": { "$ref": "#/$defs/key" }, "description": "Specie che nuzlocke.data elenca per l'area e PokéAPI no (sciami probabili, White Forest): non verificate (ADR 0004)" },
         "source": { "$ref": "#/$defs/source" }
       }
     },
@@ -118,9 +120,10 @@
       "required": ["key", "type", "areaKey", "species", "level", "source"],
       "properties": {
         "key": { "$ref": "#/$defs/key", "description": "<tipo>-<area>-<specie>" },
-        "type": { "enum": ["gift", "static", "trade"] },
+        "type": { "enum": ["gift", "static", "trade", "grotto"], "description": "grotto: grotta nascosta di Nero 2 e Bianco 2, trattata come incontro fisso con la specie da scegliere dal Pokédex (ADR 0003)" },
         "areaKey": { "$ref": "#/$defs/key", "description": "Area a cui appartiene: senza la regola dei regali separati conta come suo incontro" },
-        "species": { "$ref": "#/$defs/key" },
+        "species": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }], "description": "null per le grotte nascoste: la specie si sceglie dal Pokédex" },
+        "candidates": { "type": "array", "items": { "$ref": "#/$defs/key" }, "description": "Solo per le grotte nascoste: specie possibili secondo PokéAPI" },
         "level": {
           "description": "Livello fisso, intervallo, oppure null se le fonti non lo riportano",
           "oneOf": [
