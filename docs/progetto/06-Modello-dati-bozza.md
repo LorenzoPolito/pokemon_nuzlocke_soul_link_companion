@@ -94,6 +94,7 @@ Il gruppo di Pokémon collegati nato in un'area; tiene posizione e morte per tut
 | member\_id, link\_group\_id | TEXT | FK | Copiati dall'incontro per query semplici |
 | nickname | TEXT | NOT NULL, 1–20 caratteri |  |
 | species\_id | INTEGER | NOT NULL | Cambia con l'evoluzione |
+| variety\_id | INTEGER | NULL | Varietà del Pokédex (`pokemon_id` di PokéAPI) con tipi, statistiche o abilità diversi (Wormadam, Rotom, Darmanitan zen, Kyurem, e così via); NULL = varietà predefinita della specie ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)) |
 | level | INTEGER | CHECK 1–100 |  |
 | nature, ability, tera\_type | TEXT | NULL | Chiavi del Pokédex |
 | moves | TEXT (JSON) | CHECK json\_array\_length ≤ 4 | Chiavi delle mosse attuali |

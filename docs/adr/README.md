@@ -11,6 +11,8 @@ Le decisioni di progetto sono registrate qui, una ADR per ogni scelta difficile 
 | [0003](0003-giochi-aree-e-impostazioni-della-run.md) | Giochi, aree, tappe e impostazioni della run | Accettata | 19 ottobre 2026 |
 | [0004](0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md) | Fonti dei dati, nomi e giochi per rilascio | Accettata | 19 ottobre 2026 |
 | [0005](0005-adr-e-scelte-di-processo.md) | ADR e scelte di processo | Accettata | 19 ottobre 2026 |
+| [0006](0006-varieta-dell-esemplare.md) | Varietà dell'esemplare | Accettata | 19 ottobre 2026 |
+| [0007](0007-pr-impilate-e-merge-commit.md) | PR impilate e merge commit | Accettata | 19 ottobre 2026 |
 
 ## Regole
 

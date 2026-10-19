@@ -52,6 +52,7 @@ Il progetto segue git flow ([decisione 22](../adr/0001-decisioni-di-progetto.md#
 - **Hook** ([decisione 25](../adr/0001-decisioni-di-progetto.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)): GitHub non può proteggere i rami di questo repository, quindi le regole le applicano gli hook di git (`pre-commit`, `commit-msg`, `pre-push`) e, per l'agente, gli hook di Claude Code. L'agente non li salta mai; il product owner può farlo con `--no-verify` quando serve.
 - **Verifica su `develop`**: dopo ogni unione l'agente esegue in locale la verifica più i test end-to-end.
 - **Approvazione**: l'agente può approvare le proprie pull request con una revisione di tipo commento che comincia con "Approvata dall'agente", con la checklist di revisione e l'esito della verifica ([decisione 24](../adr/0001-decisioni-di-progetto.md#24-lagente-può-approvare-le-proprie-pull-request)): GitHub non permette l'approvazione formale perché l'agente usa l'account del product owner.
+- **PR impilate** ([ADR 0007](../adr/0007-pr-impilate-e-merge-commit.md)): l'agente può far partire una PR dal branch di un'altra non ancora unita; la serie si unisce in ordine con merge commit, non con squash (lo squash rigenera conflitti a ogni PR).
 - **Unione**: squash merge verso `develop`, un commit per PBI; merge commit (non squash) per la pull request di rilascio da `develop` a `main`, così i due rami non divergono. Unisce solo il product owner; l'agente apre le pull request, anche quella di rilascio, e non fa mai push su `main` o `develop`.
 
 ## Test
