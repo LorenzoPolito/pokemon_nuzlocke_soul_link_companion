@@ -1,11 +1,14 @@
 #!/bin/sh
-# Hook pre-push del progetto. Si attiva una volta per clone con:
+# Hook pre-push del progetto (decisioni 22 e 25). Si attiva una volta per
+# clone con:
 #   git config core.hooksPath .githooks
+# Nelle sessioni di Claude Code lo attiva l'hook SessionStart.
 #
-# Rifiuta i push verso main e develop (git flow, decisione 22): ci si
-# arriva solo con una pull request. La verifica completa
-# (npm run verify) si aggiunge con il PBI P3-11.
+# Rifiuta i push verso main e develop (ci si arriva solo con una pull
+# request) e i push forzati. La verifica completa (npm run verify) si
+# aggiunge con il PBI P3-11.
 
+zero=0000000000000000000000000000000000000000
 status=0
 
 # git passa su stdin una riga per ogni ref da inviare:
@@ -15,8 +18,16 @@ while read -r local_ref local_sha remote_ref remote_sha; do
     refs/heads/main | refs/heads/develop)
       echo "pre-push: push su ${remote_ref#refs/heads/} rifiutato. Apri una pull request: verso develop da un branch pbi/, bug/ o chore/; verso main solo da develop." >&2
       status=1
+      continue
       ;;
   esac
+  # push forzato: il ramo remoto esiste e non è antenato di quello locale
+  if [ "$local_sha" != "$zero" ] && [ "$remote_sha" != "$zero" ] && case "$remote_ref" in refs/heads/*) true ;; *) false ;; esac; then
+    if git cat-file -e "$remote_sha" 2>/dev/null && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+      echo "pre-push: push forzato su ${remote_ref#refs/heads/} rifiutato: riscrive la cronologia. Serve la conferma del product owner." >&2
+      status=1
+    fi
+  fi
 done
 
 exit $status
