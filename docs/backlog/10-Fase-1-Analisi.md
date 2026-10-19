@@ -5,7 +5,7 @@
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
 | P1-01 | Inventario dei giochi supportati | — | S | Completato |
-| P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | Da iniziare |
+| P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | In verifica |
 | P1-06 | Ordine di progressione delle aree | P1-04 | M | Da iniziare |
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | Da iniziare |
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Da iniziare |
@@ -52,11 +52,11 @@ Output: Analisi delle fonti dati.
 
 ## P1-04 Copertura PokéAPI: incontri per area
 
-Output: Analisi delle fonti dati.
+Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1-04-copertura-pokéapi-incontri-per-area).
 
-- [ ] Per ogni gioco: incontri presenti, parziali o assenti, partendo da Bianco, Nero, Bianco 2 e Nero 2.
-- [ ] Verificata la copertura di Gen 8 e Gen 9.
-- [ ] Regali e scambi in gioco: indicato se sono presenti come incontri.
+- [x] Per ogni gioco: incontri presenti, parziali o assenti, partendo da Bianco, Nero, Bianco 2 e Nero 2.
+- [x] Verificata la copertura di Gen 8 e Gen 9.
+- [x] Regali e scambi in gioco: indicato se sono presenti come incontri.
 
 ## P1-05 Nomi localizzati italiano e inglese
 
