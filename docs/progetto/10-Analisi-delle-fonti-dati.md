@@ -412,3 +412,67 @@ I tipi in PokéAPI sono 21: i 18 della serie principale (Acciaio e Buio dalla se
 | --- | --- |
 | Un esemplare registra solo la specie oppure anche la varietà (Wormadam sabbia, Rotom lavatrice), che cambia tipi e statistiche? Proposta: `species_id` più una varietà facoltativa, vuota per la forma predefinita | P2-04 (modello degli esemplari) |
 | Forme cosmetiche: ignorarle (proposta) o mostrarle come informazione | P2-04 |
+
+## P1-03 Copertura PokéAPI: mosse, learnset, abilità
+
+Data: 19 ottobre 2026. Taglia M. Fonte: CSV di [PokeAPI/pokeapi](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv), commit `6fd69df` (`moves`, `move_changelog`, `pokemon_moves`, `machines`, `abilities`, `ability_changelog`, `pokemon_abilities`, `pokemon_abilities_past`).
+
+### Mosse
+
+- **Totale**: 937, tutte con tipo, categoria (stato, fisica, speciale) e nome inglese e italiano. Fino alla quinta generazione sono 577 (165, 86, 121, 113 e 92 per generazione). Delle 577, 37 non sono di stato e non hanno una potenza fissa (colpi KO in un colpo, potenza variabile): è corretto.
+- **Macchine**: Nero, Bianco, Nero 2 e Bianco 2 hanno 101 macchine ciascuno (95 MT e 6 MN), come nei giochi.
+
+### Learnset per version group
+
+Righe di `pokemon_moves` per ognuno dei giochi inclusi in P1-01 (Pokémon con learnset / mosse distinte / righe). I metodi presenti sono sempre i metodi del gioco (livello, uovo, MT e MN, tutor, più i metodi speciali di alcuni giochi).
+
+| Version group | Pokémon | Mosse | Righe | Esito |
+| --- | --- | --- | --- | --- |
+| Rossa e Blu, Gialla | 151 | 163–164 | 4128–4152 | Presente |
+| Oro e Argento, Cristallo | 251 | 250 | 9056–9286 | Presente |
+| Rubino e Zaffiro, Smeraldo | 389 | 348–349 | 13 955–19 304 | Presente |
+| Rosso Fuoco e Verde Foglia | 390 | 352 | 16 486 | Presente |
+| Diamante e Perla, Platino | 501–508 | 466 | 26 301–30 897 | Presente |
+| HeartGold e SoulSilver | 508 | 465 | 32 216 | Presente |
+| **Nero e Bianco** | **667** | **555** | **33 756** | **Presente: tutti i 649 Pokémon** |
+| **Nero 2 e Bianco 2** | **673** | **557** | **41 544** | **Presente: tutti i 649 Pokémon** |
+| X e Y | 784 | 609 | 42 886 | Presente |
+| Rubino Omega e Zaffiro Alpha | 811 | 613 | 54 392 | Presente |
+| Sole e Luna, Ultrasole e Ultraluna | 944–959 | 666–669 | 49 542–62 019 | Presente |
+| Let's Go | 188 | 223 | 5776 | Presente (solo i Pokémon del gioco) |
+| Spada e Scudo | 750 | 637 | 44 204 | Presente |
+| Diamante Lucente e Perla Splendente | 491 | 506 | 24 797 | Presente |
+| Leggende: Arceus | 247 | 175 | 2230 | Presente, parziale (livello e tutor; nessuna macchina) |
+| Scarlatto e Violetto | 867 | 679 | 54 658 | Presente |
+| L'isola solitaria dell'armatura, Le terre innevate della corona, La maschera turchese, Il disco indaco, Leggende: Z-A, Megadimensione | 0 | 0 | 0 | **Assenti** |
+
+Per i giochi dell'MVP ogni Pokémon dal numero 1 al 649 ha il learnset sia a livello sia complessivo.
+
+### Storico di potenza, tipo e categoria delle mosse
+
+- **Potenza, tipo, precisione, PP, priorità, bersaglio ed effetto sono storicizzati**: la tabella `move_changelog` ha 198 righe per 168 mosse (115 cambi di potenza, 47 di precisione, 43 di PP, 8 di tipo, 11 di probabilità dell'effetto, 9 di effetto, 7 di bersaglio, 5 di priorità). Una mossa può avere più righe (27 ne hanno).
+- **Come si legge** (attenzione, è diverso dalle tabelle di tipi e statistiche di P1-02): ogni riga contiene i valori **vecchi**, che valgono in tutti i version group **precedenti** a quello indicato in `changed_in_version_group_id`; da quel gruppo in poi vale il valore successivo. Regola: per una mossa, un campo e un version group V vale il valore della riga con l'ordine di version group **strettamente maggiore** di V più piccolo; se non c'è, vale il valore attuale. Verificata su 15 casi noti, tutti corretti: Azione (Tackle) 35 fino a Diamante e Perla, 50 in Nero e Bianco, 40 da Sole e Luna; Fulmine (Thunderbolt) 95 fino a Nero 2 e Bianco 2, 90 da X e Y; Tossina (Toxic) 85 fino a Diamante e Perla, 90 da Nero e Bianco; Volo (Fly) 70 fino a Rubino e Zaffiro, 90 da Diamante e Perla; Martellata (Crabhammer) 90 fino a Nero 2 e Bianco 2, 100 da X e Y; Colpokarate (Karate Chop) Normale in Rossa e Blu, Lotta da Oro e Argento; Morso (Bite) Normale in Gialla, Buio da Oro e Argento.
+- **Le tabelle di tipi, statistiche e abilità dei Pokémon** (P1-02) usano invece la convenzione "ultima generazione con i valori vecchi".
+- **La categoria (fisica o speciale) non è storicizzata**: esiste un solo valore per mossa, quello attuale. Fino alla terza generazione la categoria dipende dal **tipo** della mossa e non dalla mossa (P1-09); dalla quarta si assume costante, perché PokéAPI non registra cambi.
+- Da notare: i cambi sono concentrati in poche transizioni (Oro e Argento 20, Diamante e Perla 19, Nero e Bianco 40, X e Y 83, Sole e Luna 11, Spada e Scudo 16). Per i giochi dell'MVP contano le righe di Nero e Bianco e quelle successive (che dicono come erano le mosse prima).
+
+### Abilità
+
+- **Totale**: 314 nella serie principale, tutte con nome inglese; 311 con nome italiano (P1-05). Fino alla quinta generazione sono 164.
+- **Abilità dei Pokémon per generazione**: `pokemon_abilities_past` ha 569 righe per 467 Pokémon (terza generazione 89, quarta 420, quinta 24, sesta 15, settima 2, ottava 19), con la convenzione "ultima generazione con i valori vecchi". 540 righe hanno l'abilità vuota: indicano che quello slot **non esisteva** (le abilità nascoste arrivano con la quinta generazione, e prima di allora lo slot è vuoto). Per Nero, Bianco, Nero 2 e Bianco 2 si usano le righe con generazione 5 o maggiore.
+- **Cambi di effetto delle abilità**: `ability_changelog` ha 52 righe, in Smeraldo (19), Diamante e Perla (13), Platino (1) e Nero e Bianco (19). Riportano solo che la descrizione dell'effetto è cambiata, con il testo vecchio a parte: non ci sono numeri. Per ciò che serve all'app (le abilità che cambiano l'efficacia, P1-09) basta la descrizione dell'effetto per generazione.
+
+### Lacune e decisioni
+
+| Lacuna | Decisione |
+| --- | --- |
+| Nessun learnset per le espansioni di Spada e Scudo e di Scarlatto e Violetto, né per Leggende: Z-A e Megadimensione | Le espansioni sono aree del gioco base ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)): si usa il learnset del gioco base. Da verificare prima della 0.5 se le mosse e i Pokémon nuovi delle espansioni mancano. Leggende: Z-A è del rilascio 1.0 |
+| Leggende: Arceus ha solo livello e tutor, senza macchine | Compatibile con il gioco (non ha macchine); è del rilascio 1.0 |
+| Storico delle mosse con regola "strettamente maggiore" | Il Pokédex SQLite materializza in **fase di build** i valori già risolti per ogni mossa e version group (circa 937 × 28 righe): a runtime non c'è logica di risoluzione. Lo schema è oggetto di P2-07 |
+| Categoria non storicizzata | Fino alla terza generazione deriva dal tipo della mossa (regola in P1-09); dalla quarta è quella attuale |
+| Effetti delle abilità solo come testo per generazione | Si usano le descrizioni; le abilità che modificano l'efficacia si elencano a mano in P1-09 |
+| Learnset di Leggende: Arceus e Let's Go parziali | Coerente con i giochi; Let's Go e Leggende sono del rilascio 1.0 |
+
+### Domande aperte
+
+Nessuna per il product owner. Resta da verificare, prima della 0.5, se le espansioni di Spada e Scudo e di Scarlatto e Violetto hanno mosse e Pokémon che il learnset del gioco base non contiene (PBI di dati della 0.5).
