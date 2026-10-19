@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-Il progetto segue un agile DevOps semplificato: PBI piccoli, una sessione di chat per PBI, integrazione continua su ogni modifica e tre livelli di test che aprono un bug quando trovano una regressione.
+Il progetto segue un agile DevOps semplificato: PBI piccoli, una sessione di lavoro per PBI, integrazione frequente su `main` tramite pull request con verifica locale (senza CI) e tre livelli di test che aprono un bug quando trovano una regressione.
 
 ## Ruoli
 
@@ -11,7 +11,7 @@ Il product owner decide e approva; l'agente AI esegue e documenta.
 | Ruolo | Chi | Responsabilità |
 | --- | --- | --- |
 | Product owner | Utente | Priorità del backlog, approvazione dei gate, verifica dei PBI "In verifica", gravità finale dei bug, modifiche a queste regole |
-| Agente AI | Claude (chat o Claude Code) | Sviluppo dei PBI, test, apertura dei bug, aggiornamento di backlog, registro sessioni e documenti |
+| Agente AI | Claude Code, che lavora sul repository tramite l'app Claude per GitHub ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)) | Sviluppo dei PBI, test, apertura dei bug, aggiornamento di backlog, registro sessioni e documenti; apre pull request, ma non unisce e non crea tag |
 
 L'agente porta un PBI a "In verifica" e il product owner lo chiude, con due eccezioni per alleggerire il lavoro: i PBI di analisi di taglia XS e S li chiude l'agente, e le verifiche dei PBI di sviluppo si fanno a gruppi alla fine di ogni rilascio.
 
@@ -23,21 +23,21 @@ Un PBI torna "In corso" quando la verifica locale è rossa o un criterio non è 
 
 ## Protocollo di sessione
 
-Ogni chat di lavoro è una sessione su un solo PBI o bug, che si apre e si chiude sempre allo stesso modo. Così lo stato del progetto vive nei documenti e non nella memoria di una chat.
+Ogni sessione di lavoro dell'agente riguarda un solo PBI o bug, e si apre e si chiude sempre allo stesso modo. Così lo stato del progetto vive nei file del repository e non nella memoria di una sessione.
 
 Apertura:
 
-1. Leggere la Mappa degli artefatti, il Registro sessioni e il tab Bug del backlog.
+1. Leggere la [Mappa degli artefatti](09-Mappa-degli-artefatti.md), il [Registro sessioni](../backlog/02-Registro-sessioni.md) e il [Registro bug](../backlog/01-Bug.md), tutti nel repository.
 2. Se c'è un bug Bloccante aperto, la sessione lavora su quello.
 3. Altrimenti scegliere un PBI avviabile (dipendenze completate), in ordine di fase e ID, salvo diversa priorità del product owner.
-4. Portare il PBI a "In corso" e dichiarare in chat ID, taglia e budget.
+4. Portare il PBI a "In corso" nel file della sua fase in `docs/backlog/` e dichiarare ID, taglia e budget.
 
 Chiusura:
 
 1. Spuntare i criteri soddisfatti e portare il PBI a "In verifica", oppure lasciarlo "In corso" spiegando cosa manca.
 2. Aprire i bug trovati durante la sessione.
 3. Aggiornare i documenti di output del PBI.
-4. Aggiungere una riga al Registro sessioni: data, PBI o bug, esito, token e tempo stimati, token e tempo reali se noti, prossimo passo.
+4. Aggiungere una riga al [Registro sessioni](../backlog/02-Registro-sessioni.md): data, PBI o bug, esito, token e tempo stimati, token e tempo reali se noti, prossimo passo.
 
 Una sessione che supera il 150% del budget si ferma, registra lo stato e propone di dividere il PBI.
 
@@ -50,7 +50,7 @@ Il ramo principale `main` è sempre rilasciabile: ci si arriva solo con una pull
 - **Pull request**: titolo con l'ID, descrizione con i criteri di accettazione spuntati e i test aggiunti.
 - **Verifica locale: npm run verify esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine. Un hook pre-push blocca il push se la verifica fallisce; l'esito va riportato nella pull request. Non c'è CI**.
 - **Verifica su `main`**: dopo ogni unione l'agente esegue in locale la verifica più i test end-to-end.
-- **Unione**: squash merge, un commit per PBI su `main`.
+- **Unione**: squash merge, un commit per PBI su `main`. Unisce solo il product owner; l'agente apre la pull request e non tocca mai `main` direttamente.
 
 ## Test
 
@@ -74,7 +74,7 @@ Ogni correzione di bug aggiunge un test che fallisce prima della correzione e pa
 
 ## Bug
 
-Ogni difetto trovato fuori dal PBI in corso diventa un bug nel tab Bug del backlog, con ID `BUG-001`, `BUG-002` e così via.
+Ogni difetto trovato fuori dal PBI in corso diventa un bug nel file [`docs/backlog/01-Bug.md`](../backlog/01-Bug.md), con ID `BUG-001`, `BUG-002` e così via.
 
 Campi di ogni bug: titolo, data, trovato da (unità, sistema, end-to-end, verifica, uso), PBI collegato, gravità, passi per riprodurre, risultato atteso, risultato ottenuto, taglia, stato.
 
@@ -111,7 +111,7 @@ I valori sono ipotesi iniziali. Il tempo è quello di lavoro dell'agente, senza 
 
 ## Documentazione, gate e rilasci
 
-La Mappa degli artefatti dice quale documento si aggiorna e quando; nessun artefatto nasce senza essere aggiunto alla mappa.
+La [Mappa degli artefatti](09-Mappa-degli-artefatti.md) dice quale documento si aggiorna e quando; nessun artefatto nasce senza essere aggiunto alla mappa.
 
 - **Gate**: alla fine di ogni fase il product owner verifica la checklist del gate nel Piano di progetto. Fino all'approvazione non partono PBI della fase successiva che dipendono dal gate.
 - **Versioni**: Semantic Versioning (`1.0.0`, `1.1.0`, `1.1.1`). Ogni rilascio ha un tag Git, un'immagine Docker con lo stesso tag e una voce nel `CHANGELOG.md`.
@@ -125,3 +125,4 @@ Le regole cambiano solo con l'approvazione del product owner; ogni modifica si a
 | --- | --- | --- |
 | 3 ottobre 2026 | Prima versione | Avvio del progetto |
 | 3 ottobre 2026 | Niente CI: verifica locale e hook pre-push. L'agente chiude i PBI di analisi XS e S; verifiche dei PBI di sviluppo a gruppi per rilascio; prima ricalibrazione dopo 5 PBI. | Assessment del progetto: repository privato senza CI e product owner troppo coinvolto |
+| 19 ottobre 2026 | Backlog, bug e registro sessioni sono file in `docs/backlog/`, aggiornati con le pull request; l'agente lavora tramite l'app Claude per GitHub e non unisce. | Decisioni 13, 14 e 21 del [registro delle decisioni](../decisioni.md), applicate con la preparazione del repository (P3-12) |

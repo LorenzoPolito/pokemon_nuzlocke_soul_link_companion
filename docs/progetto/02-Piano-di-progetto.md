@@ -37,6 +37,6 @@ Gate di uscita: ogni dato ha una fonte o una decisione di inserimento manuale, o
 
 ## Documenti collegati
 
-Le attività di ogni fase, con dipendenze, taglie e criteri di accettazione, sono nel Nuzlocke SoulLink Companion – Product Backlog. L'ordine in cui le funzioni arrivano a chi gioca è dato dai rilasci in Nuzlocke SoulLink Companion – MVP e rilasci.
+Le attività di ogni fase, con dipendenze, taglie e criteri di accettazione, sono nel [Product Backlog](../backlog/00-Backlog-regole-DoD-riepilogo.md). L'ordine in cui le funzioni arrivano a chi gioca è dato dai rilasci in [MVP e rilasci](03-MVP-e-rilasci.md).
 
-L'elenco completo degli artefatti, con il momento in cui ciascuno si aggiorna, è nella Nuzlocke SoulLink Companion – Mappa degli artefatti; il modo di lavorare è nelle Nuzlocke SoulLink Companion – Regole di lavoro.
+L'elenco completo degli artefatti, con il momento in cui ciascuno si aggiorna, è nella [Mappa degli artefatti](09-Mappa-degli-artefatti.md); il modo di lavorare è nelle [Regole di lavoro](04-Regole-di-lavoro.md).

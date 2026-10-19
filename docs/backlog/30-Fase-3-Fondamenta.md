@@ -1,10 +1,10 @@
 # Fase 3 – Fondamenta
 
-12 PBI. P3-12 (configurazione di GitHub) non ha dipendenze e può partire subito, anche durante la fase 1. Dopo P3-01, quattro filoni procedono in parallelo: container (P3-02, P3-04, P3-11), database e account (P3-03, P3-07, P3-08), lingue e layout (P3-05, P3-06), sync (P3-10).
+13 PBI. P3-12 (configurazione di GitHub) non ha dipendenze e può partire subito, anche durante la fase 1. Dopo P3-01, quattro filoni procedono in parallelo: container (P3-02, P3-04, P3-11), database e account (P3-03, P3-07, P3-08), lingue e layout (P3-05, P3-06), sync (P3-10).
 
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
-| P3-12 | Configurazione di GitHub | — | S | Da iniziare |
+| P3-12 | Configurazione di GitHub | — | S | In corso |
 | P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | Da iniziare |
 | P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | Da iniziare |
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | Da iniziare |
@@ -111,7 +111,9 @@ Output: repository dell'app.
 Output: repository su GitHub, Configurazione di GitHub.
 
 - [ ] Repository privato creato con nome e impostazioni del documento Configurazione di GitHub.
-- [ ] Account bot dell'agente creato e invitato come collaboratore, provato aprendo una pull request di prova.
+- [ ] App Claude per GitHub installata sul repository, provata aprendo la pull request di preparazione del repository.
+
+Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituito da quello sull'app Claude per GitHub ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)); il nome effettivo del repository è `pokemon_nuzlocke_soul_link_companion`, diverso dalla proposta del documento Configurazione di GitHub, che è stato aggiornato.
 - [ ] Dependabot attivo.
 - [ ] Licenza aggiunta appena decisa dopo P1-10.
 

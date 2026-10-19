@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-Il backlog divide il lavoro in PBI piccoli, ognuno con dipendenze esplicite e criteri di accettazione verificabili. Ogni fase del piano ha il suo tab.
+Il backlog divide il lavoro in PBI piccoli, ognuno con dipendenze esplicite e criteri di accettazione verificabili. Ogni fase del piano ha il suo file in `docs/backlog/`.
 
 ## Regole del backlog
 
@@ -13,7 +13,7 @@ Ogni PBI è un'attività piccola e verificabile, chiusa solo quando tutti i suoi
 - **Parallelismo**: due PBI avviabili senza dipendenze tra loro si possono sviluppare in parallelo, anche tra fasi diverse (per esempio il motore dei tipi P5-05 può partire durante la fase 4).
 - **Output**: il documento o la parte di app in cui il risultato viene registrato.
 - **Criteri di accettazione**: il contratto di sviluppo del PBI. Ogni criterio è verificabile con un sì o un no.
-- **Stato**: Da iniziare, In corso, In verifica, Completato. Lo si aggiorna nella tabella del tab della fase, insieme alla taglia (XS, S, M) che fissa budget di token e tempo.
+- **Stato**: Da iniziare, In corso, In verifica, Completato. Lo si aggiorna nella tabella del file della fase, insieme alla taglia (XS, S, M) che fissa budget di token e tempo.
 - **Modifiche**: un criterio cambiato dopo l'avvio del PBI si annota con data e motivo nel PBI stesso.
 
 ## Definition of Done
@@ -38,7 +38,7 @@ PBI di sviluppo (fasi 3–7):
 
 ## Riepilogo
 
-Il backlog conta 96 PBI, stimati tra 8,5 e 24 milioni di token e tra 42 e 119 ore di lavoro dell'agente. Sono ipotesi iniziali, ricavate dalle taglie delle Nuzlocke SoulLink Companion – Regole di lavoro e da ricalibrare a ogni gate. Dopo la fase 3, i filoni Run e tracker (fase 4), motore dei tipi (fase 5) e Pokédex (fase 6) possono procedere in parallelo.
+Il backlog conta 96 PBI, stimati tra 8,5 e 24 milioni di token e tra 42 e 119 ore di lavoro dell'agente. Sono ipotesi iniziali, ricavate dalle taglie delle [Regole di lavoro](../progetto/04-Regole-di-lavoro.md) e da ricalibrare a ogni gate. Dopo la fase 3, i filoni Run e tracker (fase 4), motore dei tipi (fase 5) e Pokédex (fase 6) possono procedere in parallelo.
 
 | Fase | PBI | Avviabili subito | XS / S / M | Token (milioni) | Tempo agente (ore) | Dettaglio |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -51,6 +51,6 @@ Il backlog conta 96 PBI, stimati tra 8,5 e 24 milioni di token e tra 42 e 119 or
 | 7 – Test e rilascio | 7 | 0 | 0 / 5 / 2 | 0,6–1,6 | 3–8 | Fase 7 – Test e rilascio |
 | **Totale** | **96** | **10** | **7 / 49 / 40** | **8,5–23,7** | **42–119** |  |
 
-Quali PBI entrano in ogni rilascio, a partire dall'MVP, è deciso in Nuzlocke SoulLink Companion – MVP e rilasci.
+Quali PBI entrano in ogni rilascio, a partire dall'MVP, è deciso in [MVP e rilasci](../progetto/03-MVP-e-rilasci.md).
 
-Fasi e gate sono descritti nel Nuzlocke SoulLink Companion – Piano di progetto.
+Fasi e gate sono descritti nel [Piano di progetto](../progetto/02-Piano-di-progetto.md).
