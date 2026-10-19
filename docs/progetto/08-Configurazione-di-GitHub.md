@@ -34,9 +34,9 @@ Impostazioni generali del repository (le fa il product owner: l'agente non cambi
 - [ ] Titolo del commit di squash = titolo della pull request (che contiene l'ID del PBI).
 - [x] Branch predefinito: resta `main`, perché GitHub non ha permesso di cambiarlo. Ogni nuova pull request va aperta indicando `develop` come destinazione: l'hook di Claude Code lo impone all'agente, `branch-policy` lo segnala per tutti.
 - [ ] Cancellazione automatica dei branch dopo l'unione.
-- [ ] Issues e Wiki attivi perché possono servire (scelta del product owner, 19 ottobre 2026); non sostituiscono i file del backlog. Al 19 ottobre 2026 Wiki risulta ancora disattivato e Projects attivo.
+- [x] Issues attivo, Wiki disattivato (scelta del product owner, 19 ottobre 2026, [decisione 26](../decisioni.md#26-impostazioni-di-github-lasciate-come-sono)); non sostituiscono i file del backlog. Projects resta attivo.
 - [ ] GitHub Actions attivo solo per i workflow del repository (Settings → Actions → General: "Allow LorenzoPolito, and select non-LorenzoPolito, actions and reusable workflows", nessuna azione esterna).
-- [ ] Budget di spesa per Actions a 0 dollari (Settings dell'account → Billing → Budgets), così finiti i minuti gratuiti i workflow si fermano senza addebiti.
+- [x] Budget di spesa per Actions: non impostato a 0 dollari, per scelta del product owner (decisione 26). Il workflow dura pochi secondi.
 
 Protezione di `main` e `develop` senza ruleset:
 
@@ -71,7 +71,6 @@ Questi file rendono le regole di lavoro visibili anche dentro il repository. Que
 | `.github/workflows/branch-policy.yml` | Controllo del branch di partenza delle pull request verso `main` e `develop` | P3-12 |
 | `.github/pull_request_template.md` | ID del PBI o bug, criteri di accettazione da spuntare, esito della verifica, note per la verifica del product owner | P3-12 |
 | `.github/CODEOWNERS` | Il product owner come proprietario di tutto il repository | P3-12 |
-| `.github/dependabot.yml` | Aggiornamenti settimanali per npm e immagine base Docker, con destinazione `develop` | P3-01, quando esistono `package.json` e `Dockerfile` |
 | `docs/decisioni.md` | Registro delle decisioni in stile ADR | P3-12 |
 
 ## Verifica e immagini
@@ -104,7 +103,7 @@ Accesso dell'agente:
 
 Sicurezza del repository:
 
-- [ ] Avvisi e aggiornamenti di sicurezza di Dependabot attivi.
+- [x] Dependabot non attivo, per scelta del product owner (decisione 26): nessun avviso automatico sulle dipendenze.
 - [ ] Controllo dei segreti nel pre-push (per esempio gitleaks), al posto del secret scanning di GitHub (P3-11).
 - [x] Nessun segreto nel repository: solo `.env.example`; il file `.env` è in `.gitignore`.
 
