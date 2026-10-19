@@ -28,13 +28,13 @@ Con il repository privato il codice può includere tutto ciò che serve all'app,
 
 `develop` riceve modifiche solo tramite pull request da `pbi/…`, `bug/…` o `chore/…`; `main` solo tramite la pull request di rilascio da `develop`. Servono verifica locale verde e controllo `branch-policy` verde, e solo il product owner unisce.
 
-Impostazioni generali del repository (le fa il product owner: l'agente non cambia impostazioni):
+Impostazioni generali del repository (le fa il product owner: l'agente non cambia impostazioni, e dal suo ambiente il proxy rifiuta comunque le scritture sulle impostazioni del repository, verificato il 19 ottobre 2026):
 
 - [ ] Unione consentita con **squash merge** (pull request verso `develop`) e con **merge commit** (pull request di rilascio verso `main`); rebase merge disattivato. Quale usare dipende dal ramo di destinazione, per regola.
 - [ ] Titolo del commit di squash = titolo della pull request (che contiene l'ID del PBI).
 - [ ] Branch predefinito: `develop`, così le nuove pull request puntano lì in automatico.
 - [ ] Cancellazione automatica dei branch dopo l'unione.
-- [ ] Issues, Wiki e Projects disattivati: backlog e bug vivono nei file di `docs/backlog/`.
+- [ ] Projects disattivato: backlog e bug vivono nei file di `docs/backlog/`. Issues e Wiki restano attivi perché possono servire (scelta del product owner, 19 ottobre 2026); non sostituiscono i file del backlog.
 - [ ] GitHub Actions attivo solo per i workflow del repository (Settings → Actions → General: "Allow LorenzoPolito, and select non-LorenzoPolito, actions and reusable workflows", nessuna azione esterna).
 - [ ] Budget di spesa per Actions a 0 dollari (Settings dell'account → Billing → Budgets), così finiti i minuti gratuiti i workflow si fermano senza addebiti.
 
