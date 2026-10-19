@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "game.schema.json",
+  "title": "Dati di gioco del Nuzlocke SoulLink Companion",
+  "description": "Un file per gioco (game_id). Documentazione: docs/progetto/11-Dati-di-gioco.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "gameId", "dataVersion", "generation", "versionGroup", "region", "names", "runColor", "sources", "areas", "specialEncounters"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "gameId": { "$ref": "#/$defs/key", "description": "Identificatore della versione in PokéAPI, per esempio black-2" },
+    "dataVersion": { "type": "string", "pattern": "^\\d{4}\\.\\d{2}\\.\\d{2}-\\d+$", "description": "Versione dei dati: data di generazione e progressivo" },
+    "generation": { "type": "integer", "minimum": 1, "maximum": 9 },
+    "versionGroup": { "$ref": "#/$defs/key" },
+    "region": { "$ref": "#/$defs/key" },
+    "names": { "$ref": "#/$defs/names" },
+    "runColor": { "type": ["string", "null"], "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Colore della run (run-accent); null finché non è definito dal design" },
+    "sources": {
+      "type": "object",
+      "description": "Fonti usate nel file, con la versione esatta (commit o URL)",
+      "additionalProperties": { "type": "string" }
+    },
+    "areas": {
+      "type": "array",
+      "description": "Aree in ordine di progressione; la prima è sempre starter",
+      "minItems": 1,
+      "prefixItems": [{ "properties": { "key": { "const": "starter" } } }],
+      "items": { "$ref": "#/$defs/area" }
+    },
+    "specialEncounters": {
+      "type": "array",
+      "description": "Regali, incontri fissi e scambi in gioco, ciascuno con chiave propria e area di appartenenza (decisione 17)",
+      "items": { "$ref": "#/$defs/specialEncounter" }
+    }
+  },
+  "$defs": {
+    "key": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "names": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "it"],
+      "properties": {
+        "en": { "type": "string", "minLength": 1 },
+        "it": { "type": ["string", "null"], "minLength": 1, "description": "null se manca: l'app usa l'inglese come riserva" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry"],
+      "properties": {
+        "entry": { "type": "string", "description": "Da dove viene la riga: fonte@versione e posizione (file:riga o tabella)" },
+        "check": { "type": "string", "description": "Esito della verifica con una seconda fonte: confermato (con la fonte) o non verificato" },
+        "note": { "type": "string", "description": "Correzioni rispetto alla fonte, conflitti, avvertenze" }
+      }
+    },
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "names", "pokeapiLocation", "phase", "hasWildEncounters", "source"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key", "description": "Chiave stabile (area_key): identificatore della località PokéAPI, oppure starter" },
+        "names": { "$ref": "#/$defs/names" },
+        "pokeapiLocation": { "type": ["string", "null"], "description": "Località PokéAPI da cui leggere gli incontri suggeriti; null per starter" },
+        "phase": { "enum": ["story", "postgame"] },
+        "hasWildEncounters": { "type": "boolean", "description": "PokéAPI ha incontri selvatici per l'area in questa versione" },
+        "starters": { "type": "array", "items": { "$ref": "#/$defs/key" }, "description": "Solo per l'area starter" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "specialEncounter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "type", "areaKey", "species", "level", "source"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key", "description": "<tipo>-<area>-<specie>" },
+        "type": { "enum": ["gift", "static", "trade"] },
+        "areaKey": { "$ref": "#/$defs/key", "description": "Area a cui appartiene: senza la regola dei regali separati conta come suo incontro" },
+        "species": { "$ref": "#/$defs/key" },
+        "level": {
+          "description": "Livello fisso, intervallo, oppure null se le fonti non lo riportano",
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 100 },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": { "min": { "type": "integer", "minimum": 1 }, "max": { "type": "integer", "maximum": 100 } }
+            }
+          ]
+        },
+        "conditions": { "type": "array", "items": { "type": "string" }, "description": "Condizioni PokéAPI (fossile, stagione, avanzamento)" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    }
+  }
+}
