@@ -2,7 +2,7 @@
   "$schema": "./game.schema.json",
   "schemaVersion": 1,
   "gameId": "black-2",
-  "dataVersion": "2026.10.19-1",
+  "dataVersion": "2026.10.19-2",
   "generation": 5,
   "versionGroup": "black-2-white-2",
   "region": "unova",
@@ -1554,6 +1554,297 @@
       "conditions": [
         "item-plume-fossil"
       ]
+    }
+  ],
+  "milestones": [
+    {
+      "key": "badge-1",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Cheren",
+      "location": "aspertia-city",
+      "afterAreaKey": "floccesy-ranch",
+      "badge": {
+        "index": 1,
+        "names": {
+          "en": "Basic Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 13,
+        "challenge": 14,
+        "easy": 12
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:147 (sfida: riga 151); easy: Bulbapedia, Walkthrough Part 2 (Easy/Normal)",
+        "check": "confermato: Bulbapedia, Aspertia Gym e Walkthrough Part 2; PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Serebii, notizie di giugno 2012; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Conflitto risolto: Lillipup Lv. 13 in modalità normale (Lv. 12 è il livello della modalità facile, Lv. 14 della modalità sfida, secondo Bulbapedia)"
+      }
+    },
+    {
+      "key": "badge-2",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Roxie",
+      "location": "virbank-city",
+      "afterAreaKey": "virbank-city",
+      "badge": {
+        "index": 2,
+        "names": {
+          "en": "Toxic Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 18,
+        "challenge": 19
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:157 (sfida: riga 161)",
+        "check": "confermato: Bulbapedia, Virbank Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-3",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Burgh",
+      "location": "castelia-city",
+      "afterAreaKey": "castelia-sewers",
+      "badge": {
+        "index": 3,
+        "names": {
+          "en": "Insect Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 24,
+        "challenge": 26
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:166 (sfida: riga 171)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-4",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Elesa",
+      "location": "nimbasa-city",
+      "afterAreaKey": "relic-castle",
+      "badge": {
+        "index": 4,
+        "names": {
+          "en": "Bolt Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 30,
+        "challenge": 32
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:177 (sfida: riga 182)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-5",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Clay",
+      "location": "driftveil-city",
+      "afterAreaKey": "driftveil-city",
+      "badge": {
+        "index": 5,
+        "names": {
+          "en": "Quake Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 33,
+        "challenge": 36
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:188 (sfida: riga 193)",
+        "check": "confermato: Bulbapedia, Clay; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-6",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Skyla",
+      "location": "mistralton-city",
+      "afterAreaKey": "chargestone-cave",
+      "badge": {
+        "index": 6,
+        "names": {
+          "en": "Jet Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 39,
+        "challenge": 42
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:199 (sfida: riga 204)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "nuzlocke.data (routes) collega la palestra alla squadra della modalità sfida (6c): qui si usa 6n. afterArea: nuzlocke.data mette la palestra prima di Chargestone Cave, la guida di Bulbapedia (Part 9 e 10) dopo"
+      }
+    },
+    {
+      "key": "badge-7",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Drayden",
+      "location": "opelucid-city",
+      "afterAreaKey": "unova-route-9",
+      "badge": {
+        "index": 7,
+        "names": {
+          "en": "Legend Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 48,
+        "challenge": 52
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:210 (sfida: riga 215)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia, Walkthrough Part 13; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-8",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Marlon",
+      "location": "humilau-city",
+      "afterAreaKey": "humilau-city",
+      "badge": {
+        "index": 8,
+        "names": {
+          "en": "Wave Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 51,
+        "challenge": 55
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:221 (sfida: riga 226)",
+        "check": "confermato: Bulbapedia, Humilau Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "story-boss-ghetsis",
+      "kind": "story-boss",
+      "phase": "story",
+      "trainer": "Ghetsis",
+      "location": "giant-chasm",
+      "afterAreaKey": "giant-chasm",
+      "badge": null,
+      "levelCap": {
+        "normal": 52
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:62",
+        "check": "confermato: Bulbapedia, Ghetsis; Serebii, Trainer Pokémon #635 Hydreigon"
+      }
+    },
+    {
+      "key": "elite-four-shauntal",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Shauntal",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road-2",
+      "badge": null,
+      "levelCap": {
+        "normal": 58,
+        "challenge": 62
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:234 (sfida: riga 240)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2"
+      }
+    },
+    {
+      "key": "elite-four-grimsley",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Grimsley",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road-2",
+      "badge": null,
+      "levelCap": {
+        "normal": 58,
+        "challenge": 62
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:247 (sfida: riga 253)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2"
+      }
+    },
+    {
+      "key": "elite-four-caitlin",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Caitlin",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road-2",
+      "badge": null,
+      "levelCap": {
+        "normal": 58,
+        "challenge": 62
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:260 (sfida: riga 266)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2"
+      }
+    },
+    {
+      "key": "elite-four-marshal",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Marshal",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road-2",
+      "badge": null,
+      "levelCap": {
+        "normal": 58,
+        "challenge": 62
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:273 (sfida: riga 279)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2",
+        "note": "nuzlocke.data (routes) chiama questa lotta 'Caitlin' per errore; la squadra in leagues è quella di Marshal"
+      }
+    },
+    {
+      "key": "champion-iris",
+      "kind": "champion",
+      "phase": "story",
+      "trainer": "Iris",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road-2",
+      "badge": null,
+      "levelCap": {
+        "normal": 59,
+        "challenge": 63
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:294 (sfida: riga 286)",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2"
+      }
     }
   ]
 }

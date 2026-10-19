@@ -10,6 +10,7 @@ Documento di output di P1-06 (ordine delle aree) e P1-07 (medaglie e level cap).
 | PokéAPI, CSV di [PokeAPI/pokeapi](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) | commit `6fd69df` | Chiavi e nomi inglesi delle località, incontri selvatici, regali, incontri fissi, scambi, starter, nomi dei giochi | BSD a 3 clausole |
 | [Bulbapedia, guida di Nero e Bianco](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Black_and_White) e [di Nero 2 e Bianco 2](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Black_2_and_White_2) | consultata il 19 ottobre 2026 | Seconda fonte per l'ordine: le parti della guida seguono la progressione | CC BY-NC-SA, solo consultazione |
 | Bulbapedia e [Serebii](https://www.serebii.net/blackwhite/trade.shtml), scambi in gioco di Nero e Bianco | consultati il 19 ottobre 2026 | I 5 scambi assenti in PokéAPI | Solo consultazione |
+| [PokémonDB](https://pokemondb.net/black-white/gymleaders-elitefour) ([Nero 2 e Bianco 2](https://pokemondb.net/black-white-2/gymleaders-elitefour)), Bulbapedia (pagine delle palestre, dei capipalestra, di Ghetsis e delle medaglie), Serebii | consultati il 19 ottobre 2026 | Seconda fonte per le squadre dei boss e per i nomi delle medaglie | Solo consultazione: i livelli sono dati di fatto, ricontrollati e non copiati |
 
 Accesso alle fonti: dall'ambiente dell'agente sono raggiungibili solo GitHub e la ricerca web. Bulbapedia e Serebii sono stati consultati **attraverso i risultati della ricerca web**, non aprendo le pagine: per questo una parte delle aree risulta "non verificata", perché i risultati non riportavano le parti della guida che le contengono.
 
@@ -27,6 +28,7 @@ Un file per gioco, `data/games/<game_id>.json`, dove `game_id` è l'identificato
 | `sources` | Fonti usate nel file, con la versione esatta |
 | `areas` | Aree in ordine di progressione (vedi sotto) |
 | `specialEncounters` | Regali, incontri fissi e scambi in gioco (vedi sotto) |
+| `milestones` | Tappe in ordine di gioco con level cap e, per le palestre, la medaglia (P1-07, vedi sotto) |
 
 Ogni **area** ha:
 
@@ -239,3 +241,112 @@ Le tabelle sono generate dai file JSON; in caso di differenze valgono i file.
 | Specie di White Forest: usare l'elenco di nuzlocke.data, non verificato? | P1-19 |
 | Livelli degli scambi di Nero e Bianco | Prima di P4-09 (regali separati, rilascio 0.2) |
 | Colore della run per ogni gioco (`runColor`) | P2-12, con il design |
+
+## P1-07 Medaglie e level cap per gioco
+
+Data: 19 ottobre 2026. Taglia M.
+
+### Fonte e licenza
+
+- **Fonte dei dati**: nuzlocke.data, file `leagues/bw.txt` e `leagues/b2w2.txt`, che hanno la squadra completa di ogni boss (specie, livello, mosse). Il level cap di una tappa è il livello più alto nella squadra del boss, come da definizione nel documento [Rischi tecnici](07-Rischi-tecnici-e-fonti-dei-dati.md#dove-troveremo-i-dati).
+- **Licenza**: nuzlocke.data non ha licenza. L'uso è accettato perché l'app è privata e non commerciale ([decisione 7](../decisioni.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)); se l'app venisse condivisa, questi dati vanno sostituiti o autorizzati. Del file si usa solo un numero per tappa (il livello massimo), un dato di fatto che ogni riga verifica con una seconda fonte.
+- **Seconda fonte**: PokémonDB, Bulbapedia e Serebii, consultati tramite la ricerca web (non raggiungibili direttamente dall'ambiente). Tutti i livelli in modalità normale coincidono con nuzlocke.data; i livelli della modalità sfida vengono solo da nuzlocke.data, tranne quello di Cheren (14, confermato da Bulbapedia).
+- **Nomi delle medaglie**: in inglese da Bulbapedia ("Badge") e PokémonDB; i nomi italiani sono `null`, come quelli delle aree (P1-05).
+
+### Conflitto su Cheren (Nero 2 e Bianco 2)
+
+Il documento Rischi segnalava due livelli diversi per il Lillipup di Cheren, 12 e 13. Sono entrambi giusti, ma per difficoltà diverse: secondo Bulbapedia (pagina della palestra di Aspertia e guida, parte 2) il Lillipup è Lv. 12 in modalità facile, Lv. 13 in normale e Lv. 14 in sfida. PokémonDB, Serebii (notizie di giugno 2012) e nuzlocke.data danno Lv. 13 in normale. Nei dati: `levelCap` `{ "easy": 12, "normal": 13, "challenge": 14 }`.
+
+### Formato: le tappe
+
+Medaglie e level cap stanno nell'elenco `milestones` di ogni file di gioco, in ordine di gioco. Una **tappa** è una lotta che fissa un level cap:
+
+- `key`: chiave stabile, `badge-<n>` per le palestre, `<tipo>-<allenatore>` per le altre (per esempio `elite-four-marshal`, `champion-iris`).
+- `kind`: `gym`, `elite-four`, `champion`, `story-boss`, più `trial` e `other` per i giochi senza palestre (regola sotto).
+- `phase`: `story` o `postgame`.
+- `trainer`, `location` (località PokéAPI), `afterAreaKey` (l'area dopo cui si incontra la tappa, per mostrarla nell'elenco delle aree).
+- `badge`: indice e nomi della medaglia, `null` se la tappa non dà medaglie.
+- `levelCap`: il livello più alto della squadra per difficoltà; `normal` sempre, `easy` e `challenge` dove esistono (le modalità ci sono solo in Nero 2 e Bianco 2).
+- `source`: riga di `leagues/*.txt` da cui viene la squadra, verifica con la seconda fonte, note.
+
+**Regola del level cap**: il level cap della run è quello della prima tappa, in ordine, non ancora superata; dopo l'ultima tappa non c'è cap. Le tappe del Superquattro hanno tutte lo stesso cap, quindi l'ordine in cui si affrontano non conta. Il cap si può sempre modificare a mano per la run (`run.level_cap_override`).
+
+### Regola per i giochi senza palestre
+
+La tappa è il concetto generale; la medaglia è solo un attributo delle tappe di tipo `gym`. Un gioco senza palestre usa le stesse tappe, senza medaglie:
+
+- **Sole e Luna, Ultrasole e Ultraluna**: una tappa `trial` per ogni prova dei capitani e una `other` per ogni gran prova dei kahuna, in ordine di gioco; il level cap è il livello più alto del Pokémon dominante o della squadra del kahuna. Al posto delle medaglie l'app mostra le prove superate.
+- **Leggende: Arceus**: una tappa `other` per ogni Pokémon Regale da placare, più i boss della storia.
+- **Leggende: Z-A**: una tappa `other` per ogni rango della classifica Z-A, più i boss della storia.
+- In generale: ogni lotta obbligata che la community usa come riferimento per il level cap diventa una tappa; se un gioco non ne ha, `milestones` contiene solo il campione o il boss finale.
+
+Il segnaposto "medaglie" dell'interfaccia legge le tappe con `badge` non nullo; il calcolo del level cap legge tutte le tappe.
+
+### Dati
+
+Le tabelle sono generate dai file JSON; in caso di differenze valgono i file. Le rivalità (Bianca, Cheren in Nero e Bianco, Hugh) e le lotte con il Team Plasma prima del finale non sono tappe: non fissano un level cap nelle regole di riferimento.
+
+#### Nero e Bianco
+
+| # | Tappa (`key`) | Tipo | Fase | Allenatore | Medaglia | Level cap | Dopo l'area | Verifica |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `badge-1` | palestra | storia | Chili, Cress or Cilan | Trio Badge | 14 | `dreamyard` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 2 | `badge-2` | palestra | storia | Lenora | Basic Badge | 20 | `nacrene-city` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 3 | `badge-3` | palestra | storia | Burgh | Insect Badge | 23 | `castelia-city` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 4 | `badge-4` | palestra | storia | Elesa | Bolt Badge | 27 | `relic-castle` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; Bulbapedia, Nimbasa Gym |
+| 5 | `badge-5` | palestra | storia | Clay | Quake Badge | 31 | `cold-storage` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 6 | `badge-6` | palestra | storia | Skyla | Jet Badge | 35 | `celestial-tower` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 7 | `badge-7` | palestra | storia | Brycen | Freeze Badge | 39 | `icirrus-city` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 8 | `badge-8` | palestra | storia | Drayden (Nera) / Iris (Bianca) | Legend Badge | 43 | `unova-route-9` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 9 | `elite-four-shauntal` | Superquattro | storia | Shauntal | — | 50 | `unova-victory-road` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 10 | `elite-four-grimsley` | Superquattro | storia | Grimsley | — | 50 | `unova-victory-road` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 11 | `elite-four-caitlin` | Superquattro | storia | Caitlin | — | 50 | `unova-victory-road` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 12 | `elite-four-marshal` | Superquattro | storia | Marshal | — | 50 | `unova-victory-road` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 13 | `story-boss-n` | boss della storia | storia | N | — | 52 | `ns-castle` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 14 | `story-boss-ghetsis` | boss della storia | storia | Ghetsis | — | 54 | `ns-castle` | Bulbapedia, Team Plasma (Trainer class); Serebii, Trainer Pokémon #635 Hydreigon |
+| 15 | `elite-four-shauntal-rematch` | Superquattro | postgame | Shauntal | — | 73 | `unova-route-16` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 16 | `elite-four-grimsley-rematch` | Superquattro | postgame | Grimsley | — | 73 | `unova-route-16` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 17 | `elite-four-caitlin-rematch` | Superquattro | postgame | Caitlin | — | 73 | `unova-route-16` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 18 | `elite-four-marshal-rematch` | Superquattro | postgame | Marshal | — | 73 | `unova-route-16` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+| 19 | `champion-alder` | campione | postgame | Alder | — | 77 | `unova-route-16` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White |
+
+#### Nero 2 e Bianco 2
+
+| # | Tappa (`key`) | Tipo | Fase | Allenatore | Medaglia | Level cap normale / sfida | Dopo l'area | Verifica |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `badge-1` | palestra | storia | Cheren | Basic Badge | 13 / 14 (facile 12) | `floccesy-ranch` | Bulbapedia, Aspertia Gym e Walkthrough Part 2; PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Serebii, notizie di giugno 2012 |
+| 2 | `badge-2` | palestra | storia | Roxie | Toxic Badge | 18 / 19 | `virbank-city` | Bulbapedia, Virbank Gym |
+| 3 | `badge-3` | palestra | storia | Burgh | Insect Badge | 24 / 26 | `castelia-sewers` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 4 | `badge-4` | palestra | storia | Elesa | Bolt Badge | 30 / 32 | `relic-castle` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 5 | `badge-5` | palestra | storia | Clay | Quake Badge | 33 / 36 | `driftveil-city` | Bulbapedia, Clay |
+| 6 | `badge-6` | palestra | storia | Skyla | Jet Badge | 39 / 42 | `chargestone-cave` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia |
+| 7 | `badge-7` | palestra | storia | Drayden | Legend Badge | 48 / 52 | `unova-route-9` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia, Walkthrough Part 13 |
+| 8 | `badge-8` | palestra | storia | Marlon | Wave Badge | 51 / 55 | `humilau-city` | Bulbapedia, Humilau Gym |
+| 9 | `story-boss-ghetsis` | boss della storia | storia | Ghetsis | — | 52 / — | `giant-chasm` | Bulbapedia, Ghetsis; Serebii, Trainer Pokémon #635 Hydreigon |
+| 10 | `elite-four-shauntal` | Superquattro | storia | Shauntal | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 11 | `elite-four-grimsley` | Superquattro | storia | Grimsley | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 12 | `elite-four-caitlin` | Superquattro | storia | Caitlin | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 13 | `elite-four-marshal` | Superquattro | storia | Marshal | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 14 | `champion-iris` | campione | storia | Iris | — | 59 / 63 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+
+Differenze rispetto a nuzlocke.data, tutte annotate nella riga:
+
+- Nel file delle aree la lotta della stanza est del Superquattro è attribuita a "Caitlin" invece che a Marshal (in entrambi i giochi); la squadra in `leagues` è quella giusta di Marshal.
+- In Nero 2 e Bianco 2 la palestra di Skyla è collegata alla squadra della modalità sfida (`6c`): qui si usa la squadra normale (`6n`).
+- Due posizioni corrette con la guida di Bulbapedia: la prima palestra di Nero e Bianco viene dopo Dreamyard, quella di Skyla in Nero 2 e Bianco 2 dopo Chargestone Cave.
+
+### Decisioni prese
+
+- Medaglie e level cap sono **tappe** nei file di gioco, con la medaglia come attributo opzionale. Motivo: lo stesso formato copre palestre, Superquattro, boss della storia e i giochi senza palestre.
+- Il level cap è il livello più alto della squadra del boss della prossima tappa non superata, per difficoltà.
+- Nei file c'è solo il livello massimo, non la squadra: le squadre dei boss non si mostrano mai (il randomizer le rende inutili e la specifica esclude le squadre precaricate).
+
+### Domande aperte
+
+| Domanda | PBI che la chiude |
+| --- | --- |
+| Il modello dati registra le medaglie (`run_badge.badge_index`), ma il level cap dopo l'ottava medaglia dipende da tappe senza medaglia (Superquattro, boss della storia): serve registrare le tappe superate (per esempio `run_milestone` con la `key` della tappa) | P2-06 |
+| Difficoltà della run in Nero 2 e Bianco 2 (facile, normale, sfida): impostazione della run o sempre normale? | P1-19 |
+| Il level cap è unico per la run o per giocatore (i giocatori possono avere medaglie diverse)? | P1-19 |
+| Livelli della modalità facile, oltre a Cheren | Solo se la difficoltà diventa un'impostazione |
+| Nomi italiani delle medaglie | P1-05 |
