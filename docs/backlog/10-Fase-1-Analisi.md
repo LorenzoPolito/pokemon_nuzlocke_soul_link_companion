@@ -8,7 +8,7 @@
 | P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | In verifica |
 | P1-06 | Ordine di progressione delle aree | P1-04 | M | In verifica |
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | In verifica |
-| P1-19 | Sessione di chiarimento dei requisiti | — | S | Da iniziare |
+| P1-19 | Sessione di chiarimento dei requisiti | — | S | In corso |
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Da iniziare |
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Da iniziare |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Da iniziare |
@@ -176,8 +176,10 @@ Output: Specifica dei requisiti.
 
 Già deciso: un solo gioco per run, uguale per tutti; impostazioni comuni a tutti i giocatori salvo gli override; lock sul dato in modifica e vince l'ultima modifica; app su qualsiasi server, solo HTTP; lock consultivi a scadenza definiti nella specifica.
 
-- [ ] Dupes clause: deciso il 3 ottobre 2026 che vale per il singolo giocatore; "già posseduta" vale per l'intera linea evolutiva. Contano tutti i Pokémon posseduti dal giocatore, anche quelli morti.
-- [ ] Starter: deciso il 3 ottobre 2026, conta come un normale incontro collegato. Incontri fissi e scambi in gioco si trattano come i regali.
+- [x] Dupes clause: deciso il 3 ottobre 2026 che vale per il singolo giocatore; "già posseduta" vale per l'intera linea evolutiva. Contano tutti i Pokémon posseduti dal giocatore, anche quelli morti.
+- [x] Starter: deciso il 3 ottobre 2026, conta come un normale incontro collegato. Incontri fissi e scambi in gioco si trattano come i regali.
 - [ ] Verificato con il product owner il disegno dei lock già scritto nella specifica (lease di 60 secondi, avviso a chi è sovrascritto).
 - [ ] Definito il comportamento con rete instabile durante la partita.
 - [ ] Specifica aggiornata con le decisioni prese.
+
+Output: [Domande aperte](../progetto/12-Domande-aperte.md) (19 ottobre 2026): 19 domande (R-1…R-7 sulla rete instabile, D-1…D-12 dai PBI di fase 1) e 4 scelte dell'agente da confermare (S-1…S-4), ognuna con una proposta. Il PBI resta "In corso": le decisioni spettano al product owner.

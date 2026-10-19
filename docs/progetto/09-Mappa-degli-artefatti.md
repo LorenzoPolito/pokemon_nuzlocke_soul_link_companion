@@ -33,6 +33,7 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | [Dati di gioco: aree, medaglie, level cap](11-Dati-di-gioco.md) | Documento | Fonti, formato e processo dei dati di progressione, prima per Bianco, Nero, Bianco 2, Nero 2 | P1-06, P1-07 | Durante la fase 1; poi a ogni modifica dei file di gioco | Esiste (P1-06 e P1-07 fatti) |
 | File dei dati di gioco | Dati | `data/games/<game_id>.json` (aree in ordine, incontri speciali, medaglie e level cap) e lo schema `data/games/game.schema.json` | P1-06, P1-07, poi un file per ogni nuovo gioco | Si aggiunge un gioco o si corregge un dato, con `dataVersion` incrementata | Esiste (quinta generazione) |
 | Meccaniche per generazione | Documento | Tabelle dei tipi e regole di calcolo | P1-08, P1-09 | Durante la fase 1 | Da creare |
+| [Domande aperte](12-Domande-aperte.md) | Documento | Domande ancora aperte con una proposta ciascuna: rete instabile e quanto emerso dai PBI di fase 1 | P1-19 | Il product owner risponde a una domanda o ne emerge una nuova | In corso (P1-19) |
 | Prove di fattibilità dello stack | Documento | Esiti e misure delle prove tecniche | P1-11–P1-17 | Durante la fase 1 | Da creare |
 | Architettura e API | Documento | Permessi, catalogo API, eventi SSE e lock | P2-08–P2-10 | Ogni modifica a un endpoint o evento | Da creare |
 | Flussi e schermate | Documento | Percorsi utente e bozze delle schermate | P2-11–P2-13 | Ogni modifica a un flusso | Da creare |

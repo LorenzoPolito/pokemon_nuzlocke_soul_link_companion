@@ -266,6 +266,6 @@ Regole del registro:
   - **Clone locale**: il product owner non lavora in un clone locale, quindi `git config core.hooksPath .githooks` sul suo computer non serve. Gli hook di git valgono per l'agente, che li attiva da sé a ogni sessione (decisione 25).
 - **Alternative scartate**: non documentato.
 - **Conseguenze**:
-  - Nessun avviso automatico sulle vulnerabilità delle dipendenze. Quando esisterà `package.json`, una mitigazione possibile è `npm audit` dentro `npm run verify` (P3-11): proposta nel documento Domande aperte (P1-19), non decisa.
+  - Nessun avviso automatico sulle vulnerabilità delle dipendenze. Quando esisterà `package.json`, una mitigazione possibile è `npm audit` dentro `npm run verify` (P3-11): proposta in [Domande aperte](progetto/12-Domande-aperte.md#s-3-npm-audit-nella-verifica-locale-priorità-c), non decisa.
   - Senza budget a 0, i minuti di Actions oltre quelli gratuiti sono addebitabili solo se sull'account GitHub c'è un metodo di pagamento; il product owner lo verifica, io non posso. Il workflow usa pochi secondi per PR, quindi i minuti gratuiti non dovrebbero esaurirsi.
   - Il criterio di P3-12 "Dependabot attivo" è sostituito da questa decisione.
