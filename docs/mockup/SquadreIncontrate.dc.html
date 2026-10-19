@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Squadre incontrate</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#006A6A}a:hover{color:#004F50}
+.scr{width:390px;height:844px;box-sizing:border-box;background:#FAF9F7;color:#1B1C1C;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;position:relative;overflow:hidden}
+svg.i{fill:none;stroke-width:2;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.iconbtn{width:48px;height:48px;border:0;background:transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;color:inherit;padding:0;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:8px;border:1px solid #C6C3BD;font-family:inherit;font-size:13px;font-weight:600;line-height:16px;color:#1B1C1C;background:transparent;white-space:nowrap}
+.chip.on{background:#9CF1F0;border-color:#9CF1F0;color:#002020}
+.type{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:8px;font-size:12px;font-weight:600;color:#FFFFFF}
+.sprite{width:40px;height:40px;border-radius:999px;background:#F0EEEA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5C5F61;flex-shrink:0}
+.nav{display:flex;justify-content:space-around;background:#F0EEEA;padding:12px 8px 20px;margin-top:auto}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#1B1C1C;text-decoration:none;min-width:72px}
+.pill{display:flex;align-items:center;justify-content:center;width:64px;height:32px;border-radius:999px}
+.tabs{display:flex;padding:0 8px;background:#F0EEEA;overflow-x:auto}
+.tabs a{padding:14px 12px 11px;font-size:14px;font-weight:600;color:#5C5F61;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.fab{position:absolute;right:16px;bottom:104px;height:56px;padding:0 20px;border-radius:16px;background:#006A6A;color:#FFFFFF;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;text-decoration:none;border:0}
+.fab:hover{color:#FFFFFF}
+.muted{color:#5C5F61}
+.btn{height:48px;border-radius:12px;border:0;font-family:inherit;font-size:15px;font-weight:600;line-height:20px;padding:0 20px;cursor:pointer}
+</style>
+</helmet>
+<div class="scr" style="">
+<header style="display: flex; align-items: center; padding: 4px 8px; gap: 4px; background: #FAF9F7"><a class="iconbtn" href="AreeTre.dc.html" aria-label="Indietro"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a><div style="flex-grow: 1; min-width: 0"><div style="font-size: 20px; line-height: 26px; font-weight: 700">Squadre incontrate</div><div class="muted" style="font-size: 13px">Unima con Sara e Luca</div></div></header>
+<main style="display: flex; flex-direction: column; gap: 12px; padding: 12px 16px; overflow: hidden"><section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><h2 style="margin: 0; font-size: 15px; font-weight: 700">Cheren · Palestra 1</h2><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Patrat Lv 11</span><span class="muted" style="font-size: 13px">Mosse viste: Azione, Fulmisguardo</span></span></div><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Lillipup Lv 13</span><span class="muted" style="font-size: 13px">Mosse viste: Azione, Riduttore</span></span></div><p class="muted" style="margin: 0; font-size: 13px">Salvata da Sara il 20 settembre</p></section><section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><h2 style="margin: 0; font-size: 15px; font-weight: 700">Rivale · Percorso 19</h2><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Snivy Lv 8</span><span class="muted" style="font-size: 13px">Mosse viste: Azione</span></span></div><p class="muted" style="margin: 0; font-size: 13px">Salvata da Marco il 18 settembre</p></section><p class="muted" style="margin: 0; font-size: 13px">Solo ciò che avete visto: l'app non propone squadre del gioco.</p></main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#45617F","options":["#45617F","#8A6D00","#2F7D32","#B3261E"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#45617F' };
+}
+}
+</script>
+</body>
+</html>

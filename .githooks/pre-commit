@@ -1,0 +1,21 @@
+#!/bin/sh
+# Hook pre-commit (decisione 25): niente commit diretti su main e develop,
+# niente segreti o database nel repository.
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+case "$branch" in
+  main | develop)
+    # un merge locale in corso (MERGE_HEAD) resta comunque vietato su questi rami
+    echo "pre-commit: commit diretto su $branch rifiutato. Lavora su un branch pbi/, bug/ o chore/ creato da develop." >&2
+    exit 1
+    ;;
+esac
+
+bad=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '(^|/)\.env($|\.)|\.(db|sqlite|sqlite3)(-journal|-wal|-shm)?$' | grep -v -E '(^|/)\.env\.example$')
+if [ -n "$bad" ]; then
+  echo "pre-commit: file che non vanno nel repository (segreti o database):" >&2
+  echo "$bad" | sed 's/^/  /' >&2
+  exit 1
+fi
+
+exit 0

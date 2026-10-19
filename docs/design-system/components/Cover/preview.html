@@ -1,0 +1,28 @@
+<!-- @dsCard height=288 -->
+<style>
+  .cover{position:relative;width:960px;height:288px;overflow:hidden;background:var(--surface);font-family:var(--font-sans)}
+  .cover svg{position:absolute;left:0;top:0}
+  .b-primary{fill:var(--primary)} .b-link{fill:var(--link)} .b-ink{fill:var(--ink)} .b-tint{fill:var(--primary-container)}
+  .ring-a{fill:none;stroke:var(--surface);stroke-width:8px} .ring-b{fill:none;stroke:var(--link-container);stroke-width:8px}
+  .name{position:absolute;left:48px;bottom:56px;max-width:440px;font-size:80px;line-height:.95;font-weight:700;color:var(--ink);letter-spacing:-1px}
+  .tag{position:absolute;left:48px;bottom:24px;max-width:440px;font-size:14px;line-height:20px;color:var(--ink-muted)}
+</style>
+<div class="cover">
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <!-- blocks: primary 192x288, link 208x144, ink 208x96, primary-container 64x112 -->
+    <!-- arrangement: one tall slab bleeding top and bottom, satellites stacked to the right edge -->
+    <!-- pattern: linked rings (literal motif: the soul link chain), README "Il legame si vede sempre" -->
+    <!-- scales: sides from space-4/space-8 multiples, rings r = radius-lg + 4, stroke space-2 -->
+    <rect class="b-tint" x="496" y="176" width="64" height="112"/>
+    <rect class="b-primary" x="560" y="0" width="192" height="288"/>
+    <rect class="b-link" x="752" y="48" width="208" height="144"/>
+    <rect class="b-ink" x="752" y="192" width="208" height="96"/>
+    <circle class="ring-a" cx="624" cy="72" r="24"/><circle class="ring-a" cx="656" cy="72" r="24"/>
+    <circle class="ring-a" cx="624" cy="144" r="24"/><circle class="ring-a" cx="656" cy="144" r="24"/>
+    <circle class="ring-a" cx="624" cy="216" r="24"/><circle class="ring-a" cx="656" cy="216" r="24"/>
+    <circle class="ring-b" cx="824" cy="120" r="24"/><circle class="ring-b" cx="856" cy="120" r="24"/>
+  </svg>
+  <div class="name">SoulLink<br>Companion</div>
+  <div class="tag">Due partite, un solo destino per ogni coppia.</div>
+</div>
+<script></script>

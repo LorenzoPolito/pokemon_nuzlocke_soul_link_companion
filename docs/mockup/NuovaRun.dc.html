@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Nuova run</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#006A6A}a:hover{color:#004F50}
+.scr{width:390px;height:844px;box-sizing:border-box;background:#FAF9F7;color:#1B1C1C;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;position:relative;overflow:hidden}
+svg.i{fill:none;stroke-width:2;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.iconbtn{width:48px;height:48px;border:0;background:transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;color:inherit;padding:0;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:8px;border:1px solid #C6C3BD;font-family:inherit;font-size:13px;font-weight:600;line-height:16px;color:#1B1C1C;background:transparent;white-space:nowrap}
+.chip.on{background:#9CF1F0;border-color:#9CF1F0;color:#002020}
+.type{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:8px;font-size:12px;font-weight:600;color:#FFFFFF}
+.sprite{width:40px;height:40px;border-radius:999px;background:#F0EEEA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5C5F61;flex-shrink:0}
+.nav{display:flex;justify-content:space-around;background:#F0EEEA;padding:12px 8px 20px;margin-top:auto}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#1B1C1C;text-decoration:none;min-width:72px}
+.pill{display:flex;align-items:center;justify-content:center;width:64px;height:32px;border-radius:999px}
+.tabs{display:flex;padding:0 8px;background:#F0EEEA;overflow-x:auto}
+.tabs a{padding:14px 12px 11px;font-size:14px;font-weight:600;color:#5C5F61;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.fab{position:absolute;right:16px;bottom:104px;height:56px;padding:0 20px;border-radius:16px;background:#006A6A;color:#FFFFFF;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;text-decoration:none;border:0}
+.fab:hover{color:#FFFFFF}
+.muted{color:#5C5F61}
+.btn{height:48px;border-radius:12px;border:0;font-family:inherit;font-size:15px;font-weight:600;line-height:20px;padding:0 20px;cursor:pointer}
+</style>
+</helmet>
+<div class="scr">
+<header style="display: flex; align-items: center; padding: 4px 8px; gap: 4px">
+<a class="iconbtn" href="Main.dc.html" aria-label="Chiudi"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<div style="flex-grow: 1"><div style="font-size: 20px; font-weight: 700">Nuova run</div><div class="muted" style="font-size: 13px">Passo 1 di 3 · Gioco, giocatori e regole</div></div>
+</header>
+<div style="height: 4px; background: #F0EEEA; margin: 0 16px; border-radius: 999px"><div style="width: 33%; height: 4px; background: #006A6A; border-radius: 999px"></div></div>
+<main style="display: flex; flex-direction: column; gap: 16px; padding: 16px; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="rn" style="font-size: 13px; font-weight: 600">Nome della run</label><input id="rn" value="Unima con Sara e Luca" style="height: 48px; border: 1px solid #C6C3BD; border-radius: 12px; padding: 0 14px; font: 16px system-ui, sans-serif; background: #FFFFFF; color: #1B1C1C"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 600">Gioco della run</span><div style="display: flex; flex-wrap: wrap; gap: 6px"><button class="chip">Bianco</button><button class="chip">Nero</button><button class="chip on">Bianco 2</button><button class="chip">Nero 2</button></div><span class="muted" style="font-size: 13px">Il gioco e le regole valgono per tutti i giocatori.</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 600">Giocatori</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><span class="chip on">Marco (tu)</span><span class="chip">Sara</span><span class="chip">Luca</span><button class="chip" style="border-style: dashed"><svg class="i" viewBox="0 0 24 24" width="16" height="16" style="color: currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Invita</button></div>
+</div>
+<section style="background: #FFFFFF; border-radius: 20px; padding: 4px 16px">
+<label for="sw1" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Run già iniziata</span><span class="muted" style="font-size: 13px; line-height: 18px">Indicherai medaglie, team e aree già visitate</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw1" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label>
+<label for="sw2" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Dupes clause</span><span class="muted" style="font-size: 13px; line-height: 18px">Nuovo tentativo per chi possiede già la linea evolutiva, anche se morta</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw2" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label>
+<label for="sw6" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Regali, incontri fissi e scambi separati</span><span class="muted" style="font-size: 13px; line-height: 18px">Non consumano l'incontro dell'area</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw6" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label>
+<label for="sw3" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Restrizione tipo primario</span><span class="muted" style="font-size: 13px; line-height: 18px">Nessun tipo primario ripetuto nel team</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw3" type="checkbox"  style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #C6C3BD"></span><span style="position: absolute; top: 4px; left: 2px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label>
+<label for="sw4" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Randomizer</span><span class="muted" style="font-size: 13px; line-height: 18px">Nessuna specie suggerita nelle aree</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw4" type="checkbox"  style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #C6C3BD"></span><span style="position: absolute; top: 4px; left: 2px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label>
+<label for="sw5" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Calcolatore danni</span><span class="muted" style="font-size: 13px; line-height: 18px">Mostra il calcolatore nella lotta</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw5" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label>
+</section>
+</main>
+<div style="padding: 12px 16px 20px; margin-top: auto; background: #FAF9F7"><button class="btn" style="width: 100%; background: #006A6A; color: #FFFFFF">Avanti</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#8A6D00' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Run: impostazioni</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#006A6A}a:hover{color:#004F50}
+.scr{width:390px;height:844px;box-sizing:border-box;background:#FAF9F7;color:#1B1C1C;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;position:relative;overflow:hidden}
+svg.i{fill:none;stroke-width:2;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.iconbtn{width:48px;height:48px;border:0;background:transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;color:inherit;padding:0;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:8px;border:1px solid #C6C3BD;font-family:inherit;font-size:13px;font-weight:600;line-height:16px;color:#1B1C1C;background:transparent;white-space:nowrap}
+.chip.on{background:#9CF1F0;border-color:#9CF1F0;color:#002020}
+.type{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:8px;font-size:12px;font-weight:600;color:#FFFFFF}
+.sprite{width:40px;height:40px;border-radius:999px;background:#F0EEEA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5C5F61;flex-shrink:0}
+.nav{display:flex;justify-content:space-around;background:#F0EEEA;padding:12px 8px 20px;margin-top:auto}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#1B1C1C;text-decoration:none;min-width:72px}
+.pill{display:flex;align-items:center;justify-content:center;width:64px;height:32px;border-radius:999px}
+.tabs{display:flex;padding:0 8px;background:#F0EEEA;overflow-x:auto}
+.tabs a{padding:14px 12px 11px;font-size:14px;font-weight:600;color:#5C5F61;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.fab{position:absolute;right:16px;bottom:104px;height:56px;padding:0 20px;border-radius:16px;background:#006A6A;color:#FFFFFF;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;text-decoration:none;border:0}
+.fab:hover{color:#FFFFFF}
+.muted{color:#5C5F61}
+.btn{height:48px;border-radius:12px;border:0;font-family:inherit;font-size:15px;font-weight:600;line-height:20px;padding:0 20px;cursor:pointer}
+</style>
+</helmet>
+<div class="scr" style="">
+<header style="display: flex; align-items: center; padding: 4px 8px; gap: 4px; background: #FAF9F7"><a class="iconbtn" href="AreeTre.dc.html" aria-label="Indietro"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a><div style="flex-grow: 1; min-width: 0"><div style="font-size: 20px; line-height: 26px; font-weight: 700">Impostazioni della run</div><div class="muted" style="font-size: 13px">Valgono per tutti i giocatori</div></div></header>
+<main style="display: flex; flex-direction: column; gap: 12px; padding: 12px 16px; overflow: hidden"><section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Gioco</span><span class="muted" style="font-size: 13px">Bianco 2 · bloccato dopo il primo incontro</span></span></div><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Nome</span><span class="muted" style="font-size: 13px">Unima con Sara e Luca</span></span><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></div></section><section style="background: #FFFFFF; border-radius: 20px; padding: 4px 16px"><label for="sw11" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Dupes clause</span><span class="muted" style="font-size: 13px; line-height: 18px">Bloccata: la run è iniziata</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw11" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label><label for="sw14" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Regali, incontri fissi e scambi separati</span><span class="muted" style="font-size: 13px; line-height: 18px">Bloccata: la run è iniziata</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw14" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label><label for="sw12" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Restrizione tipo primario</span><span class="muted" style="font-size: 13px; line-height: 18px">Bloccata: la run è iniziata</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw12" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label><label for="sw13" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #F0EEEA; cursor: pointer">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Calcolatore danni</span><span class="muted" style="font-size: 13px; line-height: 18px">Si può cambiare in qualsiasi momento</span></span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0"><input id="sw13" type="checkbox" checked="checked" style="position: absolute; opacity: 0; width: 52px; height: 32px; margin: 0"><span style="display: block; width: 52px; height: 32px; border-radius: 999px; background: #006A6A"></span><span style="position: absolute; top: 4px; left: 22px; width: 24px; height: 24px; border-radius: 999px; background: #FFFFFF"></span></span>
+</label></section><section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><h2 style="margin: 0; font-size: 15px; font-weight: 700">Partecipanti</h2><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Marco</span><span class="muted" style="font-size: 13px">Proprietario</span></span></div><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Sara</span><span class="muted" style="font-size: 13px">Giocatrice</span></span></div><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Luca</span><span class="muted" style="font-size: 13px">Giocatore</span></span></div><div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #F0EEEA; padding-top: 8px"><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Giulia</span><span class="muted" style="font-size: 13px">Spettatrice</span></span><button class="chip">Rimuovi</button></div></section><button class="btn" style="background: transparent; color: #1B1C1C; border: 1px solid #C6C3BD; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px">Segna la run come completata</button><button class="btn" style="background: #8C1D18; color: #FFFFFF; border: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px">Elimina la run</button></main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#45617F","options":["#45617F","#8A6D00","#2F7D32","#B3261E"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#45617F' };
+}
+}
+</script>
+</body>
+</html>
