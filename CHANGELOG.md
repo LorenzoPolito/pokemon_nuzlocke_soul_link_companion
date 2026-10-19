@@ -10,4 +10,5 @@ Il formato segue [Keep a Changelog](https://keepachangelog.com/it/1.1.0/) e il p
 
 - Documentazione di progetto in `docs/`: requisiti, piano, MVP e rilasci, regole di lavoro, linee guida, modello dati in bozza, rischi e fonti, configurazione di GitHub, mappa degli artefatti, backlog, design system, mockup e fonti.
 - Registro delle decisioni in `docs/decisioni.md`.
-- File di base del repository: `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, `.gitignore`, modello di pull request, `CODEOWNERS` e hook `pre-push` che blocca i push su `main`.
+- File di base del repository: `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, `.gitignore`, modello di pull request, `CODEOWNERS` e hook `pre-push` che blocca i push su `main` e `develop`.
+- Git flow con `main` e `develop` e controllo dei branch delle pull request con GitHub Actions (`branch-policy`).
