@@ -27,7 +27,7 @@ Primi PBI da avviare: P1-01, P1-04, P1-06, P1-07 sui quattro giochi di quinta ge
 | [`fonti/`](fonti/) | Regole Nuzlocke e Soul Link di riferimento. |
 | [`decisioni.md`](decisioni.md) | Registro delle decisioni in stile ADR. |
 
-I dati di gioco (aree in ordine, medaglie, level cap) non stanno qui ma in [`../data/games/`](../data/games/), con lo schema documentato in `progetto/`.
+I dati di gioco (aree in ordine, medaglie, level cap) non stanno qui ma in `data/games/` alla radice del repository, con lo schema documentato in `progetto/` (nascono con P1-06 e P1-07).
 
 ## Decisioni chiave
 
