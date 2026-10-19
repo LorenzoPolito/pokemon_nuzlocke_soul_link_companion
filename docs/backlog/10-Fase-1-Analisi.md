@@ -4,7 +4,7 @@
 
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
-| P1-01 | Inventario dei giochi supportati | — | S | Da iniziare |
+| P1-01 | Inventario dei giochi supportati | — | S | Completato |
 | P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | Da iniziare |
 | P1-06 | Ordine di progressione delle aree | P1-04 | M | Da iniziare |
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | Da iniziare |
@@ -26,11 +26,13 @@
 
 ## P1-01 Inventario dei giochi supportati
 
-Output: Analisi delle fonti dati.
+Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1-01-inventario-dei-giochi-supportati).
 
-- [ ] Elenco di tutti i giochi principali dalla Gen 1 alla Gen 9, con generazione e version group di PokéAPI.
-- [ ] Ogni gioco marcato con il rilascio che lo supporta: Bianco, Nero, Bianco 2 e Nero 2 nell'MVP.
-- [ ] Remake e giochi fuori serie principale marcati come inclusi o esclusi, con motivo.
+- [x] Elenco di tutti i giochi principali dalla Gen 1 alla Gen 9, con generazione e version group di PokéAPI.
+- [x] Ogni gioco marcato con il rilascio che lo supporta: Bianco, Nero, Bianco 2 e Nero 2 nell'MVP.
+- [x] Remake e giochi fuori serie principale marcati come inclusi o esclusi, con motivo.
+
+Nota di chiusura, 19 ottobre 2026: i rilasci dei giochi diversi dalla quinta generazione (0.5 o 1.0) sono una proposta, da confermare in P1-18; l'inclusione di Let's Go e dei due Leggende è da confermare in P1-19.
 
 ## P1-02 Copertura PokéAPI: specie, forme, statistiche, tipi
 
