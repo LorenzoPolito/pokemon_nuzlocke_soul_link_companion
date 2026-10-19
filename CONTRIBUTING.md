@@ -9,6 +9,8 @@ Sintesi delle [Regole di lavoro](docs/progetto/04-Regole-di-lavoro.md) e della [
 
 ## Prima di iniziare
 
+Solo se lavori in un clone locale (le sessioni di Claude Code lo fanno da sé):
+
 ```sh
 git config core.hooksPath .githooks
 ```
