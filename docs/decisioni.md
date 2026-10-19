@@ -21,8 +21,8 @@ Regole del registro:
 | 10 | [Run già iniziata](#10-run-già-iniziata) | Accettata |
 | 11 | [Concorrenza: lock consultivi e vince l'ultimo](#11-concorrenza-lock-consultivi-e-vince-lultimo) | Accettata |
 | 12 | [Rete: solo HTTP](#12-rete-solo-http) | Accettata |
-| 13 | [Repository privato senza CI, verifica locale](#13-repository-privato-senza-ci-verifica-locale) | Accettata |
-| 14 | [Agente: app Claude per GitHub](#14-agente-app-claude-per-github) | Accettata |
+| 13 | [Repository privato senza CI, verifica locale](#13-repository-privato-senza-ci-verifica-locale) | Modificata da 23 |
+| 14 | [Agente: app Claude per GitHub](#14-agente-app-claude-per-github) | Integrata da 24 |
 | 15 | [Dupes clause per giocatore, su tutta la linea evolutiva](#15-dupes-clause-per-giocatore-su-tutta-la-linea-evolutiva) | Accettata |
 | 16 | [Starter come incontro collegato nell'area `starter`](#16-starter-come-incontro-collegato-nellarea-starter) | Accettata |
 | 17 | [Regali, incontri fissi e scambi in gioco](#17-regali-incontri-fissi-e-scambi-in-gioco) | Accettata |
@@ -30,6 +30,9 @@ Regole del registro:
 | 19 | [MVP 0.1: Bianco, Nero, Bianco 2, Nero 2](#19-mvp-01-bianco-nero-bianco-2-nero-2) | Accettata |
 | 20 | [Design: Material 3 e Apple, font di sistema, token](#20-design-material-3-e-apple-font-di-sistema-token) | Accettata |
 | 21 | [La documentazione nel repository è l'unica fonte valida](#21-la-documentazione-nel-repository-è-lunica-fonte-valida) | Accettata |
+| 22 | [Git flow: `main` e `develop`](#22-git-flow-main-e-develop) | Accettata |
+| 23 | [GitHub Actions solo per il controllo dei branch, gratis](#23-github-actions-solo-per-il-controllo-dei-branch-gratis) | Accettata |
+| 24 | [L'agente può approvare le proprie pull request](#24-lagente-può-approvare-le-proprie-pull-request) | Accettata |
 
 ---
 
@@ -135,7 +138,7 @@ Regole del registro:
 - **Contesto**: l'assessment del progetto ha scelto un repository privato senza CI ([Regole di lavoro, Modifiche alle regole](progetto/04-Regole-di-lavoro.md#modifiche-alle-regole)). Sul piano Free di GitHub regole di protezione e ruleset esistono solo per i repository pubblici ([Configurazione di GitHub](progetto/08-Configurazione-di-GitHub.md#decisioni)).
 - **Decisione**: repository privato, nessuna CI; i controlli girano in locale con `npm run verify` (lint, tipi, test di unità e di sistema, build dell'immagine) e un hook pre-push versionato in `.githooks/`, che blocca anche i push su `main`.
 - **Alternative scartate**: CI su GitHub Actions, scartata dall'assessment; ruleset e protezione di `main`, non disponibili sui repository privati del piano Free (si attiveranno solo con un eventuale passaggio a GitHub Pro).
-- **Conseguenze**: la protezione di `main` è affidata all'hook e alle regole di lavoro; il modello di pull request chiede l'esito della verifica; GitHub Actions resta disattivato. L'hook si attiva a mano con `git config core.hooksPath .githooks`; finché P3-11 non arriva, blocca solo i push su `main`.
+- **Conseguenze**: la protezione di `main` è affidata all'hook e alle regole di lavoro; il modello di pull request chiede l'esito della verifica; GitHub Actions resta disattivato. L'hook si attiva a mano con `git config core.hooksPath .githooks`; finché P3-11 non arriva, blocca solo i push su `main`. La decisione 23 riattiva GitHub Actions per il solo controllo dei branch delle pull request; la decisione 22 estende l'hook a `develop`.
 
 ## 14. Agente: app Claude per GitHub
 
@@ -143,7 +146,7 @@ Regole del registro:
 - **Contesto**: la Configurazione di GitHub prevedeva un account bot dedicato, collaboratore del solo repository, con un token fine-grained a 90 giorni. Il motivo della sostituzione non è documentato.
 - **Decisione**: l'agente lavora tramite l'app Claude per GitHub, che sostituisce l'account bot. Crea branch, fa push e apre pull request; non unisce, non crea tag e non cambia impostazioni del repository.
 - **Alternative scartate**: account bot dedicato con token fine-grained, previsto nei documenti fino a questa decisione.
-- **Conseguenze**: niente token da creare, ruotare o revocare a mano; l'accesso si gestisce dalle impostazioni dell'app su GitHub. L'app ha tecnicamente il permesso di unire: unisce solo il product owner, per regola. I commit dell'agente portano l'autore Claude, così si distinguono da quelli del product owner. Il criterio di P3-12 sull'account bot è stato riscritto di conseguenza.
+- **Conseguenze**: niente token da creare, ruotare o revocare a mano; l'accesso si gestisce dalle impostazioni dell'app su GitHub. L'app ha tecnicamente il permesso di unire: unisce solo il product owner, per regola. I commit dell'agente portano l'autore Claude, così si distinguono da quelli del product owner. Il criterio di P3-12 sull'account bot è stato riscritto di conseguenza. Dal 19 ottobre 2026 si sa che l'agente agisce con l'account del product owner: vedi la decisione 24.
 
 ## 15. Dupes clause per giocatore, su tutta la linea evolutiva
 
@@ -200,3 +203,31 @@ Regole del registro:
 - **Decisione**: da ora la documentazione in `docs/` è l'unica fonte valida; le copie su claude.ai non si aggiornano più.
 - **Alternative scartate**: continuare ad aggiornare i Claude Docs su claude.ai, scartata. Tenere due fonti in parallelo, esclusa dal README dello zip.
 - **Conseguenze**: backlog, bug e registro sessioni sono file in `docs/backlog/` e si aggiornano con le pull request; i link interni puntano ai file del repository. Fa eccezione il canvas dei mockup, che si visualizza solo su claude.ai e resta collegato lì. I PDF in `docs/progetto/pdf/` sono copie del 3 ottobre 2026 e non si aggiornano: quando un diagramma cambia, si aggiorna il Markdown.
+
+## 22. Git flow: `main` e `develop`
+
+- **Data**: 19 ottobre 2026
+- **Contesto**: le Regole di lavoro prevedevano un solo ramo stabile, `main`, con un branch per PBI unito direttamente su `main`. Il product owner ha chiesto di seguire git flow, con `main` e `develop` protetti.
+- **Decisione**:
+  - `main` contiene solo i rilasci e riceve modifiche solo da pull request che partono da `develop`. I tag di versione si creano su `main`.
+  - `develop` è il ramo di integrazione e riceve modifiche solo da pull request di branch `pbi/…`, `bug/…` o `chore/…`, creati da `develop`.
+  - Le pull request verso `develop` si uniscono con squash merge (un commit per PBI); quella di rilascio da `develop` a `main` con un merge commit, così i due rami non divergono.
+  - Non si usano branch `release/…` né `hotfix/…`: una correzione urgente è un `bug/…` verso `develop`, seguito da un rilascio.
+- **Alternative scartate**: il flusso con il solo `main` previsto fino a questa decisione; git flow completo con `release/…` e `hotfix/…`, escluso perché verso `main` si va solo da `develop`.
+- **Conseguenze**: l'hook pre-push rifiuta i push su `main` e su `develop`; la verifica con i test end-to-end gira su `develop` dopo ogni unione, e su `main` prima di ogni rilascio. Nelle impostazioni del repository restano attivi squash merge e merge commit; quale usare dipende dal ramo di destinazione, per regola. `develop` è nato il 19 ottobre 2026 dal commit iniziale vuoto, lo stesso di `main`.
+
+## 23. GitHub Actions solo per il controllo dei branch, gratis
+
+- **Data**: 19 ottobre 2026
+- **Contesto**: la decisione 13 disattivava GitHub Actions. Su un repository privato del piano Free non esistono ruleset, quindi GitHub non può impedire una pull request da un branch sbagliato. Il product owner vuole un controllo automatico senza spendere nulla.
+- **Decisione**: GitHub Actions si riattiva per un solo workflow, `.github/workflows/branch-policy.yml`. Il workflow verifica che una pull request verso `main` parta da `develop` e che una verso `develop` parta da `pbi/…`, `bug/…` o `chore/…`. Gira in pochi secondi, con timeout di 1 minuto, dentro i minuti gratuiti del piano Free; il budget di spesa per Actions resta a 0 dollari. La verifica completa (`npm run verify`) resta locale: non c'è CI.
+- **Alternative scartate**: GitHub Pro con ruleset, scartato per il costo; repository pubblico, scartato perché il repository resta privato; nessun controllo, scartato perché il product owner vuole il vincolo sui branch.
+- **Conseguenze**: senza ruleset un controllo rosso non blocca il pulsante di unione. Si vede però sulla pull request, e per regola una pull request con il controllo rosso non si unisce. Se i minuti gratuiti finiscono, con budget a 0 il workflow si ferma senza addebiti.
+
+## 24. L'agente può approvare le proprie pull request
+
+- **Data**: 19 ottobre 2026
+- **Contesto**: il 19 ottobre 2026 è emerso che l'agente agisce su GitHub con l'account del product owner (`LorenzoPolito`): le pull request risultano aperte da lui, solo i commit hanno come autore Claude. GitHub non consente a chi ha aperto una pull request di approvarla, quindi l'approvazione formale ("Approve") non è possibile né per l'agente né per il product owner.
+- **Decisione**: l'agente può approvare le proprie pull request. Lo fa con una revisione di tipo commento che comincia con "Approvata dall'agente", e riporta la checklist di revisione e l'esito della verifica locale. L'agente non unisce: unisce solo il product owner. Le protezioni (hook pre-push e controllo dei branch) valgono anche per l'agente.
+- **Alternative scartate**: un account bot separato per l'agente (la proposta iniziale della decisione 14), che renderebbe possibile l'approvazione formale; non adottato per ora e da riconsiderare se l'approvazione formale diventa necessaria.
+- **Conseguenze**: nella cronologia di GitHub le azioni dell'agente e del product owner hanno lo stesso autore; si distinguono dai commit (autore Claude), dalla firma in fondo ai commenti e dalla revisione "Approvata dall'agente". La conseguenza della decisione 14 sulla distinzione delle azioni vale solo per i commit.

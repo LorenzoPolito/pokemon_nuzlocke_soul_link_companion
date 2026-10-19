@@ -5,7 +5,7 @@ Sintesi delle [Regole di lavoro](docs/progetto/04-Regole-di-lavoro.md) e della [
 ## Ruoli
 
 - **Product owner**: decide le priorità, approva i gate, verifica i PBI "In verifica" e unisce le pull request. È l'unico che unisce e che crea tag.
-- **Agente** (Claude Code, tramite l'app Claude per GitHub): sviluppa i PBI, scrive i test, apre i bug, aggiorna backlog, registro sessioni e documenti; apre pull request, non unisce.
+- **Agente** (Claude Code, tramite l'app Claude per GitHub): sviluppa i PBI, scrive i test, apre i bug, aggiorna backlog, registro sessioni e documenti; apre pull request e può approvarle, non unisce.
 
 ## Prima di iniziare
 
@@ -13,16 +13,18 @@ Sintesi delle [Regole di lavoro](docs/progetto/04-Regole-di-lavoro.md) e della [
 git config core.hooksPath .githooks
 ```
 
-L'hook `pre-push` rifiuta i push su `main`. Dal PBI P3-11 esegue anche `npm run verify`.
+L'hook `pre-push` rifiuta i push su `main` e `develop`. Dal PBI P3-11 esegue anche `npm run verify`.
 
-## Branch
+## Branch (git flow)
 
-Uno per PBI o bug, creato da `main` aggiornato, con l'ID nel nome:
+- `main`: solo rilasci. Ci si arriva con la pull request di rilascio da `develop`.
+- `develop`: integrazione. Ci si arriva con una pull request da un branch di lavoro.
+- Branch di lavoro, creati da `develop` aggiornato, con l'ID nel nome:
+  - `pbi/P4-06-link-soullink`
+  - `bug/BUG-007-morte-partner`
+  - `chore/…` per la manutenzione del repository
 
-- `pbi/P4-06-link-soullink`
-- `bug/BUG-007-morte-partner`
-
-Mai push diretti su `main`, mai push forzati su `main`.
+Niente `release/…` né `hotfix/…`. Mai push diretti o forzati su `main` e `develop`. Il controllo `branch-policy` di GitHub Actions segna in rosso le pull request che non rispettano queste regole, e una pull request rossa non si unisce.
 
 ## Commit
 
@@ -35,13 +37,14 @@ Un commit per passo logico; ogni commit compila e passa i test.
 
 ## Pull request
 
-- Titolo con l'ID: `P3-01 Scheletro del progetto SvelteKit`.
+- Verso `develop`, titolo con l'ID: `P3-01 Scheletro del progetto SvelteKit`.
 - Descrizione secondo il [modello](.github/pull_request_template.md): criteri di accettazione spuntati, test aggiunti, esito di `npm run verify`.
-- Unione solo con squash merge, solo da parte del product owner.
+- L'agente può approvare le proprie pull request con una revisione di tipo commento che comincia con "Approvata dall'agente". GitHub non permette l'approvazione formale, perché l'agente usa l'account del product owner.
+- Unisce solo il product owner: squash merge verso `develop`, merge commit per la pull request di rilascio verso `main`.
 
 ## Verifica locale
 
-Non c'è CI. Prima di ogni push `npm run verify` esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine (da P3-11). Dopo ogni unione su `main` l'agente esegue la verifica e i test end-to-end all'inizio della sessione successiva.
+Non c'è CI. Prima di ogni push `npm run verify` esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine (da P3-11). Dopo ogni unione su `develop` l'agente esegue la verifica e i test end-to-end all'inizio della sessione successiva. GitHub Actions esegue solo il controllo dei branch, nei minuti gratuiti.
 
 ## Backlog, bug e sessioni
 
