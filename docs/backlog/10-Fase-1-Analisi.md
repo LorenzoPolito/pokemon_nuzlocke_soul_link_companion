@@ -12,7 +12,7 @@
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | In verifica |
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | In verifica |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Completato |
-| P1-08 | Tabelle dei tipi per generazione | — | S | Da iniziare |
+| P1-08 | Tabelle dei tipi per generazione | — | S | Completato |
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Da iniziare |
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
 | P1-11 | Prova: @smogon/calc con override | — | S | Da iniziare |
@@ -93,10 +93,12 @@ Nota di chiusura, 19 ottobre 2026: "licenza verificata" vuol dire che nuzlocke.d
 
 ## P1-08 Tabelle dei tipi per generazione
 
-Output: Meccaniche per generazione.
+Output: [Meccaniche per generazione](../progetto/13-Meccaniche-per-generazione.md#p1-08-tabelle-dei-tipi-per-generazione) e [`data/mechanics/type-chart.json`](../../data/mechanics/type-chart.json).
 
-- [ ] Tabelle complete per Gen 1, Gen 2–5 e Gen 6+, con le differenze evidenziate.
-- [ ] Fonte citata e verificata su almeno 10 combinazioni campione.
+- [x] Tabelle complete per Gen 1, Gen 2–5 e Gen 6+, con le differenze evidenziate.
+- [x] Fonte citata e verificata su almeno 10 combinazioni campione.
+
+Nota di chiusura, 19 ottobre 2026: oltre ai 24 campioni, le tabelle costruite da PokéAPI coincidono con quelle di @smogon/calc 0.12.0 in tutte le 2677 celle delle nove generazioni.
 
 ## P1-09 Differenze di meccaniche per generazione
 
