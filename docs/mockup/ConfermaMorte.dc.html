@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Conferma morte di un gruppo collegato</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#006A6A}a:hover{color:#004F50}
+.scr{width:390px;height:844px;box-sizing:border-box;background:#FAF9F7;color:#1B1C1C;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;position:relative;overflow:hidden}
+svg.i{fill:none;stroke-width:2;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.iconbtn{width:48px;height:48px;border:0;background:transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;color:inherit;padding:0;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:8px;border:1px solid #C6C3BD;font-family:inherit;font-size:13px;font-weight:600;line-height:16px;color:#1B1C1C;background:transparent;white-space:nowrap}
+.chip.on{background:#9CF1F0;border-color:#9CF1F0;color:#002020}
+.type{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:8px;font-size:12px;font-weight:600;color:#FFFFFF}
+.sprite{width:40px;height:40px;border-radius:999px;background:#F0EEEA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5C5F61;flex-shrink:0}
+.nav{display:flex;justify-content:space-around;background:#F0EEEA;padding:12px 8px 20px;margin-top:auto}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#1B1C1C;text-decoration:none;min-width:72px}
+.pill{display:flex;align-items:center;justify-content:center;width:64px;height:32px;border-radius:999px}
+.tabs{display:flex;padding:0 8px;background:#F0EEEA;overflow-x:auto}
+.tabs a{padding:14px 12px 11px;font-size:14px;font-weight:600;color:#5C5F61;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.fab{position:absolute;right:16px;bottom:104px;height:56px;padding:0 20px;border-radius:16px;background:#006A6A;color:#FFFFFF;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;text-decoration:none;border:0}
+.fab:hover{color:#FFFFFF}
+.muted{color:#5C5F61}
+.btn{height:48px;border-radius:12px;border:0;font-family:inherit;font-size:15px;font-weight:600;line-height:20px;padding:0 20px;cursor:pointer}
+</style>
+</helmet>
+<div class="scr" style="">
+<header style="background: {{accent}}; color: #FFFFFF; padding: 4px 8px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 4px">
+<a class="iconbtn" href="Main.dc.html" aria-label="Indietro" style="color: #FFFFFF"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<div style="flex-grow: 1; min-width: 0"><div style="font-size: 20px; line-height: 26px; font-weight: 700">Unima con Sara e Luca</div><div style="font-size: 13px; line-height: 18px">Bianco 2 · Marco, Sara e Luca</div></div>
+<button class="iconbtn" aria-label="Altre azioni" style="color: #FFFFFF"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; padding: 0 8px; font-size: 13px; font-weight: 600">
+<span style="display: inline-flex; gap: 4px" aria-label="1 medaglia su 8"><span style="width: 14px; height: 14px; border-radius: 999px; background: #FFFFFF"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span><span style="width: 14px; height: 14px; border-radius: 999px; border: 2px solid #FFFFFF; box-sizing: border-box"></span></span>
+<span style="margin-left: auto">Level cap 13 · Cheren</span>
+</div>
+</header>
+<nav class="tabs" aria-label="Sezioni della run"><a href="RunAree.dc.html">Aree</a><a href="RunTeam.dc.html" aria-current="page" style="color: #1B1C1C; border-bottom-color: {{accent}}">Team</a><a href="Lotta.dc.html">Lotta</a><a href="RunAree.dc.html">Cimitero</a><a href="RunAree.dc.html">Diario</a></nav>
+<div style="display: flex; padding: 12px 16px 8px">
+<div style="display: flex; border: 1px solid #C6C3BD; border-radius: 999px; overflow: hidden; width: 100%">
+<button style="flex: 1 1 0; height: 40px; border: 0; background: #9CF1F0; color: #002020; font: 600 14px system-ui, sans-serif; display: flex; align-items: center; justify-content: center; gap: 6px"><svg class="i" viewBox="0 0 24 24" width="18" height="18" style="color: currentColor" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"></path></svg>Team 3</button>
+<button style="flex: 1 1 0; height: 40px; border: 0; border-left: 1px solid #C6C3BD; background: transparent; color: #1B1C1C; font: 600 14px system-ui, sans-serif; display: flex; align-items: center; justify-content: center; gap: 6px"><svg class="i" viewBox="0 0 24 24" width="18" height="18" style="color: currentColor" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"></path><path d="M3 7l9 4 9-4M12 11v10"></path></svg>Box 1</button>
+</div></div>
+<ul style="margin: 0; padding: 0 16px; display: flex; flex-direction: column; gap: 8px; overflow: hidden">
+<li style="list-style: none; background: #FFFFFF; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 8px"><span class="muted" style="font-size: 13px; font-weight: 600; flex-grow: 1">Starter</span><span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border-radius: 8px; background: #FFDBC8; color: #5A2800; font-size: 12px; font-weight: 600"><svg class="i" viewBox="0 0 24 24" width="16" height="16" style="color: currentColor" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>Collegati</span><button class="iconbtn" style="width: 40px; height: 40px" aria-label="Azioni per Starter"><svg class="i" viewBox="0 0 24 24" width="20" height="20" style="color: currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button></div>
+<div style="display: flex; align-items: center; gap: 10px"><span class="sprite" style="width: 36px; height: 36px; font-size: 12px">SN</span><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Foglia <span class="muted" style="font-weight: 500; font-size: 13px">· Marco</span></span><span class="muted" style="font-size: 13px">Snivy · Lv 12</span></span><span style="display: flex; gap: 4px"><span class="type" style="background: #2F7D32">Erba</span></span></div><div style="display: flex; align-items: center; gap: 10px"><span class="sprite" style="width: 36px; height: 36px; font-size: 12px">TE</span><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Brace <span class="muted" style="font-weight: 500; font-size: 13px">· Sara</span></span><span class="muted" style="font-size: 13px">Tepig · Lv 12</span></span><span style="display: flex; gap: 4px"><span class="type" style="background: #C2410C">Fuoco</span></span></div><div style="display: flex; align-items: center; gap: 10px"><span class="sprite" style="width: 36px; height: 36px; font-size: 12px">OS</span><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Conchiglia <span class="muted" style="font-weight: 500; font-size: 13px">· Luca</span></span><span class="muted" style="font-size: 13px">Oshawott · Lv 13</span></span><span style="display: flex; gap: 4px"><span class="type" style="background: #2563C9">Acqua</span></span></div></li>
+<li style="list-style: none; background: #FFFFFF; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 8px"><span class="muted" style="font-size: 13px; font-weight: 600; flex-grow: 1">Percorso 19</span><span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border-radius: 8px; background: #FFDBC8; color: #5A2800; font-size: 12px; font-weight: 600"><svg class="i" viewBox="0 0 24 24" width="16" height="16" style="color: currentColor" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>Collegati</span><button class="iconbtn" style="width: 40px; height: 40px" aria-label="Azioni per Percorso 19"><svg class="i" viewBox="0 0 24 24" width="20" height="20" style="color: currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button></div>
+<div style="display: flex; align-items: center; gap: 10px"><span class="sprite" style="width: 36px; height: 36px; font-size: 12px">PU</span><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Graffio <span class="muted" style="font-weight: 500; font-size: 13px">· Marco</span></span><span class="muted" style="font-size: 13px">Purrloin · Lv 9</span></span><span style="display: flex; gap: 4px"><span class="type" style="background: #4A3F38">Buio</span></span></div><div style="display: flex; align-items: center; gap: 10px"><span class="sprite" style="width: 36px; height: 36px; font-size: 12px">PA</span><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Vedetta <span class="muted" style="font-weight: 500; font-size: 13px">· Sara</span></span><span class="muted" style="font-size: 13px">Patrat · Lv 9</span></span><span style="display: flex; gap: 4px"><span class="type" style="background: #6B6B4F">Normale</span></span></div><div style="display: flex; align-items: center; gap: 10px"><span class="sprite" style="width: 36px; height: 36px; font-size: 12px">LI</span><span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 600">Fiuto <span class="muted" style="font-weight: 500; font-size: 13px">· Luca</span></span><span class="muted" style="font-size: 13px">Lillipup · Lv 10</span></span><span style="display: flex; gap: 4px"><span class="type" style="background: #6B6B4F">Normale</span></span></div></li>
+</ul>
+<p class="muted" style="margin: 12px 16px 0; font-size: 13px; line-height: 18px">Ogni gruppo si muove insieme: team, box e morte valgono per tutti i Pokémon collegati.</p>
+<nav class="nav" aria-label="Navigazione principale"><a href="Main.dc.html"><span class="pill" style="background: #9CF1F0"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg></span>Run</a><a href="Pokedex.dc.html"><span class="pill" style="background: transparent"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"></path><path d="M5 18a2 2 0 0 1 2-2h12"></path></svg></span>Pokédex</a><a href="Main.dc.html"><span class="pill" style="background: transparent"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg></span>Profilo</a></nav><div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4)"></div>
+<section role="dialog" aria-modal="true" aria-labelledby="dt" style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-radius: 20px 20px 0 0; padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="width: 32px; height: 4px; border-radius: 999px; background: #C6C3BD; align-self: center"></div>
+<div style="display: flex; align-items: center; gap: 10px"><svg class="i" viewBox="0 0 24 24" width="24" height="24" style="color: #8C1D18" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg><h2 id="dt" style="margin: 0; font-size: 20px; font-weight: 700">Segnare Graffio come morto?</h2></div>
+<p style="margin: 0; font-size: 15px; line-height: 22px">Anche <strong>Vedetta</strong> (Sara) e <strong>Fiuto</strong> (Luca) sono collegati e saranno segnati come morti. L'azione non si può annullare.</p>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="avv" style="font-size: 13px; font-weight: 600">Avversario (facoltativo)</label><input id="avv" value="Cheren · Lillipup" style="height: 48px; border: 1px solid #C6C3BD; border-radius: 12px; padding: 0 14px; font: 16px system-ui, sans-serif; color: #1B1C1C; background: #FFFFFF"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="mos" style="font-size: 13px; font-weight: 600">Mossa (facoltativa)</label><input id="mos" value="Azione" style="height: 48px; border: 1px solid #C6C3BD; border-radius: 12px; padding: 0 14px; font: 16px system-ui, sans-serif; color: #1B1C1C; background: #FFFFFF"></div>
+<div style="display: flex; gap: 8px"><button class="btn" style="flex: 1 1 0; background: transparent; border: 1px solid #C6C3BD; color: #1B1C1C">Annulla</button><button class="btn" style="flex: 1 1 0; background: #8C1D18; color: #FFFFFF">Segna come morti</button></div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#45617F","options":["#45617F","#8A6D00","#2F7D32","#B3261E"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#45617F' };
+}
+}
+</script>
+</body>
+</html>

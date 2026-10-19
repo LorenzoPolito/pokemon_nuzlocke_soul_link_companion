@@ -1,0 +1,11 @@
+# Registro sessioni
+
+Una riga per ogni chat di lavoro, la più recente in alto. I consumi reali servono a ricalibrare le taglie a ogni gate.
+
+| Data | PBI o bug | Esito | Taglia | Token reali | Tempo reale | Prossimo passo |
+| --- | --- | --- | --- | --- | --- | --- |
+| 3 ottobre 2026 | Decisioni sulle regole e consegna | Dupes clause per giocatore e per linea evolutiva, morti compresi; starter come incontro normale; incontri fissi e scambi come regali; account eliminati anonimizzati; run recuperabili per 30 giorni. Documenti esportati in uno zip per il passaggio di consegne | — | non misurato | non misurato | Chi riceve il progetto: leggere il README dello zip, poi P1-01, P1-04, P1-06, P1-07, P1-19 |
+| 3 ottobre 2026 | P2-01–P2-06 (bozza anticipata) | Decisione: nuzlocke.data usato senza chiedere (app privata). Creato il Modello dati in bozza: diagramma, tabelle, invarianti, indici, evoluzione. Stati dei PBI invariati: mancano P1-06, P1-07 e P1-19 | — | non misurato | non misurato | Rispondere alle domande aperte del modello; poi P1-01 |
+| 3 ottobre 2026 | Verifica dei rischi e delle fonti | Creato il documento Rischi tecnici e fonti dei dati; lock definiti nella specifica; tolto HTTPS; criteri di lingua corretti (ricarica accettata) | — | non misurato | non misurato | Decidere la fonte di riferimento per ordine delle aree e level cap, poi P1-01 |
+| 3 ottobre 2026 | Assessment del progetto | Creato MVP e rilasci; aggiunti P1-19, P3-13, P4-21; gioco unico per run; niente CI e repository privato; regole, GitHub, specifica, piano e mappa aggiornati; 7 nuovi mockup | — | non misurato | non misurato | Avviare P1-01 e P1-19, poi P1-04, P1-06, P1-07 su Bianco, Nero, Bianco 2, Nero 2 |
+| 3 ottobre 2026 | Avvio del progetto | Creati specifica, piano, backlog, regole di lavoro e mappa degli artefatti | — | non misurato | non misurato | Avviare i PBI di fase 1 senza dipendenze |
