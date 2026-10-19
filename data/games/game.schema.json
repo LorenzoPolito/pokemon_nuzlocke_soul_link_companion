@@ -5,7 +5,7 @@
   "description": "Un file per gioco (game_id). Documentazione: docs/progetto/11-Dati-di-gioco.md",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "gameId", "dataVersion", "generation", "versionGroup", "region", "names", "runColor", "sources", "areas", "specialEncounters"],
+  "required": ["schemaVersion", "gameId", "dataVersion", "generation", "versionGroup", "region", "names", "runColor", "sources", "areas", "specialEncounters", "milestones"],
   "properties": {
     "$schema": { "type": "string" },
     "schemaVersion": { "const": 1 },
@@ -32,6 +32,12 @@
       "type": "array",
       "description": "Regali, incontri fissi e scambi in gioco, ciascuno con chiave propria e area di appartenenza (decisione 17)",
       "items": { "$ref": "#/$defs/specialEncounter" }
+    },
+    "milestones": {
+      "type": "array",
+      "description": "Tappe in ordine di gioco (palestre, Superquattro, campione, boss della storia, prove). Il level cap è quello della prima tappa non ancora superata",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/milestone" }
     }
   },
   "$defs": {
@@ -66,6 +72,43 @@
         "phase": { "enum": ["story", "postgame"] },
         "hasWildEncounters": { "type": "boolean", "description": "PokéAPI ha incontri selvatici per l'area in questa versione" },
         "starters": { "type": "array", "items": { "$ref": "#/$defs/key" }, "description": "Solo per l'area starter" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "milestone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "kind", "phase", "trainer", "location", "afterAreaKey", "badge", "levelCap", "source"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key", "description": "Chiave stabile della tappa: badge-<n> per le palestre" },
+        "kind": { "enum": ["gym", "trial", "elite-four", "champion", "story-boss", "other"] },
+        "phase": { "enum": ["story", "postgame"] },
+        "trainer": { "type": "string", "minLength": 1, "description": "Nome inglese dell'allenatore o della prova" },
+        "location": { "type": ["string", "null"], "description": "Località PokéAPI in cui avviene la lotta" },
+        "afterAreaKey": { "type": ["string", "null"], "description": "Area dopo la quale si incontra la tappa, per mostrarla nell'elenco delle aree" },
+        "badge": {
+          "description": "Medaglia ottenuta, null per le tappe senza medaglia",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["index", "names"],
+              "properties": { "index": { "type": "integer", "minimum": 1 }, "names": { "$ref": "#/$defs/names" } }
+            }
+          ]
+        },
+        "levelCap": {
+          "type": "object",
+          "description": "Livello più alto nella squadra, per difficoltà; normal è sempre presente",
+          "additionalProperties": false,
+          "required": ["normal"],
+          "properties": {
+            "easy": { "type": "integer", "minimum": 1, "maximum": 100 },
+            "normal": { "type": "integer", "minimum": 1, "maximum": 100 },
+            "challenge": { "type": "integer", "minimum": 1, "maximum": 100 }
+          }
+        },
         "source": { "$ref": "#/$defs/source" }
       }
     },

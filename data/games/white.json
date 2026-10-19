@@ -2,7 +2,7 @@
   "$schema": "./game.schema.json",
   "schemaVersion": 1,
   "gameId": "white",
-  "dataVersion": "2026.10.19-1",
+  "dataVersion": "2026.10.19-2",
   "generation": 5,
   "versionGroup": "black-white",
   "region": "unova",
@@ -1142,6 +1142,367 @@
         "entry": "Bulbapedia, List of in-game trade Pokémon in Pokémon Black and White; Serebii, Pokémon Black & White - In-Game Trades",
         "check": "confermato: nuzlocke.data@baf5df5 elenca la specie nell'area",
         "note": "Assente in PokéAPI; livello non riportato dalle fonti consultate; solo in estate"
+      }
+    }
+  ],
+  "milestones": [
+    {
+      "key": "badge-1",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Chili, Cress or Cilan",
+      "location": "striaton-city",
+      "afterAreaKey": "dreamyard",
+      "badge": {
+        "index": 1,
+        "names": {
+          "en": "Trio Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 14
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:174",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Il capopalestra dipende dallo starter scelto. afterArea: nuzlocke.data mette la palestra prima di Dreamyard, la guida di Bulbapedia (Part 2) dopo"
+      }
+    },
+    {
+      "key": "badge-2",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Lenora",
+      "location": "nacrene-city",
+      "afterAreaKey": "nacrene-city",
+      "badge": {
+        "index": 2,
+        "names": {
+          "en": "Basic Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 20
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:180",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-3",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Burgh",
+      "location": "castelia-city",
+      "afterAreaKey": "castelia-city",
+      "badge": {
+        "index": 3,
+        "names": {
+          "en": "Insect Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 23
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:184",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-4",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Elesa",
+      "location": "nimbasa-city",
+      "afterAreaKey": "relic-castle",
+      "badge": {
+        "index": 4,
+        "names": {
+          "en": "Bolt Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 27
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:189",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; Bulbapedia, Nimbasa Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-5",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Clay",
+      "location": "driftveil-city",
+      "afterAreaKey": "cold-storage",
+      "badge": {
+        "index": 5,
+        "names": {
+          "en": "Quake Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 31
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:194",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-6",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Skyla",
+      "location": "mistralton-city",
+      "afterAreaKey": "celestial-tower",
+      "badge": {
+        "index": 6,
+        "names": {
+          "en": "Jet Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 35
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:199",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "afterArea corretta come la Celestial Tower (P1-06)"
+      }
+    },
+    {
+      "key": "badge-7",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Brycen",
+      "location": "icirrus-city",
+      "afterAreaKey": "icirrus-city",
+      "badge": {
+        "index": 7,
+        "names": {
+          "en": "Freeze Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 39
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:204",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "badge-8",
+      "kind": "gym",
+      "phase": "story",
+      "trainer": "Iris",
+      "location": "opelucid-city",
+      "afterAreaKey": "unova-route-9",
+      "badge": {
+        "index": 8,
+        "names": {
+          "en": "Legend Badge",
+          "it": null
+        }
+      },
+      "levelCap": {
+        "normal": 43
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:214",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+      }
+    },
+    {
+      "key": "elite-four-shauntal",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Shauntal",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road",
+      "badge": null,
+      "levelCap": {
+        "normal": 50
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:219",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White"
+      }
+    },
+    {
+      "key": "elite-four-grimsley",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Grimsley",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road",
+      "badge": null,
+      "levelCap": {
+        "normal": 50
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:225",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White"
+      }
+    },
+    {
+      "key": "elite-four-caitlin",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Caitlin",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road",
+      "badge": null,
+      "levelCap": {
+        "normal": 50
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:231",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White"
+      }
+    },
+    {
+      "key": "elite-four-marshal",
+      "kind": "elite-four",
+      "phase": "story",
+      "trainer": "Marshal",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-victory-road",
+      "badge": null,
+      "levelCap": {
+        "normal": 50
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:237",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White",
+        "note": "nuzlocke.data (routes) chiama questa lotta 'Caitlin' per errore; la squadra in leagues è quella di Marshal"
+      }
+    },
+    {
+      "key": "story-boss-n",
+      "kind": "story-boss",
+      "phase": "story",
+      "trainer": "N",
+      "location": "ns-castle",
+      "afterAreaKey": "ns-castle",
+      "badge": null,
+      "levelCap": {
+        "normal": 52
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:31",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White"
+      }
+    },
+    {
+      "key": "story-boss-ghetsis",
+      "kind": "story-boss",
+      "phase": "story",
+      "trainer": "Ghetsis",
+      "location": "ns-castle",
+      "afterAreaKey": "ns-castle",
+      "badge": null,
+      "levelCap": {
+        "normal": 54
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:39",
+        "check": "confermato: Bulbapedia, Team Plasma (Trainer class); Serebii, Trainer Pokémon #635 Hydreigon"
+      }
+    },
+    {
+      "key": "elite-four-shauntal-rematch",
+      "kind": "elite-four",
+      "phase": "postgame",
+      "trainer": "Shauntal",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-route-16",
+      "badge": null,
+      "levelCap": {
+        "normal": 73
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:244",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White",
+        "note": "Rivincita del postgame"
+      }
+    },
+    {
+      "key": "elite-four-grimsley-rematch",
+      "kind": "elite-four",
+      "phase": "postgame",
+      "trainer": "Grimsley",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-route-16",
+      "badge": null,
+      "levelCap": {
+        "normal": 73
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:252",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White",
+        "note": "Rivincita del postgame"
+      }
+    },
+    {
+      "key": "elite-four-caitlin-rematch",
+      "kind": "elite-four",
+      "phase": "postgame",
+      "trainer": "Caitlin",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-route-16",
+      "badge": null,
+      "levelCap": {
+        "normal": 73
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:260",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White",
+        "note": "Rivincita del postgame"
+      }
+    },
+    {
+      "key": "elite-four-marshal-rematch",
+      "kind": "elite-four",
+      "phase": "postgame",
+      "trainer": "Marshal",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-route-16",
+      "badge": null,
+      "levelCap": {
+        "normal": 73
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:268",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White",
+        "note": "Rivincita del postgame"
+      }
+    },
+    {
+      "key": "champion-alder",
+      "kind": "champion",
+      "phase": "postgame",
+      "trainer": "Alder",
+      "location": "unova-pokemon-league",
+      "afterAreaKey": "unova-route-16",
+      "badge": null,
+      "levelCap": {
+        "normal": 77
+      },
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 leagues/bw.txt:276",
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black & White"
       }
     }
   ]

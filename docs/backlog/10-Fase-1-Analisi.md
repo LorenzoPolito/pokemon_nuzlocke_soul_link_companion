@@ -7,7 +7,7 @@
 | P1-01 | Inventario dei giochi supportati | — | S | Completato |
 | P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | In verifica |
 | P1-06 | Ordine di progressione delle aree | P1-04 | M | In verifica |
-| P1-07 | Medaglie e level cap per gioco | P1-01 | M | Da iniziare |
+| P1-07 | Medaglie e level cap per gioco | P1-01 | M | In verifica |
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Da iniziare |
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Da iniziare |
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Da iniziare |
@@ -77,11 +77,13 @@ Nota di chiusura, 19 ottobre 2026: i nomi italiani delle aree sono `null` (fallb
 
 ## P1-07 Medaglie e level cap per gioco
 
-Output: Dati di gioco: aree, medaglie, level cap.
+Output: [Dati di gioco](../progetto/11-Dati-di-gioco.md#p1-07-medaglie-e-level-cap-per-gioco) e i file `data/games/*.json` (`milestones`).
 
-- [ ] Fonte scelta per medaglie e level cap, con licenza verificata.
-- [ ] Formato dati deciso, con i dati completi di Bianco, Nero, Bianco 2 e Nero 2.
-- [ ] Regola per i giochi senza palestre (per esempio le prove di Sole e Luna) definita.
+- [x] Fonte scelta per medaglie e level cap, con licenza verificata.
+- [x] Formato dati deciso, con i dati completi di Bianco, Nero, Bianco 2 e Nero 2.
+- [x] Regola per i giochi senza palestre (per esempio le prove di Sole e Luna) definita.
+
+Nota di chiusura, 19 ottobre 2026: "licenza verificata" vuol dire che nuzlocke.data non ha licenza ed è usato per la decisione 7 (uso privato); ogni livello è confermato da una seconda fonte. I nomi italiani delle medaglie sono `null` (P1-05).
 
 ## P1-08 Tabelle dei tipi per generazione
 
