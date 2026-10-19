@@ -356,3 +356,59 @@ Dettagli:
 | --- | --- |
 | Nomi italiani delle forme (e delle 3 abilità della nona generazione): compilarli a mano o aspettare PokéAPI? | Prima del rilascio che porta quelle forme (0.5 per la sesta generazione in poi); non serve all'MVP |
 | Nomi italiani di aree e medaglie, da una fonte da individuare | Dopo l'MVP: [ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md) li lascia in inglese |
+
+## P1-02 Copertura PokéAPI: specie, forme, statistiche, tipi
+
+Data: 19 ottobre 2026. Taglia M. Fonte: CSV di [PokeAPI/pokeapi](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv), commit `6fd69df` (`pokemon_species`, `pokemon`, `pokemon_forms`, `pokemon_stats`, `pokemon_stats_past`, `pokemon_types`, `pokemon_types_past`, `types`, `type_efficacy_past`).
+
+### Copertura per generazione
+
+Il totale atteso delle specie è quello ufficiale della serie principale (Pokédex nazionale).
+
+| Gen | Specie in PokéAPI | Atteso | Varietà (`pokemon`) | Forme (`pokemon_forms`) |
+| --- | --- | --- | --- | --- |
+| 1 | 151 | 151 | 238 | 238 |
+| 2 | 100 | 100 | 115 | 143 |
+| 3 | 135 | 135 | 167 | 167 |
+| 4 | 107 | 107 | 129 | 154 |
+| 5 | 156 | 156 | 185 | 197 |
+| 6 | 72 | 72 | 104 | 184 |
+| 7 | 88 | 88 | 131 | 148 |
+| 8 | 96 | 96 | 133 | 197 |
+| 9 | 120 | 120 | 149 | 151 |
+| **Totale** | **1025** | **1025** | **1351** | **1579** |
+
+- **Specie**: complete, 1025 su 1025. Fino alla quinta generazione sono 649, tante quante i Pokémon dei giochi dell'MVP (PokéAPI ha 649 indici di gioco per Nero, Bianco, Nero 2 e Bianco 2).
+- **Varietà e forme**: per le varietà e le forme non esiste un totale atteso da una fonte raggiungibile. Ho quindi controllato la coerenza interna: ogni specie ha una varietà predefinita (1025 su 1025); tutte le 1351 varietà hanno le sei statistiche di base e almeno un tipo (765 ne hanno due); le forme introdotte fino a Nero 2 e Bianco 2 sono 735 su 1579, e nessuna è una mega evoluzione.
+- **Forme dei giochi di quinta generazione**: ho controllato che ci siano tutte quelle che compaiono in Nero, Bianco, Nero 2 e Bianco 2: le varianti a strisce rosse e blu di Basculin, Darmanitan zen, Keldeo, Meloetta, Tornadus, Thundurus e Landorus nelle due forme, Kyurem Nero e Bianco, Genesect, Wormadam, Rotom, Shaymin, Giratina e Deoxys; le stagioni di Deerling e Sawsbuck e i mantelli di Burmy sono **forme cosmetiche** (tabella `pokemon_forms`), non varietà.
+
+### Tipi e statistiche cambiati tra generazioni
+
+PokéAPI conserva i valori **storici** in due tabelle, che elencano solo ciò che è cambiato:
+
+- `pokemon_types_past`: 36 righe per 29 Pokémon. La `generation_id` della riga è l'**ultima generazione in cui valevano i tipi vecchi**. Esempi: Clefairy era Normale fino alla quinta generazione e oggi è Folletto; Magnemite era Elettro nella prima generazione e poi Elettro/Acciaio; le cinque forme di Rotom degli elettrodomestici erano Elettro/Spettro fino alla quarta. Coprono i cambi di tipo di Folletto (sesta generazione), di Acciaio (seconda) e di Rotom.
+- `pokemon_stats_past`: 235 righe per 200 Pokémon, con la stessa convenzione. In 151 righe è la statistica **Speciale** della prima generazione (nessuna delle altre generazioni la usa). Il resto sono cambi veri di statistiche base, per esempio Butterfree (Att. Sp. 80, poi 90 dalla sesta generazione), Pikachu (Dif. 30, poi 40), Aegislash (150, poi 140 dall'ottava) e Zacian (Att. 130, poi 120 dalla nona). Sette righe (6 della terza e 1 della settima generazione) hanno la statistica di base **uguale** a quella di oggi: cambia solo il valore degli EV, che non serve all'app.
+- `type_efficacy_past`: 6 righe. Sono i cambi della tabella dei tipi (per esempio Spettro e Buio resistiti da Acciaio fino alla quinta generazione); la tabella completa è oggetto di P1-08.
+
+**Regola di lettura** per una generazione G: per ogni Pokémon e statistica (o slot di tipo) vale la riga storica con la `generation_id` più piccola maggiore o uguale a G; se non c'è, vale il valore attuale. Verificata su Butterfree (G = 5 dà 80, G = 6 dà 90) e Clefairy (G = 5 dà Normale, G = 6 dà Folletto). Per G = 1, Attacco Speciale e Difesa Speciale sono entrambi il valore **Speciale**.
+
+I tipi in PokéAPI sono 21: i 18 della serie principale (Acciaio e Buio dalla seconda generazione, Folletto dalla sesta), più `stellar` (nona generazione, solo per la Teracristallizzazione), `unknown` e `shadow` (Colosseum e XD).
+
+### Lacune e decisioni
+
+| Lacuna | Decisione |
+| --- | --- |
+| Nessun totale atteso per varietà e forme da una fonte raggiungibile | Verificate la coerenza interna e le forme dei giochi dell'MVP (sopra). Nessun'altra fonte è necessaria finché i giochi di altre generazioni non arrivano (0.5) |
+| 37 varietà predefinite hanno un identificativo diverso da quello della specie (13 fino alla quinta generazione: `deoxys-normal`, `wormadam-plant`, `giratina-altered`, `shaymin-land`, `basculin-red-striped`, `darmanitan-standard`, `frillish-male`, `jellicent-male`, `tornadus-incarnate`, `thundurus-incarnate`, `landorus-incarnate`, `keldeo-ordinary`, `meloetta-aria`) | Le specie si indicizzano sempre per **id numerico** (`species_id`, come nel modello dati) e le varietà per `pokemon_id`, mai per nome. I nomi di nuzlocke.data si risolvono sull'identificativo di **specie** |
+| Storico dei tipi e delle statistiche in tabelle "passate" con regola di lettura | Il Pokédex SQLite materializza in **fase di build** i valori già risolti per ogni generazione (statistiche e tipi per Pokémon e generazione): a runtime non c'è nessuna logica di risoluzione. Lo schema è oggetto di P2-07 |
+| Righe storiche che cambiano solo gli EV | Ignorate |
+| Statistica Speciale della prima generazione | Conservata nei dati storici; per la prima generazione il servizio dei dati effettivi (P5-04) usa lo Speciale per Attacco Speciale e Difesa Speciale. Non serve all'MVP |
+| Tipi `unknown` e `shadow` | Esclusi dai tipi selezionabili; `stellar` solo con la Teracristallizzazione (P5-14) |
+| Forme cosmetiche (stagione di Deerling, mantello di Burmy, le forme di Unown e simili) | Non si tracciano: l'esemplare registra la specie. Le varietà con tipi, statistiche o abilità diversi (Wormadam, Rotom, Darmanitan zen, Kyurem, e così via) sono un caso a parte, vedi la domanda sotto |
+
+### Domande aperte
+
+| Domanda | PBI che la chiude |
+| --- | --- |
+| Un esemplare registra solo la specie oppure anche la varietà (Wormadam sabbia, Rotom lavatrice), che cambia tipi e statistiche? Proposta: `species_id` più una varietà facoltativa, vuota per la forma predefinita | P2-04 (modello degli esemplari) |
+| Forme cosmetiche: ignorarle (proposta) o mostrarle come informazione | P2-04 |
