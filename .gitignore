@@ -40,6 +40,9 @@ logs/
 *.log
 npm-debug.log*
 
+# Impostazioni personali di Claude Code (quelle di progetto sono in .claude/settings.json)
+.claude/settings.local.json
+
 # Sistema ed editor
 .DS_Store
 Thumbs.db

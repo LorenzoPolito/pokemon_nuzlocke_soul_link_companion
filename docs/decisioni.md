@@ -33,6 +33,7 @@ Regole del registro:
 | 22 | [Git flow: `main` e `develop`](#22-git-flow-main-e-develop) | Accettata |
 | 23 | [GitHub Actions solo per il controllo dei branch, gratis](#23-github-actions-solo-per-il-controllo-dei-branch-gratis) | Accettata |
 | 24 | [L'agente può approvare le proprie pull request](#24-lagente-può-approvare-le-proprie-pull-request) | Accettata |
+| 25 | [Protezioni con gli hook di Claude Code e di git](#25-protezioni-con-gli-hook-di-claude-code-e-di-git) | Accettata |
 
 ---
 
@@ -231,3 +232,24 @@ Regole del registro:
 - **Decisione**: l'agente può approvare le proprie pull request. Lo fa con una revisione di tipo commento che comincia con "Approvata dall'agente", e riporta la checklist di revisione e l'esito della verifica locale. L'agente non unisce: unisce solo il product owner. Le protezioni (hook pre-push e controllo dei branch) valgono anche per l'agente.
 - **Alternative scartate**: un account bot separato per l'agente (la proposta iniziale della decisione 14), che renderebbe possibile l'approvazione formale; non adottato per ora e da riconsiderare se l'approvazione formale diventa necessaria.
 - **Conseguenze**: nella cronologia di GitHub le azioni dell'agente e del product owner hanno lo stesso autore; si distinguono dai commit (autore Claude), dalla firma in fondo ai commenti e dalla revisione "Approvata dall'agente". La conseguenza della decisione 14 sulla distinzione delle azioni vale solo per i commit.
+
+## 25. Protezioni con gli hook di Claude Code e di git
+
+- **Data**: 19 ottobre 2026
+- **Contesto**: attivando le regole di protezione dei branch, GitHub ha risposto che "non saranno applicate su questo repository privato finché non si passa a un account di organizzazione GitHub Team o Enterprise". Il product owner ha scelto di non farlo e di gestire il più possibile con gli hook. Il branch predefinito è rimasto `main`, perché GitHub non ha permesso di cambiarlo.
+- **Decisione**: le regole di git flow e di lavoro sono applicate in tre punti, in aggiunta al controllo `branch-policy` (decisione 23).
+  - **Hook di Claude Code** (`.claude/settings.json` e `.claude/hooks/guard.cjs`), prima di ogni azione dell'agente:
+    - **vietati**: push su `main` e `develop`, commit e merge locali su quei rami, unione di pull request (anche automatica), tag e push di tag, `--no-verify`, cambio di `core.hooksPath`, pull request verso il ramo sbagliato, scritture con l'API su `main` e `develop`;
+    - **con conferma del product owner**: push forzati, cancellazione di rami, `rebase`, `commit --amend`, `reset --hard`, scritture dirette sull'API di GitHub, modifiche agli hook, a `.claude/settings.json` e ai workflow.
+  - **Hook SessionStart di Claude Code**: a ogni avvio di sessione imposta `core.hooksPath` su `.githooks`, così gli hook di git sono sempre attivi per l'agente.
+  - **Hook di git** in `.githooks/`, per chiunque abbia `core.hooksPath` impostato:
+    - `pre-commit`: rifiuta i commit su `main` e `develop` e i file `.env` e di database;
+    - `commit-msg`: impone i Conventional Commits con l'ID (`docs(P1-01): …`), ammettendo i messaggi generati da git;
+    - `pre-push`: rifiuta i push su `main` e `develop` e i push forzati.
+- **Alternative scartate**: un account di organizzazione GitHub Team o Enterprise, scartato per il costo; il repository pubblico, scartato perché il repository resta privato.
+- **Conseguenze**:
+  - Le protezioni sono locali. Il product owner può saltare gli hook di git con `--no-verify` quando serve (per esempio per un tag o una correzione d'emergenza); l'agente no, perché l'hook di Claude Code glielo vieta.
+  - Il product owner deve impostare una volta `git config core.hooksPath .githooks` sul proprio clone.
+  - Con `main` come branch predefinito, ogni nuova pull request va aperta indicando `develop` come destinazione: l'hook di Claude Code lo impone all'agente, e il controllo `branch-policy` lo segnala per tutti.
+  - Gli hook usano solo `sh`, `git` e `node`, già richiesto da Claude Code.
+  - Il documento Configurazione di GitHub indicava GitHub Pro per i ruleset sui repository privati; secondo il messaggio ricevuto il 19 ottobre 2026 serve un'organizzazione Team o Enterprise.

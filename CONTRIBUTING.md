@@ -13,7 +13,13 @@ Sintesi delle [Regole di lavoro](docs/progetto/04-Regole-di-lavoro.md) e della [
 git config core.hooksPath .githooks
 ```
 
-L'hook `pre-push` rifiuta i push su `main` e `develop`. Dal PBI P3-11 esegue anche `npm run verify`.
+Gli hook di `.githooks/` applicano le regole che GitHub non può imporre su questo repository ([decisione 25](docs/decisioni.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)):
+
+- `pre-commit`: niente commit su `main` e `develop`, niente `.env` o file di database;
+- `commit-msg`: messaggi in Conventional Commits con l'ID (sotto);
+- `pre-push`: niente push su `main` e `develop`, niente push forzati; dal PBI P3-11 esegue anche `npm run verify`.
+
+L'agente ha in più gli hook di Claude Code (`.claude/`), che gli vietano anche di unire pull request e creare tag.
 
 ## Branch (git flow)
 
@@ -37,7 +43,7 @@ Un commit per passo logico; ogni commit compila e passa i test.
 
 ## Pull request
 
-- Verso `develop`, titolo con l'ID: `P3-01 Scheletro del progetto SvelteKit`.
+- Verso `develop`, titolo con l'ID: `P3-01 Scheletro del progetto SvelteKit`. Il branch predefinito di GitHub è `main`: scegli `develop` come destinazione a mano.
 - Descrizione secondo il [modello](.github/pull_request_template.md): criteri di accettazione spuntati, test aggiunti, esito di `npm run verify`.
 - L'agente può approvare le proprie pull request con una revisione di tipo commento che comincia con "Approvata dall'agente". GitHub non permette l'approvazione formale, perché l'agente usa l'account del product owner.
 - Unisce solo il product owner: squash merge verso `develop`, merge commit per la pull request di rilascio verso `main`.

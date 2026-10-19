@@ -1,0 +1,19 @@
+#!/bin/sh
+# Hook commit-msg (decisione 25): Conventional Commits con l'ID del PBI o
+# del bug come ambito, per esempio "docs(P1-01): …" o "fix(BUG-004): …".
+# Sono ammessi i messaggi generati da git (merge, revert, fixup, squash).
+
+first=$(sed -n '/^[^#]/{p;q;}' "$1")
+
+case "$first" in
+  "Merge "* | "Revert "* | "fixup! "* | "squash! "* | "amend! "*) exit 0 ;;
+esac
+
+if printf '%s\n' "$first" | grep -Eq '^(feat|fix|docs|test|chore|refactor|perf|build|style|revert)\((P[0-9]-[0-9]{2}|BUG-[0-9]{3})\)!?: .+'; then
+  exit 0
+fi
+
+echo "commit-msg: messaggio non valido: \"$first\"" >&2
+echo "Formato: <tipo>(<ID>): <descrizione>, per esempio \"docs(P1-01): inventario dei giochi\" o \"fix(BUG-004): …\"." >&2
+echo "Tipi: feat, fix, docs, test, chore, refactor, perf, build, style, revert." >&2
+exit 1
