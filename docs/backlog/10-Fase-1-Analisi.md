@@ -11,7 +11,7 @@
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Completato |
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Da iniziare |
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Da iniziare |
-| P1-05 | Nomi localizzati italiano e inglese | — | S | Da iniziare |
+| P1-05 | Nomi localizzati italiano e inglese | — | S | Completato |
 | P1-08 | Tabelle dei tipi per generazione | — | S | Da iniziare |
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Da iniziare |
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
@@ -60,10 +60,10 @@ Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1
 
 ## P1-05 Nomi localizzati italiano e inglese
 
-Output: Analisi delle fonti dati.
+Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1-05-nomi-localizzati-italiano-e-inglese).
 
-- [ ] Percentuale di nomi italiani presenti per Pokémon, mosse, abilità, aree.
-- [ ] Regola di fallback all'inglese definita.
+- [x] Percentuale di nomi italiani presenti per Pokémon, mosse, abilità, aree.
+- [x] Regola di fallback all'inglese definita.
 
 Modifica dei criteri, 19 ottobre 2026 ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)): per l'MVP i nomi di aree e medaglie restano in inglese; la percentuale per le aree è già misurata in P1-04 (nessun nome italiano per le località di Unima). Resta da misurare quella per Pokémon, mosse e abilità.
 
