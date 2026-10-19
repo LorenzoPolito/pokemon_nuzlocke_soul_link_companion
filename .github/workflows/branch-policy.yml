@@ -1,0 +1,52 @@
+# Controllo dei branch delle pull request (decisioni 22 e 23).
+# - verso main: solo da develop
+# - verso develop: solo da pbi/…, bug/… o chore/…
+# Unico workflow del repository: non è una CI, la verifica resta locale
+# (npm run verify). Dura pochi secondi, dentro i minuti gratuiti.
+name: branch-policy
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, reopened, edited, synchronize]
+
+permissions: {}
+
+concurrency:
+  group: branch-policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  branch-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Controlla il branch di partenza
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ "$HEAD_REPO" != "$REPO" ]; then
+            echo "::error::La pull request deve partire da un branch di questo repository."
+            exit 1
+          fi
+          case "$BASE" in
+            main)
+              if [ "$HEAD" != "develop" ]; then
+                echo "::error::Verso main si arriva solo da develop (branch di partenza: $HEAD)."
+                exit 1
+              fi
+              ;;
+            develop)
+              case "$HEAD" in
+                pbi/* | bug/* | chore/*) ;;
+                *)
+                  echo "::error::Verso develop si arriva solo da pbi/…, bug/… o chore/… (branch di partenza: $HEAD)."
+                  exit 1
+                  ;;
+              esac
+              ;;
+          esac
+          echo "Branch consentito: $HEAD → $BASE"

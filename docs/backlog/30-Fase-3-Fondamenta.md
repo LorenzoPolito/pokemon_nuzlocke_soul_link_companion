@@ -104,7 +104,9 @@ Output: repository dell'app.
 Output: repository dell'app.
 
 - [ ] Il comando npm run verify esegue lint, controllo dei tipi, test di unità e di sistema e build dell'immagine.
-- [ ] Un hook pre-push blocca il push se la verifica fallisce o se il ramo è main; la pull request riporta l'esito della verifica.
+- [ ] Un hook pre-push blocca il push se la verifica fallisce o se il ramo è main o develop; la pull request riporta l'esito della verifica.
+
+Modifica dei criteri, 19 ottobre 2026: aggiunto `develop` al criterio dell'hook (git flow, [decisione 22](../decisioni.md#22-git-flow-main-e-develop)); il blocco su `main` e `develop` esiste già dalla preparazione del repository (P3-12).
 
 ## P3-12 Configurazione di GitHub
 
@@ -113,8 +115,9 @@ Output: repository su GitHub, Configurazione di GitHub.
 - [ ] Repository privato creato con nome e impostazioni del documento Configurazione di GitHub.
 - [ ] App Claude per GitHub installata sul repository, provata aprendo la pull request di preparazione del repository.
 
-Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituito da quello sull'app Claude per GitHub ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)); il nome effettivo del repository è `pokemon_nuzlocke_soul_link_companion`, diverso dalla proposta del documento Configurazione di GitHub, che è stato aggiornato.
+Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituito da quello sull'app Claude per GitHub ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)); il nome effettivo del repository è `pokemon_nuzlocke_soul_link_companion`, diverso dalla proposta del documento Configurazione di GitHub, che è stato aggiornato. Aggiunto il criterio su git flow (decisioni 22 e 23), su richiesta del product owner.
 - [ ] Dependabot attivo.
+- [ ] Git flow configurato: ramo `develop` creato, hook che blocca `main` e `develop`, controllo `branch-policy` su GitHub Actions entro i minuti gratuiti.
 - [ ] Licenza aggiunta appena decisa dopo P1-10.
 
 ## P3-13 Solo HTTP, compatibile con reverse proxy

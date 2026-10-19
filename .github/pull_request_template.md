@@ -1,6 +1,7 @@
 ## PBI o bug
 
-<!-- ID e titolo, per esempio: P4-06 Collegamento Soul Link automatico. Il titolo della PR comincia con lo stesso ID. -->
+<!-- ID e titolo, per esempio: P4-06 Collegamento Soul Link automatico. Il titolo della PR comincia con lo stesso ID.
+     Destinazione: develop (da pbi/…, bug/…, chore/…). Verso main solo la PR di rilascio da develop. -->
 
 - ID:
 - Taglia e budget:
