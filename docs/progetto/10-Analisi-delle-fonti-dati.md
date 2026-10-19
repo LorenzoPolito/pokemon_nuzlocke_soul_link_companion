@@ -259,3 +259,44 @@ Lacune trovate:
 | Nomi italiani delle aree di Unima: da quale fonte? Le fonti italiane (Pokémon Central) non sono raggiungibili dall'ambiente dell'agente | Decisa: tutto in inglese per l'MVP |
 | Incontri di Diamante Lucente, Perla Splendente, Scarlatto, Violetto: affidarsi a nuzlocke.data? Leggende: Arceus e Leggende: Z-A: inserimento manuale o niente suggerimenti? | Decisa: nuzlocke.data per i primi quattro; nessun suggerimento per i Leggende |
 | Precisione degli incontri dei giochi diversi dalla quinta generazione (qui solo contati) | Prima del rilascio di ciascun gioco (0.5) |
+
+## P1-10 Licenze di dati e sprite
+
+Data: 19 ottobre 2026. Taglia XS.
+
+### Licenze
+
+| Cosa | Licenza | Fonte letta il 19 ottobre 2026 | Cosa impone |
+| --- | --- | --- | --- |
+| Dati di PokéAPI (CSV di [PokeAPI/pokeapi](https://github.com/PokeAPI/pokeapi), copia in [PokeAPI/api-data](https://github.com/PokeAPI/api-data)) | BSD a 3 clausole, "© 2013–2023 Paul Hallett and PokéAPI contributors"; "Pokémon and Pokémon character names are trademarks of Nintendo" | [`LICENSE.md`](https://github.com/PokeAPI/pokeapi/blob/master/LICENSE.md) (api-data non ha un file di licenza proprio: copia i dati di PokéAPI) | Chi ridistribuisce, anche in forma binaria, deve riportare l'avviso di copyright, le condizioni e l'esclusione di garanzia; non si usa il nome PokéAPI per promuovere l'app |
+| Sprite di PokéAPI ([PokeAPI/sprites](https://github.com/PokeAPI/sprites)) | Il repository è dichiarato CC0 1.0, ma "all image contents within are Copyright The Pokémon Company" | [`LICENCE.txt`](https://github.com/PokeAPI/sprites/blob/master/LICENCE.txt); il `package.json` dice invece ISC | La CC0 non può dare diritti sulle immagini, che non sono di chi la applica: gli sprite restano proprietà di The Pokémon Company, senza una licenza d'uso. Le immagini per i Pokémon con ID oltre 650 sono sprite della comunità Smogon, usati con il loro permesso (README del repository) |
+| @smogon/calc ([smogon/damage-calc](https://github.com/smogon/damage-calc)) | MIT, "© 2013–2025 Honko and other contributors"; la versione 0.12.0 su npm riporta MIT | [`LICENSE`](https://github.com/smogon/damage-calc/blob/master/LICENSE), registro npm | Includere l'avviso di copyright e di licenza nelle copie del software |
+| nuzlocke.data | Nessuna licenza | Repository senza file di licenza (già noto) | Nessun diritto concesso: uso privato accettato ([decisione 7](../adr/0001-decisioni-di-progetto.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)) |
+
+I marchi e i nomi dei Pokémon sono di Nintendo, Creatures e Game Freak; il copyright delle immagini è di The Pokémon Company.
+
+### Compatibilità con un'app self-hosted
+
+- **Dati di PokéAPI**: compatibile. L'app incorpora nell'immagine il Pokédex SQLite generato dai dati: l'immagine deve contenere l'avviso della licenza BSD (per esempio un file `THIRD-PARTY-NOTICES` nel repository e nell'immagine), e l'app cita PokéAPI nelle informazioni sull'app.
+- **@smogon/calc**: compatibile; stesso file di avvisi. Il codice finisce nel bundle dell'app: l'avviso va anche lì.
+- **Sprite**: **non compatibile con una ridistribuzione, tollerato per l'uso privato**. L'app li carica a runtime dal repository di PokéAPI e li tiene nella cache del browser, senza copiarli nel repository né nell'immagine ([Specifica, Pokédex](01-Specifica-dei-requisiti.md#pokédex)): è la scelta che regge. Un'immagine Docker o un repository pubblico che li contenesse ridistribuirebbe immagini con copyright senza licenza.
+- **Segnalazione**: la domanda di PokéAPI/sprites sull'uso personale ([issue 38](https://github.com/PokeAPI/sprites/issues/38)) non ha una risposta dei manutentori che si possa citare; la tolleranza per l'uso privato è un'interpretazione, non un permesso.
+- **Dipendenza di disponibilità**: gli sprite dipendono dal repository di un terzo; con lo sprite assente la pagina resta utilizzabile (immagine di riserva, [Linee guida](05-Linee-guida-di-sviluppo.md#codice-antifragile)).
+- **Se il repository o l'immagine diventassero pubblici**: servono prima una licenza per il codice, la sostituzione o l'autorizzazione dei dati di nuzlocke.data e il controllo che nessuno sprite sia incluso.
+
+### Correzioni ai documenti
+
+- Il documento [Rischi tecnici](07-Rischi-tecnici-e-fonti-dei-dati.md) diceva "copyright degli sprite di Nintendo, repository con licenza Creative Commons": il copyright è di **The Pokémon Company** e la CC0 vale per il repository, non per le immagini. Corretto.
+- La licenza MIT di @smogon/calc, segnata "da confermare in P1-10", è confermata.
+
+### Decisioni prese
+
+- Gli sprite non si copiano mai nel repository né nell'immagine: si caricano da PokéAPI e si tengono nella cache del browser.
+- L'avviso della licenza BSD di PokéAPI e quello MIT di @smogon/calc si riportano in un file `THIRD-PARTY-NOTICES` e nelle informazioni sull'app (si crea con P3-01; a quel punto si aggiungono anche le dipendenze npm).
+- Nessuna licenza per il repository finché resta privato.
+
+### Domande aperte
+
+| Domanda | PBI che la chiude |
+| --- | --- |
+| Se un giorno il repository diventa pubblico: quale licenza per il codice (proposta: MIT) e cosa sostituire (dati di nuzlocke.data) | Decisione del product owner, solo se si decide di pubblicare; chiude il criterio "licenza" di P3-12 |

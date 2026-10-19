@@ -16,7 +16,7 @@ Il rischio più alto per l'MVP sono i dati di progressione (ordine delle aree, c
 | Cambio lingua senza ricaricare | Con Paraglide 2 setLocale() ricarica la pagina; il cambio senza ricarica è un'eccezione limitata al browser | Medio | Accettare la ricarica e correggere i criteri di P1-14 e P6-07 |
 | Better Auth su libSQL | Better Auth ha un adattatore Drizzle per SQLite; la CLI genera lo schema, le migrazioni passano da drizzle-kit | Basso | P1-13 conferma con il client libSQL asincrono |
 | Override di specie nel calcolatore | Nel codice di @smogon/calc il Pokémon unisce i dati della specie con le opzioni di override, da cui prende anche i tipi | Basso | P1-11 misura anche il peso aggiunto al bundle |
-| Sprite | Copyright degli sprite di Nintendo, repository con licenza Creative Commons; per un'app personale basta citare la proprietà di Nintendo. Gli sprite della quinta generazione sono ufficiali | Basso | Nota di attribuzione nell'app e nel README |
+| Sprite | Copyright di The Pokémon Company (non di Nintendo); il repository PokeAPI/sprites è dichiarato CC0, ma la CC0 non copre le immagini, che restano senza licenza d'uso. P1-10 (19 ottobre 2026): tollerato per l'uso privato, non ridistribuibile | Basso per l'uso privato, alto se si ridistribuisse | Gli sprite non vanno mai nel repository né nell'immagine: si caricano da PokéAPI; nota di attribuzione nell'app e nel README ([Analisi delle fonti dati](10-Analisi-delle-fonti-dati.md#p1-10-licenze-di-dati-e-sprite)) |
 | Licenza dei dati PokéAPI | Licenza BSD a 3 clausole, con nomi e personaggi marchi di Nintendo | Basso | Citare PokéAPI nell'app |
 | Sync SSE con l'adapter Node | Non verificato in questa sessione | Basso | P1-16 |
 | Dimensione del Pokédex SQLite | Non verificato | Da misurare | P1-15 |
@@ -35,8 +35,8 @@ Quasi tutti i dati dei Pokémon arrivano da PokéAPI; i dati di progressione dei
 | Regali, scambi, incontri fissi | PokéAPI, metodi `gift`, `gift-egg`, `static`, `npc-trade` (scambi di Bianco 2 e Nero 2 aggiunti a maggio 2026) | Come sopra | Presenti, tranne gli scambi di Nero e Bianco (P1-04): quelli a mano |
 | Ordine delle aree | nuzlocke.data (file delle aree in ordine con le lotte dei boss) | Nessuna licenza: uso privato accettato, da rivedere prima di qualsiasi condivisione | Importato e verificato in P1-06, con correzioni annotate |
 | Capipalestra, medaglie, level cap | nuzlocke.data (squadre dei boss), verificato con PokémonDB, Bulbapedia e Serebii; il level cap è il livello più alto nella squadra del boss | nuzlocke.data senza licenza (decisione 7); dati di fatto verificati | Fatto in P1-07 per la quinta generazione |
-| Sprite | PokeAPI/sprites | Copyright Nintendo, attribuzione | Utilizzabili nel repository privato |
-| Tabelle dei tipi | Dati di @smogon/calc o guide pubbliche | Licenza MIT per @smogon/calc (da confermare in P1-10) | Non serve all'MVP |
+| Sprite | PokeAPI/sprites | Copyright The Pokémon Company, senza licenza d'uso; caricati a runtime, mai inclusi nel repository né nell'immagine | Uso privato tollerato (P1-10) |
+| Tabelle dei tipi | Dati di @smogon/calc o guide pubbliche | Licenza MIT per @smogon/calc (confermata in P1-10) | Non serve all'MVP |
 
 ## Fonti consultate
 
