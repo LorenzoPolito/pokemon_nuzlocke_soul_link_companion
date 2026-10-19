@@ -14,7 +14,7 @@
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Da iniziare |
 | P1-08 | Tabelle dei tipi per generazione | — | S | Da iniziare |
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Da iniziare |
-| P1-10 | Licenze di dati e sprite | — | XS | Da iniziare |
+| P1-10 | Licenze di dati e sprite | — | XS | Completato |
 | P1-11 | Prova: @smogon/calc con override | — | S | Da iniziare |
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | Da iniziare |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Da iniziare |
@@ -104,10 +104,12 @@ Output: Meccaniche per generazione.
 
 ## P1-10 Licenze di dati e sprite
 
-Output: Analisi delle fonti dati.
+Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1-10-licenze-di-dati-e-sprite).
 
-- [ ] Licenze di PokéAPI, dei suoi sprite e di @smogon/calc riportate.
-- [ ] Condizioni d'uso compatibili con un'app self-hosted confermate o segnalate.
+- [x] Licenze di PokéAPI, dei suoi sprite e di @smogon/calc riportate.
+- [x] Condizioni d'uso compatibili con un'app self-hosted confermate o segnalate.
+
+Nota di chiusura, 19 ottobre 2026: gli sprite non hanno una licenza d'uso (copyright The Pokémon Company): uso privato tollerato, ridistribuzione no; per questo non si includono mai nel repository né nell'immagine. Il criterio "licenza" di P3-12 resta in attesa di una eventuale pubblicazione.
 
 ## P1-11 Prova: @smogon/calc con override
 
