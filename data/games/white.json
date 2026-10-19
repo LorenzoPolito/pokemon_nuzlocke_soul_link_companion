@@ -1,0 +1,1148 @@
+{
+  "$schema": "./game.schema.json",
+  "schemaVersion": 1,
+  "gameId": "white",
+  "dataVersion": "2026.10.19-1",
+  "generation": 5,
+  "versionGroup": "black-white",
+  "region": "unova",
+  "names": {
+    "en": "White",
+    "it": "Bianca"
+  },
+  "runColor": null,
+  "sources": {
+    "nuzlocke.data": "https://github.com/domtronn/nuzlocke.data/tree/baf5df5",
+    "pokeapi": "https://github.com/PokeAPI/pokeapi/tree/6fd69df/data/v2/csv",
+    "bulbapedia-walkthrough": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Black_and_White"
+  },
+  "areas": [
+    {
+      "key": "starter",
+      "names": {
+        "en": "Starter",
+        "it": "Starter"
+      },
+      "pokeapiLocation": null,
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:1",
+        "note": "Area speciale (decisione 16). Starter da PokéAPI: regali in `nuvema-town` (snivy, tepig, oshawott, pokeapi@6fd69df encounters gift)",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 1 (scelta dello starter)"
+      },
+      "starters": [
+        "snivy",
+        "tepig",
+        "oshawott"
+      ],
+      "hasWildEncounters": false
+    },
+    {
+      "key": "unova-route-1",
+      "names": {
+        "en": "Route 1",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-1",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:4",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 1"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-2",
+      "names": {
+        "en": "Route 2",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-2",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:6",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 2"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "striaton-city",
+      "names": {
+        "en": "Striaton City",
+        "it": null
+      },
+      "pokeapiLocation": "striaton-city",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:8",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 2"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "dreamyard",
+      "names": {
+        "en": "Dreamyard",
+        "it": null
+      },
+      "pokeapiLocation": "dreamyard",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:11",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 2"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-3",
+      "names": {
+        "en": "Route 3",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-3",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:12",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 3"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "wellspring-cave",
+      "names": {
+        "en": "Wellspring Cave",
+        "it": null
+      },
+      "pokeapiLocation": "wellspring-cave",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:14",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 3"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "nacrene-city",
+      "names": {
+        "en": "Nacrene City",
+        "it": null
+      },
+      "pokeapiLocation": "nacrene-city",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:15",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 3"
+      },
+      "hasWildEncounters": false
+    },
+    {
+      "key": "pinwheel-forest",
+      "names": {
+        "en": "Pinwheel Forest",
+        "it": null
+      },
+      "pokeapiLocation": "pinwheel-forest",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:18",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 4"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "castelia-city",
+      "names": {
+        "en": "Castelia City",
+        "it": null
+      },
+      "pokeapiLocation": "castelia-city",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:19",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 4"
+      },
+      "hasWildEncounters": false
+    },
+    {
+      "key": "unova-route-4",
+      "names": {
+        "en": "Route 4",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-4",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:22",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "desert-resort",
+      "names": {
+        "en": "Desert Resort",
+        "it": null
+      },
+      "pokeapiLocation": "desert-resort",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:24",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "relic-castle",
+      "names": {
+        "en": "Relic Castle",
+        "it": null
+      },
+      "pokeapiLocation": "relic-castle",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:25",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 5"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-5",
+      "names": {
+        "en": "Route 5",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-5",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:28",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 6"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "driftveil-drawbridge",
+      "names": {
+        "en": "Driftveil Drawbridge",
+        "it": null
+      },
+      "pokeapiLocation": "driftveil-drawbridge",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:30",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 6"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "driftveil-city",
+      "names": {
+        "en": "Driftveil City",
+        "it": null
+      },
+      "pokeapiLocation": "driftveil-city",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:31",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 6"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "cold-storage",
+      "names": {
+        "en": "Cold Storage",
+        "it": null
+      },
+      "pokeapiLocation": "cold-storage",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:32",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 6"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-6",
+      "names": {
+        "en": "Route 6",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-6",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:35",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "mistralton-cave",
+      "names": {
+        "en": "Mistralton Cave",
+        "it": null
+      },
+      "pokeapiLocation": "mistralton-cave",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:36",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "guidance-chamber",
+      "names": {
+        "en": "Guidance Chamber",
+        "it": null
+      },
+      "pokeapiLocation": "guidance-chamber",
+      "phase": "story",
+      "source": {
+        "entry": "pokeapi@6fd69df locations",
+        "note": "Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "chargestone-cave",
+      "names": {
+        "en": "Chargestone Cave",
+        "it": null
+      },
+      "pokeapiLocation": "chargestone-cave",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:37",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-7",
+      "names": {
+        "en": "Route 7",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-7",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:39",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "celestial-tower",
+      "names": {
+        "en": "Celestial Tower",
+        "it": null
+      },
+      "pokeapiLocation": "celestial-tower",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:45",
+        "note": "Spostata prima di Route 17: in nuzlocke.data è dopo P2 Laboratory, ma la visita è obbligatoria prima della palestra di Mistralton (Bulbapedia, Walkthrough:Pokémon Black and White/Part 7)",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 7"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-17",
+      "names": {
+        "en": "Route 17",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-17",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:42",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-18",
+      "names": {
+        "en": "Route 18",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-18",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:43",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "p2-laboratory",
+      "names": {
+        "en": "P2 Laboratory",
+        "it": null
+      },
+      "pokeapiLocation": "p2-laboratory",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:44",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "twist-mountain",
+      "names": {
+        "en": "Twist Mountain",
+        "it": null
+      },
+      "pokeapiLocation": "twist-mountain",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:46",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "icirrus-city",
+      "names": {
+        "en": "Icirrus City",
+        "it": null
+      },
+      "pokeapiLocation": "icirrus-city",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:47",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "dragonspiral-tower",
+      "names": {
+        "en": "Dragonspiral Tower",
+        "it": null
+      },
+      "pokeapiLocation": "dragonspiral-tower",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:49",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-8",
+      "names": {
+        "en": "Route 8",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-8",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:50",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "moor-of-icirrus",
+      "names": {
+        "en": "Moor of Icirrus",
+        "it": null
+      },
+      "pokeapiLocation": "moor-of-icirrus",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:52",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-9",
+      "names": {
+        "en": "Route 9",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-9",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:53",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-10",
+      "names": {
+        "en": "Route 10",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-10",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:55",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-victory-road",
+      "names": {
+        "en": "Victory Road",
+        "it": null
+      },
+      "pokeapiLocation": "unova-victory-road",
+      "phase": "story",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:57",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "trial-chamber",
+      "names": {
+        "en": "Trial Chamber",
+        "it": null
+      },
+      "pokeapiLocation": "trial-chamber",
+      "phase": "story",
+      "source": {
+        "entry": "pokeapi@6fd69df locations",
+        "note": "Assente in nuzlocke.data; stanza di Victory Road, messa subito dopo",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "ns-castle",
+      "names": {
+        "en": "N's Castle",
+        "it": null
+      },
+      "pokeapiLocation": "ns-castle",
+      "phase": "story",
+      "source": {
+        "entry": "pokeapi@6fd69df locations",
+        "note": "Assente in nuzlocke.data; incontro fisso con il leggendario della versione, alla fine della storia (Bulbapedia, Walkthrough:Pokémon Black and White/Part 12)",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 12"
+      },
+      "hasWildEncounters": false
+    },
+    {
+      "key": "challengers-cave",
+      "names": {
+        "en": "Challenger's Cave",
+        "it": null
+      },
+      "pokeapiLocation": "challengers-cave",
+      "phase": "postgame",
+      "source": {
+        "entry": "pokeapi@6fd69df locations",
+        "note": "Assente in nuzlocke.data; postgame, prima di Route 11 (Bulbapedia, Walkthrough:Pokémon Black and White/Part 14)",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 14"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-11",
+      "names": {
+        "en": "Route 11",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-11",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:70",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "village-bridge",
+      "names": {
+        "en": "Village Bridge",
+        "it": null
+      },
+      "pokeapiLocation": "village-bridge",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:71",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-12",
+      "names": {
+        "en": "Route 12",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-12",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:72",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-13",
+      "names": {
+        "en": "Route 13",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-13",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:73",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "giant-chasm",
+      "names": {
+        "en": "Giant Chasm",
+        "it": null
+      },
+      "pokeapiLocation": "giant-chasm",
+      "phase": "postgame",
+      "source": {
+        "entry": "pokeapi@6fd69df locations",
+        "note": "Assente in nuzlocke.data; dopo Route 13 (Bulbapedia, Walkthrough:Pokémon Black and White/Part 16)",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 16"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "undella-town",
+      "names": {
+        "en": "Undella Town",
+        "it": null
+      },
+      "pokeapiLocation": "undella-town",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:74",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 17"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "undella-bay",
+      "names": {
+        "en": "Undella Bay",
+        "it": null
+      },
+      "pokeapiLocation": "undella-bay",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:76",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 17"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "unova-route-14",
+      "names": {
+        "en": "Route 14",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-14",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:77",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 17"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "abundant-shrine",
+      "names": {
+        "en": "Abundant Shrine",
+        "it": null
+      },
+      "pokeapiLocation": "abundant-shrine",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:78",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 17"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "white-forest",
+      "names": {
+        "en": "White Forest",
+        "it": null
+      },
+      "pokeapiLocation": "white-forest",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:79",
+        "note": "Esclusiva di Bianco. PokéAPI non ha incontri per quest'area: specie da completare a mano (P1-04)",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
+      },
+      "hasWildEncounters": false
+    },
+    {
+      "key": "unova-route-15",
+      "names": {
+        "en": "Route 15",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-15",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:80",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "marvelous-bridge",
+      "names": {
+        "en": "Marvelous Bridge",
+        "it": null
+      },
+      "pokeapiLocation": "marvelous-bridge",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:81",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "lostlorn-forest",
+      "names": {
+        "en": "Lostlorn Forest",
+        "it": null
+      },
+      "pokeapiLocation": "lostlorn-forest",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:82",
+        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
+      },
+      "hasWildEncounters": true
+    },
+    {
+      "key": "liberty-garden",
+      "names": {
+        "en": "Liberty Garden",
+        "it": null
+      },
+      "pokeapiLocation": "liberty-garden",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:83",
+        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore. Raggiungibile solo con il Liberty Pass, distribuito come evento",
+        "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
+      },
+      "hasWildEncounters": false
+    },
+    {
+      "key": "unova-route-16",
+      "names": {
+        "en": "Route 16",
+        "it": null
+      },
+      "pokeapiLocation": "unova-route-16",
+      "phase": "postgame",
+      "source": {
+        "entry": "nuzlocke.data@baf5df5 routes/wh.txt:84",
+        "note": "Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore",
+        "check": "confermato: Bulbapedia, Walkthrough:Pokémon Black and White/Part 18"
+      },
+      "hasWildEncounters": true
+    }
+  ],
+  "specialEncounters": [
+    {
+      "key": "gift-dreamyard-pansage",
+      "type": "gift",
+      "areaKey": "dreamyard",
+      "species": "pansage",
+      "level": 10,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      }
+    },
+    {
+      "key": "gift-dreamyard-pansear",
+      "type": "gift",
+      "areaKey": "dreamyard",
+      "species": "pansear",
+      "level": 10,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      }
+    },
+    {
+      "key": "gift-dreamyard-panpour",
+      "type": "gift",
+      "areaKey": "dreamyard",
+      "species": "panpour",
+      "level": 10,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      }
+    },
+    {
+      "key": "gift-castelia-city-zorua",
+      "type": "gift",
+      "areaKey": "castelia-city",
+      "species": "zorua",
+      "level": 10,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      }
+    },
+    {
+      "key": "gift-marvelous-bridge-magikarp",
+      "type": "gift",
+      "areaKey": "marvelous-bridge",
+      "species": "magikarp",
+      "level": 5,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      }
+    },
+    {
+      "key": "gift-unova-route-18-larvesta",
+      "type": "gift",
+      "areaKey": "unova-route-18",
+      "species": "larvesta",
+      "level": 1,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift-egg)"
+      }
+    },
+    {
+      "key": "static-liberty-garden-victini",
+      "type": "static",
+      "areaKey": "liberty-garden",
+      "species": "victini",
+      "level": 15,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-dreamyard-musharna",
+      "type": "static",
+      "areaKey": "dreamyard",
+      "species": "musharna",
+      "level": 50,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      },
+      "conditions": [
+        "defeated-ghetsis",
+        "weekday-friday"
+      ]
+    },
+    {
+      "key": "static-lostlorn-forest-zoroark",
+      "type": "static",
+      "areaKey": "lostlorn-forest",
+      "species": "zoroark",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-unova-route-6-foongus",
+      "type": "static",
+      "areaKey": "unova-route-6",
+      "species": "foongus",
+      "level": 20,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-unova-route-10-foongus",
+      "type": "static",
+      "areaKey": "unova-route-10",
+      "species": "foongus",
+      "level": 30,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-unova-route-10-amoonguss",
+      "type": "static",
+      "areaKey": "unova-route-10",
+      "species": "amoonguss",
+      "level": 40,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-relic-castle-volcarona",
+      "type": "static",
+      "areaKey": "relic-castle",
+      "species": "volcarona",
+      "level": 70,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-mistralton-cave-cobalion",
+      "type": "static",
+      "areaKey": "mistralton-cave",
+      "species": "cobalion",
+      "level": 42,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-unova-victory-road-terrakion",
+      "type": "static",
+      "areaKey": "unova-victory-road",
+      "species": "terrakion",
+      "level": 42,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-pinwheel-forest-virizion",
+      "type": "static",
+      "areaKey": "pinwheel-forest",
+      "species": "virizion",
+      "level": 42,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-ns-castle-zekrom",
+      "type": "static",
+      "areaKey": "ns-castle",
+      "species": "zekrom",
+      "level": 50,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-dragonspiral-tower-zekrom",
+      "type": "static",
+      "areaKey": "dragonspiral-tower",
+      "species": "zekrom",
+      "level": 50,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-abundant-shrine-landorus",
+      "type": "static",
+      "areaKey": "abundant-shrine",
+      "species": "landorus",
+      "level": 70,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "static-giant-chasm-kyurem",
+      "type": "static",
+      "areaKey": "giant-chasm",
+      "species": "kyurem",
+      "level": 75,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (static)"
+      }
+    },
+    {
+      "key": "gift-nacrene-city-omanyte",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "omanyte",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-helix-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-kabuto",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "kabuto",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-dome-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-aerodactyl",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "aerodactyl",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-old-amber"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-lileep",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "lileep",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-root-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-anorith",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "anorith",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-claw-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-cranidos",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "cranidos",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-skull-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-shieldon",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "shieldon",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-armor-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-tirtouga",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "tirtouga",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-cover-fossil"
+      ]
+    },
+    {
+      "key": "gift-nacrene-city-archen",
+      "type": "gift",
+      "areaKey": "nacrene-city",
+      "species": "archen",
+      "level": 25,
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (gift)"
+      },
+      "conditions": [
+        "item-plume-fossil"
+      ]
+    },
+    {
+      "key": "trade-nacrene-city-cottonee",
+      "type": "trade",
+      "areaKey": "nacrene-city",
+      "species": "cottonee",
+      "level": null,
+      "source": {
+        "entry": "Bulbapedia, List of in-game trade Pokémon in Pokémon Black and White; Serebii, Pokémon Black & White - In-Game Trades",
+        "check": "confermato: nuzlocke.data@baf5df5 elenca la specie nell'area",
+        "note": "Assente in PokéAPI; livello non riportato dalle fonti consultate"
+      }
+    },
+    {
+      "key": "trade-driftveil-city-basculin",
+      "type": "trade",
+      "areaKey": "driftveil-city",
+      "species": "basculin",
+      "level": null,
+      "source": {
+        "entry": "Bulbapedia, List of in-game trade Pokémon in Pokémon Black and White; Serebii, Pokémon Black & White - In-Game Trades",
+        "check": "confermato: nuzlocke.data@baf5df5 elenca la specie nell'area",
+        "note": "Assente in PokéAPI; livello non riportato dalle fonti consultate; forma Blue-Striped"
+      }
+    },
+    {
+      "key": "trade-unova-route-7-emolga",
+      "type": "trade",
+      "areaKey": "unova-route-7",
+      "species": "emolga",
+      "level": null,
+      "source": {
+        "entry": "Bulbapedia, List of in-game trade Pokémon in Pokémon Black and White; Serebii, Pokémon Black & White - In-Game Trades",
+        "check": "confermato: nuzlocke.data@baf5df5 elenca la specie nell'area",
+        "note": "Assente in PokéAPI; livello non riportato dalle fonti consultate"
+      }
+    },
+    {
+      "key": "trade-unova-route-15-rotom",
+      "type": "trade",
+      "areaKey": "unova-route-15",
+      "species": "rotom",
+      "level": null,
+      "source": {
+        "entry": "Bulbapedia, List of in-game trade Pokémon in Pokémon Black and White; Serebii, Pokémon Black & White - In-Game Trades",
+        "check": "confermato: nuzlocke.data@baf5df5 elenca la specie nell'area",
+        "note": "Assente in PokéAPI; livello non riportato dalle fonti consultate"
+      }
+    },
+    {
+      "key": "trade-undella-town-munchlax",
+      "type": "trade",
+      "areaKey": "undella-town",
+      "species": "munchlax",
+      "level": null,
+      "source": {
+        "entry": "Bulbapedia, List of in-game trade Pokémon in Pokémon Black and White; Serebii, Pokémon Black & White - In-Game Trades",
+        "check": "confermato: nuzlocke.data@baf5df5 elenca la specie nell'area",
+        "note": "Assente in PokéAPI; livello non riportato dalle fonti consultate; solo in estate"
+      }
+    }
+  ]
+}

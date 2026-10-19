@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | P1-01 | Inventario dei giochi supportati | — | S | Completato |
 | P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | In verifica |
-| P1-06 | Ordine di progressione delle aree | P1-04 | M | Da iniziare |
+| P1-06 | Ordine di progressione delle aree | P1-04 | M | In verifica |
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | Da iniziare |
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Da iniziare |
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Da iniziare |
@@ -67,11 +67,13 @@ Output: Analisi delle fonti dati.
 
 ## P1-06 Ordine di progressione delle aree
 
-Output: Dati di gioco: aree, medaglie, level cap.
+Output: [Dati di gioco](../progetto/11-Dati-di-gioco.md#p1-06-ordine-di-progressione-delle-aree) e i file `data/games/*.json`.
 
-- [ ] Fonte scelta per l'ordine delle aree, o processo di inserimento manuale definito.
-- [ ] Formato del file dati deciso, con i dati completi di Bianco, Nero, Bianco 2 e Nero 2 e l'area speciale starter in testa all'ordine; regali, incontri fissi e scambi hanno una chiave propria e l'area a cui appartengono.
-- [ ] Modalità di aggiunta di aree personalizzate da parte dell'admin definita.
+- [x] Fonte scelta per l'ordine delle aree, o processo di inserimento manuale definito.
+- [x] Formato del file dati deciso, con i dati completi di Bianco, Nero, Bianco 2 e Nero 2 e l'area speciale starter in testa all'ordine; regali, incontri fissi e scambi hanno una chiave propria e l'area a cui appartengono.
+- [x] Modalità di aggiunta di aree personalizzate da parte dell'admin definita.
+
+Nota di chiusura, 19 ottobre 2026: i nomi italiani delle aree sono `null` (fallback all'inglese) perché PokéAPI non li ha per Unima; si completano in P1-05. L'ordine di 15 aree di Nero e Bianco e 26 di Nero 2 e Bianco 2 non è stato verificato con la seconda fonte.
 
 ## P1-07 Medaglie e level cap per gioco
 
