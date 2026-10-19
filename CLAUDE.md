@@ -38,7 +38,8 @@ I PDF in `docs/progetto/pdf/` sono copie storiche con i diagrammi: non si aggior
 
 - Git flow (decisione 22): mai push su `main` o `develop`, mai unire pull request, mai creare tag. Si apre una PR e unisce il PO: squash verso `develop`, merge commit da `develop` a `main`.
 - Un branch e una PR per ogni PBI o bug, creato da `develop` e con PR verso `develop`: `pbi/P1-01-inventario-giochi`, `bug/BUG-007-morte-partner`, `chore/…` per il repository. Verso `main` solo la PR di rilascio da `develop`, aperta dall'agente.
-- Il controllo `branch-policy` (GitHub Actions) deve essere verde; Actions si usa solo per quello, nei minuti gratuiti (decisione 23).
+- Il controllo `branch-policy` (GitHub Actions) deve essere verde; Actions si usa solo per quello, nei minuti gratuiti (decisione 23). Il branch predefinito di GitHub è `main`: apri sempre le PR con `base: develop`.
+- Le protezioni sono hook (decisione 25): `.claude/hooks/guard.cjs` nega o chiede conferma per le azioni vietate o distruttive, `.githooks/` controlla commit, messaggi e push. Non aggirarli mai (niente `--no-verify`, niente cambio di `core.hooksPath`); se un hook ti blocca, chiedi al PO.
 - Puoi approvare le tue PR con una revisione di tipo commento che comincia con "Approvata dall'agente", con checklist di revisione ed esito della verifica (decisione 24). L'approvazione formale di GitHub non è possibile.
 - Commit in Conventional Commits con l'ID: `docs(P1-01): …`, `feat(P4-06): …`, `fix(BUG-004): …`.
 - Rispetta il budget della taglia (tabella in `04-Regole-di-lavoro.md`). Oltre il 150%: fermati, registra lo stato e proponi di dividere il PBI.
@@ -83,11 +84,11 @@ Comandi (da completare in P3-01):
 
 | Comando | Cosa fa |
 | --- | --- |
-| `git config core.hooksPath .githooks` | Attiva l'hook pre-push (oggi blocca solo i push su `main` e `develop`) |
+| `git config core.hooksPath .githooks` | Attiva gli hook di git (lo fa da sé l'hook SessionStart di Claude Code) |
 | `npm run verify` | Lint, tipi, test di unità e di sistema, build dell'immagine (da P3-11) |
 
 Architettura, moduli e convenzioni di codice: `docs/progetto/05-Linee-guida-di-sviluppo.md`.
 
 ## Decisioni
 
-Le decisioni già prese (24 al 19 ottobre 2026), con contesto, alternative e conseguenze, sono in `docs/decisioni.md`. Una decisione nuova o cambiata si aggiunge lì, solo con l'approvazione del PO.
+Le decisioni già prese (25 al 19 ottobre 2026), con contesto, alternative e conseguenze, sono in `docs/decisioni.md`. Una decisione nuova o cambiata si aggiunge lì, solo con l'approvazione del PO.
