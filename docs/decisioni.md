@@ -31,9 +31,10 @@ Regole del registro:
 | 20 | [Design: Material 3 e Apple, font di sistema, token](#20-design-material-3-e-apple-font-di-sistema-token) | Accettata |
 | 21 | [La documentazione nel repository è l'unica fonte valida](#21-la-documentazione-nel-repository-è-lunica-fonte-valida) | Accettata |
 | 22 | [Git flow: `main` e `develop`](#22-git-flow-main-e-develop) | Accettata |
-| 23 | [GitHub Actions solo per il controllo dei branch, gratis](#23-github-actions-solo-per-il-controllo-dei-branch-gratis) | Accettata |
+| 23 | [GitHub Actions solo per il controllo dei branch, gratis](#23-github-actions-solo-per-il-controllo-dei-branch-gratis) | Integrata da 26 |
 | 24 | [L'agente può approvare le proprie pull request](#24-lagente-può-approvare-le-proprie-pull-request) | Accettata |
-| 25 | [Protezioni con gli hook di Claude Code e di git](#25-protezioni-con-gli-hook-di-claude-code-e-di-git) | Accettata |
+| 25 | [Protezioni con gli hook di Claude Code e di git](#25-protezioni-con-gli-hook-di-claude-code-e-di-git) | Integrata da 26 |
+| 26 | [Impostazioni di GitHub lasciate come sono](#26-impostazioni-di-github-lasciate-come-sono) | Accettata |
 
 ---
 
@@ -249,7 +250,22 @@ Regole del registro:
 - **Alternative scartate**: un account di organizzazione GitHub Team o Enterprise, scartato per il costo; il repository pubblico, scartato perché il repository resta privato.
 - **Conseguenze**:
   - Le protezioni sono locali. Il product owner può saltare gli hook di git con `--no-verify` quando serve (per esempio per un tag o una correzione d'emergenza); l'agente no, perché l'hook di Claude Code glielo vieta.
-  - Il product owner deve impostare una volta `git config core.hooksPath .githooks` sul proprio clone.
+  - Chi lavora in un clone locale deve impostare una volta `git config core.hooksPath .githooks`; il product owner non ne usa uno (decisione 26).
   - Con `main` come branch predefinito, ogni nuova pull request va aperta indicando `develop` come destinazione: l'hook di Claude Code lo impone all'agente, e il controllo `branch-policy` lo segnala per tutti.
   - Gli hook usano solo `sh`, `git` e `node`, già richiesto da Claude Code.
   - Il documento Configurazione di GitHub indicava GitHub Pro per i ruleset sui repository privati; secondo il messaggio ricevuto il 19 ottobre 2026 serve un'organizzazione Team o Enterprise.
+
+## 26. Impostazioni di GitHub lasciate come sono
+
+- **Data**: 19 ottobre 2026
+- **Contesto**: le impostazioni del repository non si possono cambiare dall'ambiente dell'agente (il proxy rifiuta le scritture), quindi restano al product owner. Per quattro di esse il product owner ha deciso di non intervenire.
+- **Decisione**:
+  - **Wiki** resta disattivato: la documentazione vive in `docs/`. Issues resta attivo.
+  - **Dependabot** non si attiva (né avvisi né aggiornamenti di sicurezza); il file `.github/dependabot.yml` non si crea in P3-01.
+  - **Budget di spesa di GitHub Actions**: il product owner non lo imposta a 0 dollari. La decisione 23 restava valida nella parte "solo il workflow `branch-policy`", che dura pochi secondi.
+  - **Clone locale**: il product owner non lavora in un clone locale, quindi `git config core.hooksPath .githooks` sul suo computer non serve. Gli hook di git valgono per l'agente, che li attiva da sé a ogni sessione (decisione 25).
+- **Alternative scartate**: non documentato.
+- **Conseguenze**:
+  - Nessun avviso automatico sulle vulnerabilità delle dipendenze. Quando esisterà `package.json`, una mitigazione possibile è `npm audit` dentro `npm run verify` (P3-11): proposta nel documento Domande aperte (P1-19), non decisa.
+  - Senza budget a 0, i minuti di Actions oltre quelli gratuiti sono addebitabili solo se sull'account GitHub c'è un metodo di pagamento; il product owner lo verifica, io non posso. Il workflow usa pochi secondi per PR, quindi i minuti gratuiti non dovrebbero esaurirsi.
+  - Il criterio di P3-12 "Dependabot attivo" è sostituito da questa decisione.
