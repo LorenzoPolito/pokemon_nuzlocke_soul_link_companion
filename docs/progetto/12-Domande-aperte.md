@@ -1,16 +1,16 @@
 # Nuzlocke SoulLink Companion – Domande aperte
 
-Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie le domande ancora aperte al 19 ottobre 2026: il comportamento con rete instabile durante la partita e quanto è emerso dai PBI di fase 1 (P1-01, P1-04, P1-06, P1-07). **Nessuna domanda è decisa**: ogni voce ha una proposta, e decide il product owner.
+Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie le domande che erano aperte al 19 ottobre 2026: il comportamento con rete instabile durante la partita e quanto è emerso dai PBI di fase 1 (P1-01, P1-04, P1-06, P1-07). **Il product owner ha risposto a tutte il 19 ottobre 2026**: le risposte sono in ogni voce e nelle ADR [0002](../adr/0002-rete-instabile.md), [0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md), [0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md) e [0005](../adr/0005-adr-e-scelte-di-processo.md). Il documento resta come storico delle domande e delle proposte.
 
 ## Come si usa
 
-- Per ogni domanda rispondi "ok" (accetti la proposta), "alternativa" (con quale) o "decido dopo". Si può rispondere anche in blocco, per esempio "ok a tutte tranne R-1 e D-3".
+- Per ogni domanda il product owner risponde "ok" (accetta la proposta), "alternativa" (con quale) o "decido dopo".
 - Priorità: **A** blocca la progettazione della fase 2 (modello dati, API, schermate); **B** serve prima del rilascio indicato; **C** è un dettaglio che non blocca nulla.
-- Una risposta diventa una voce nuova di [`decisioni.md`](../decisioni.md); dove serve, aggiorno la [Specifica dei requisiti](01-Specifica-dei-requisiti.md) e i dati di gioco. Non cambio nulla prima della tua risposta.
+- Una risposta diventa una ADR in [`docs/adr/`](../adr/README.md); dove serve, si aggiornano la [Specifica dei requisiti](01-Specifica-dei-requisiti.md), il [Modello dati](06-Modello-dati-bozza.md) e i dati di gioco.
 
 ## Riepilogo
 
-| ID | Domanda | Priorità | Proposta in una riga | Chiude |
+| ID | Domanda | Priorità | Proposta in una riga (risposte: nelle voci sotto) | Chiude |
 | --- | --- | --- | --- | --- |
 | R-1 | Si può modificare senza rete? | A | Modifiche semplici in coda per 10 minuti; azioni Soul Link mai in coda | P2-09, P4-18 |
 | R-2 | Quando la connessione è "persa" e cosa succede al ritorno | A | Segnale ogni 15 s, persa dopo 40 s; al ritorno si recuperano gli eventi mancanti | P2-10, P4-18 |
@@ -49,7 +49,7 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
   - le **azioni Soul Link** (catturare con collegamento, spostare in team o box, segnare morto, saltare un'area) **non si accodano mai**: servono la rete e lo stato aggiornato, e al ritorno vanno confermate a mano;
   - tutte le scritture portano la stessa chiave di idempotenza a ogni tentativo (R-4).
 - **Alternativa**: niente coda (più semplice): senza rete il pulsante Salva è disattivato e la bozza resta compilata. Si perde la comodità per i cali brevi, ma non c'è nessun rischio di applicare qualcosa a uno stato vecchio.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Niente coda: senza rete il pulsante Salva è disattivato e il testo resta compilato (alternativa scelta).
 
 ### R-2 Quando la connessione è persa e cosa succede al ritorno (priorità A)
 
@@ -60,7 +60,7 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
   - al ritorno invia l'identificativo dell'ultimo evento ricevuto: il server rimanda gli eventi mancanti dal diario della run. Se sono troppi o il server è stato riavviato, il client ricarica l'intero stato della run;
   - l'avviso scompare da solo al riallineamento, senza richiedere nessun gesto.
 - **Alternativa**: ricaricare sempre l'intero stato al ritorno (più semplice, ma più traffico su rete mobile e perdita dello scorrimento della schermata).
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### R-3 Lock con rete persa o server riavviato (priorità A)
 
@@ -71,35 +71,35 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
   - un riavvio del server azzera i lock senza errori; i client con un modulo aperto li richiedono di nuovo appena si riconnettono;
   - chi salva e ha perso il lock sovrascrive comunque ("vince l'ultimo"); chi viene sovrascritto riceve l'avviso con il valore nuovo, e il valore precedente resta nel diario.
 - **Alternativa**: nessuna prevista; è l'applicazione diretta di ciò che è già deciso.
-- **Risposta**: _da compilare_ (una conferma chiude anche il criterio "verificato con il product owner il disegno dei lock").
+- **Risposta (19 ottobre 2026)**: Come proposto; il disegno dei lock è confermato.
 
 ### R-4 Doppio invio e risposta persa (priorità A)
 
 - **Domanda**: se la richiesta arriva ma la risposta si perde, e il client riprova, come si evita un doppio effetto?
 - **Proposta**: ogni scrittura porta una chiave di idempotenza generata dal client; il server salva la risposta e, se riceve di nuovo la stessa chiave, la restituisce senza rifare nulla. La chiave vale **24 ore** (già nel Modello dati). Poiché la coda di R-1 dura al massimo 10 minuti, la finestra è ampiamente sufficiente.
 - **Alternativa**: nessuna ragionevole; senza idempotenza una morte ripetuta o una cattura doppia sarebbe un bug Bloccante.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### R-5 La schermata cambia subito o aspetta il server? (priorità A)
 
 - **Domanda**: dopo un tocco, l'interfaccia aggiorna subito o attende la conferma del server?
 - **Proposta**: **subito** per le modifiche semplici, con un indicatore discreto "in invio", annullato con un messaggio se il server rifiuta; **mai** per le azioni Soul Link, che attendono la risposta: sono una transazione unica su più giocatori e possono essere rifiutate dal server (team pieno, area già usata), e mostrare uno stato sbagliato dei partner collegati è peggio di una piccola attesa.
 - **Alternativa**: sempre ottimistica (più fluida, ma con correzioni visibili agli altri giocatori) oppure sempre in attesa (più semplice, ma lenta su rete mobile).
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### R-6 Bozze di ciò che si sta scrivendo (priorità B)
 
 - **Domanda**: dove si conserva ciò che l'utente sta scrivendo se la pagina si chiude o la rete cade?
 - **Proposta**: nel browser (archivio locale), per modulo e per dato, cancellato al salvataggio riuscito e comunque dopo 24 ore. Se l'archivio non è disponibile (navigazione privata), l'app funziona lo stesso, senza bozze.
 - **Alternativa**: bozze sul server (sopravvivono al cambio di dispositivo, ma aggiungono tabelle, traffico e un altro caso di conflitto).
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### R-7 Funzionamento completamente offline (priorità C)
 
 - **Domanda**: l'app deve funzionare senza rete per ore (app installabile, dati in cache)?
 - **Proposta**: **fuori ambito fino alla 1.0**: richiede una sincronizzazione con risoluzione dei conflitti molto più complessa dei lock consultivi, e il Pokédex è sul server. Per l'MVP basta R-1. Da rivalutare dopo la prima partita vera con la 0.1.
 - **Alternativa**: partire subito con un'app installabile con sincronizzazione differita.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### Come si verifica
 
@@ -114,14 +114,14 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
 - **Proposta**: il gioco della run è una **versione** (`black`, `white`, `black-2`, `white-2`), come già nei file di `data/games/`; il version group serve per le meccaniche e i learnset.
 - **Alternativa**: il gioco è la coppia e la versione è un'opzione della run (meno file, ma la run deve comunque distinguere gli incontri).
 - **Nota**: oggi è una scelta fatta da me in P1-01 e P1-06; chiedo la conferma.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-2 L'ordine delle aree è obbligatorio? (priorità A)
 
 - **Contesto** (P1-06): l'ordine dei file è quello consigliato della storia. Il postgame e molte aree opzionali si visitano in ordine libero, e due giocatori possono arrivare in un'area in momenti diversi.
 - **Proposta**: l'ordine serve solo a **mostrare** l'elenco (e a collocare le tappe di medaglie e level cap, "dopo l'area"); ogni area si può registrare in qualunque momento, senza blocchi.
 - **Alternativa**: sbloccare le aree solo dopo le precedenti (impedisce errori, ma non funziona nelle aree facoltative).
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-3 Stanze interne: area separata o unita? (priorità A)
 
@@ -129,14 +129,14 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
 - **Proposta**: **unite** all'area principale, come nelle regole della community e in nuzlocke.data, la fonte scelta per l'ordine; le stanze restano nei dati come informazione.
 - **Alternativa**: separate (più incontri, in linea con PokéAPI).
 - **Nota**: nei file attuali sono separate, per una scelta mia in P1-06. Con la tua risposta le unisco o le lascio.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: **Regola opzionale scelta alla creazione della run**, accesa di base, non modificabile dopo il primo incontro registrato.
 
 ### D-4 Grotte nascoste di Nero 2 e Bianco 2 (priorità B)
 
 - **Contesto** (P1-06): PokéAPI le registra con il metodo `hidden-grotto`; oggi sono escluse dai file di gioco.
-- **Proposta**: trattarle come gli **incontri fissi**: con la regola "regali separati" attiva sono un incontro a parte, altrimenti contano come incontro dell'area in cui si trovano ([decisione 17](../decisioni.md#17-regali-incontri-fissi-e-scambi-in-gioco)). La specie si sceglie liberamente, senza suggerimenti.
+- **Proposta**: trattarle come gli **incontri fissi**: con la regola "regali separati" attiva sono un incontro a parte, altrimenti contano come incontro dell'area in cui si trovano ([decisione 17](../adr/0001-decisioni-di-progetto.md#17-regali-incontri-fissi-e-scambi-in-gioco)). La specie si sceglie liberamente, senza suggerimenti.
 - **Alternativa**: vietarle (non contano mai) o contarle sempre come incontro separato.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-5 Difficoltà di Nero 2 e Bianco 2 (priorità A)
 
@@ -144,14 +144,14 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
 - **Proposta**: la difficoltà è un'**impostazione della run**, uguale per tutti i giocatori, con **normale** di default; il level cap segue quella scelta.
 - **Alternativa**: sempre normale (più semplice, ma sbagliato per chi gioca in sfida).
 - **Nota**: se la proposta va bene, servono i livelli della modalità facile per tutti i boss: oggi sono solo quelli di Cheren.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-6 Il level cap è per run o per giocatore? (priorità A)
 
 - **Contesto** (P1-07): i giocatori di una run dovrebbero giocare insieme, ma le medaglie sono per giocatore. Il Modello dati ha un solo `level_cap_override` per la run.
 - **Proposta**: il cap si calcola **per giocatore** dal suo avanzamento (di norma coincide con quello degli altri); l'override manuale resta **uno per run**.
 - **Alternativa**: un solo cap per la run, dal giocatore più indietro.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-7 Come si registrano le tappe senza medaglia (priorità A)
 
@@ -159,66 +159,68 @@ Documento di output di P1-19 (sessione di chiarimento dei requisiti). Raccoglie 
 - **Proposta**: sostituire `run_badge` con **`run_milestone`** (giocatore, chiave della tappa, data): le medaglie diventano un attributo delle tappe, e tutto funziona nello stesso modo per ogni gioco.
 - **Alternativa**: tenere `run_badge` e aggiungere una seconda tabella per le altre tappe.
 - **Nota**: è una scelta di modellazione; se vuoi, la lasci a me in P2-06.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-8 Nomi italiani delle aree e delle medaglie (priorità B)
 
 - **Contesto** (P1-04, P1-06, P1-07): PokéAPI non ha nomi italiani delle località di Unima (0 su 122); le fonti italiane (per esempio Pokémon Central) non sono raggiungibili dall'ambiente dell'agente.
 - **Proposta**: in italiano, "Route N" diventa **"Percorso N"** per regola (copre i percorsi, una parte minoritaria delle aree); per le altre aree e per le medaglie si usa l'inglese come riserva finché non c'è un elenco. L'elenco lo puoi dare tu o lo compilo in una sessione con accesso a una fonte italiana.
 - **Alternativa**: lasciare tutto in inglese per l'MVP.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Tutto in inglese per l'MVP (alternativa scelta).
 
 ### D-9 Giochi in 0.5 e in 1.0; Let's Go e Leggende; espansioni (priorità B)
 
 - **Contesto** (P1-01): il rilascio dei giochi diversi dalla quinta generazione è solo proposto (17 giochi con dati in nuzlocke.data in 0.5; Let's Go e i due Leggende in 1.0). Let's Go non ha lotte selvatiche, i Leggende non hanno palestre. Le espansioni (isola solitaria dell'armatura, maschera turchese e così via) sono version group separati in PokéAPI.
 - **Proposta**: come in P1-01, con le espansioni trattate come **aree in coda al gioco base**, e i giochi senza palestre con la regola delle tappe ([Dati di gioco](11-Dati-di-gioco.md#regola-per-i-giochi-senza-palestre)).
 - **Alternativa**: escludere Let's Go e Leggende dalla 1.0, oppure trattare le espansioni come giochi separati.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-10 Fonti degli incontri per Gen 8 e Gen 9 (priorità B)
 
 - **Contesto** (P1-04): PokéAPI non ha nessun incontro per Diamante Lucente e Perla Splendente, Leggende: Arceus, Scarlatto e Violetto e Leggende: Z-A.
 - **Proposta**: per Diamante Lucente, Perla Splendente, Scarlatto e Violetto, **nuzlocke.data** (ha le specie per area); per Leggende, **nessun suggerimento**: la specie si sceglie dal Pokédex, come con il flag randomizer.
 - **Alternativa**: inserimento a mano di tutti gli incontri (molto lavoro, nessuna fonte raggiungibile).
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### D-11 Sciami, White Forest, livelli degli scambi (priorità C)
 
 - **Contesto** (P1-04, P1-06): in Nero e Bianco PokéAPI non ha gli sciami e gli incontri di White Forest; nuzlocke.data li ha ma senza distinguerli e con errori. I livelli dei 5 scambi di Nero e Bianco non sono riportati dalle fonti consultate.
 - **Proposta**: **nessun suggerimento** per sciami e White Forest finché non c'è una fonte verificata (la specie si sceglie dal Pokédex); livello dello scambio vuoto, lo inserisce il giocatore.
 - **Alternativa**: usare l'elenco di nuzlocke.data non verificato.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Si usano le specie di nuzlocke.data (alternativa scelta), segnate come non verificate.
 
 ### D-12 Colore della run per gioco (priorità C)
 
 - **Contesto**: il design system prevede un colore della run per gioco (`run-accent`); nei file è `null`.
 - **Proposta**: lo sceglie il design in P2-12, con il controllo del contrasto già previsto.
-- **Risposta**: _da compilare_.
+- **Risposta (19 ottobre 2026)**: Come proposto.
 
 ## Scelte mie da confermare
 
 ### S-1 Registro delle decisioni al posto di `docs/adr/` (priorità C)
 
-Le Linee guida prevedono un file per decisione in `docs/adr/`; tu hai chiesto `docs/decisioni.md`. **Proposta**: tenere solo `decisioni.md` e aggiornare le Linee guida nel PBI di P3-01. **Risposta**: _da compilare_.
+Le Linee guida prevedono un file per decisione in `docs/adr/`; tu hai chiesto `docs/decisioni.md`. **Proposta**: tenere solo `decisioni.md` e aggiornare le Linee guida nel PBI di P3-01. **Risposta (19 ottobre 2026)**: Si tiene `decisioni.md`, ma da ora si usano le ADR: `decisioni.md` diventa l'ADR 0001 e ogni decisione nuova è una ADR separata.
 
 ### S-2 Dipendenze "In verifica" per i PBI di sviluppo (priorità B)
 
-Le verifiche dei PBI di sviluppo si fanno a gruppi a fine rilascio. **Proposta**: per decidere se un PBI è avviabile, una dipendenza "In verifica" con la PR unita su `develop` conta come completata (oggi scritto in `CLAUDE.md`). **Alternativa**: serve "Completato", e quindi una verifica del product owner dopo ogni PBI. **Risposta**: _da compilare_.
+Le verifiche dei PBI di sviluppo si fanno a gruppi a fine rilascio. **Proposta**: per decidere se un PBI è avviabile, una dipendenza "In verifica" con la PR unita su `develop` conta come completata (oggi scritto in `CLAUDE.md`). **Alternativa**: serve "Completato", e quindi una verifica del product owner dopo ogni PBI. **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### S-3 `npm audit` nella verifica locale (priorità C)
 
-Con la decisione 26 Dependabot non è attivo, quindi nessun avviso sulle vulnerabilità. **Proposta**: `npm audit --audit-level=high` dentro `npm run verify` (P3-11), come **avviso** che non blocca il push (a rete assente non deve fallire). **Alternativa**: nessun controllo. **Risposta**: _da compilare_.
+Con la decisione 26 Dependabot non è attivo, quindi nessun avviso sulle vulnerabilità. **Proposta**: `npm audit --audit-level=high` dentro `npm run verify` (P3-11), come **avviso** che non blocca il push (a rete assente non deve fallire). **Alternativa**: nessun controllo. **Risposta (19 ottobre 2026)**: Come proposto.
 
 ### S-4 Diagramma di architettura con Neon (priorità C)
 
-Il segnaposto del diagramma nella Specifica cita ancora Neon, scartato. **Proposta**: ridisegnarlo con la progettazione dell'architettura (P2-08); il PDF resta una copia storica. **Risposta**: _da compilare_.
+Il segnaposto del diagramma nella Specifica cita ancora Neon, scartato. **Proposta**: ridisegnarlo con la progettazione dell'architettura (P2-08); il PDF resta una copia storica. **Risposta (19 ottobre 2026)**: Correggere subito: fatto, il diagramma della specifica non cita più Neon.
 
 ## Criteri di P1-19
 
+Tutti soddisfatti il 19 ottobre 2026.
+
 - [x] Dupes clause: deciso il 3 ottobre 2026.
 - [x] Starter, incontri fissi e scambi: deciso il 3 ottobre 2026.
-- [ ] Verificato con il product owner il disegno dei lock: aspetta la risposta a R-3.
-- [ ] Definito il comportamento con rete instabile: aspetta le risposte a R-1…R-7.
-- [ ] Specifica aggiornata con le decisioni prese: dopo le risposte.
+- [x] Verificato con il product owner il disegno dei lock: confermato (R-3, [ADR 0002](../adr/0002-rete-instabile.md)).
+- [x] Definito il comportamento con rete instabile: R-1…R-7, ADR 0002 e sezione "Rete instabile" della specifica.
+- [x] Specifica aggiornata con le decisioni prese: rete instabile, stanze interne, difficoltà, tappe, nomi in inglese, rilasci dei giochi; diagramma di architettura corretto.
 
-P1-19 resta **In corso** finché non rispondi: le decisioni spettano a te, e non chiudo il PBI al posto tuo.
+P1-19 è **Completato**.

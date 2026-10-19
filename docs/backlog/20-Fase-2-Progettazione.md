@@ -34,6 +34,7 @@ Output: Modello dati.
 - [ ] Una run ha un solo gioco, uguale per tutti gli N giocatori; impostazioni e regole valgono per tutti, salvo gli override per specie.
 - [ ] Regole opzionali e flag (randomizer, calcolatore) memorizzati per run.
 - [ ] Stato della run (in corso, persa, completata) definito.
+- [ ] Il gioco della run è una versione; le impostazioni comprendono la regola "stanze interne come aree separate" (accesa di base, non modificabile dopo il primo incontro) e, per Nero 2 e Bianco 2, la difficoltà ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 
 ## P2-03 Modello dati: aree, incontri, link Soul Link
 
@@ -42,6 +43,7 @@ Output: Modello dati.
 - [ ] Un incontro per area per giocatore, con esito (catturato, fallito, fuggito, saltato per dupe, regalo, precedente non tracciato).
 - [ ] Il link Soul Link unisce gli incontri della stessa area tra tutti i giocatori.
 - [ ] Aree personalizzate aggiunte dall'admin supportate.
+- [ ] Le stanze interne portano la chiave dell'area principale e, con la regola spenta, contano in quella; le grotte nascoste sono incontri speciali con la specie dal Pokédex ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 
 ## P2-04 Modello dati: esemplari, stato, eventi
 
@@ -62,8 +64,8 @@ Output: Modello dati.
 
 Output: Modello dati.
 
-- [ ] Medaglie ottenute per giocatore, con data.
-- [ ] Level cap calcolato dai dati di gioco e override manuale per run.
+- [ ] Tappe superate per giocatore (`run_milestone`, che sostituisce `run_badge`), con data: la medaglia è un attributo della tappa ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [ ] Level cap calcolato per giocatore dai dati di gioco e dalla difficoltà della run; un solo override manuale per la run.
 
 ## P2-07 Schema del Pokédex SQLite
 
@@ -86,6 +88,7 @@ Output: Architettura e API.
 
 - [ ] Ogni endpoint con metodo, percorso, input, output, errori e permesso richiesto.
 - [ ] Le regole Soul Link sono applicate dal server, non solo dall'interfaccia.
+- [ ] Ogni scrittura porta una chiave di idempotenza generata dal client, valida 24 ore ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 ## P2-10 Catalogo degli eventi SSE
 
@@ -93,6 +96,7 @@ Output: Architettura e API.
 
 - [ ] Ogni evento con nome, contenuto e destinatari.
 - [ ] Strategia di riallineamento dopo una riconnessione definita, insieme agli eventi di presa e rilascio dei lock.
+- [ ] Segnale ogni 15 secondi, avviso dopo 40 secondi senza eventi, recupero degli eventi dall'identificativo dell'ultimo ricevuto, lock ripresi alla riconnessione ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 ## P2-11 Flussi: creazione run, inviti, run già iniziata
 

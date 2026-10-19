@@ -7,7 +7,7 @@ Documento di output dei PBI di fase 1 sulle fonti dei dati Pokémon: inventario 
 | Fonte | Versione consultata | Come | Note |
 | --- | --- | --- | --- |
 | PokéAPI, CSV del repository [PokeAPI/pokeapi](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) | ramo `master`, commit `6fd69df`, letto il 19 ottobre 2026 | File CSV scaricati da raw.githubusercontent.com | Sono i dati da cui si genera PokeAPI/api-data. L'API online `pokeapi.co` non è raggiungibile dall'ambiente dell'agente (bloccata dal proxy) |
-| [nuzlocke.data](https://github.com/domtronn/nuzlocke.data) | ramo `main`, commit `baf5df5` del 27 maggio 2023 | Clone Git | Dati del tracker nuzlocke.app (stesso autore). Nessuna licenza: uso privato accettato ([decisione 7](../decisioni.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)). Il ramo `master` è più vecchio e non si usa |
+| [nuzlocke.data](https://github.com/domtronn/nuzlocke.data) | ramo `main`, commit `baf5df5` del 27 maggio 2023 | Clone Git | Dati del tracker nuzlocke.app (stesso autore). Nessuna licenza: uso privato accettato ([decisione 7](../adr/0001-decisioni-di-progetto.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)). Il ramo `master` è più vecchio e non si usa |
 | [MVP e rilasci](03-MVP-e-rilasci.md), PDF in `pdf/03-MVP-e-rilasci.pdf` | 3 ottobre 2026 | Lettura | Il diagramma dei rilasci (visibile solo nel PDF) assegna: 0.1 quinta generazione; 0.5 "altre generazioni, dati di gioco aggiunti a gruppi"; 1.0 "tutte le generazioni" |
 
 ## P1-01 Inventario dei giochi supportati
@@ -83,11 +83,11 @@ I giochi fuori serie principale che non sono in PokéAPI (Mystery Dungeon, Range
 
 | Domanda | PBI che la chiude |
 | --- | --- |
-| Raggruppamento dei giochi tra 0.5 e 1.0 (qui solo proposto) | P1-18 (stime e gate 1), con il product owner |
-| Inclusione di Let's Go, Leggende: Arceus e Leggende: Z-A, che non hanno lotte selvatiche classiche o palestre | P1-19 |
-| Espansioni come aree in coda al gioco base oppure come giochi separati | P1-06 per il formato, P1-19 per la conferma |
-| Copertura degli incontri per i giochi inclusi, a partire dalla quinta generazione | P1-04 |
-| Regola per i giochi senza palestre (Sole e Luna, Leggende) | P1-07 |
+| Raggruppamento dei giochi tra 0.5 e 1.0 (qui solo proposto) | Deciso il 19 ottobre 2026: 17 giochi in 0.5, Let's Go e i due Leggende in 1.0 ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)); P1-18 stima le durate |
+| Inclusione di Let's Go, Leggende: Arceus e Leggende: Z-A, che non hanno lotte selvatiche classiche o palestre | Decisa: inclusi, in 1.0 |
+| Espansioni come aree in coda al gioco base oppure come giochi separati | Decisa: aree in coda al gioco base |
+| Copertura degli incontri per i giochi inclusi, a partire dalla quinta generazione | P1-04 (fatto) |
+| Regola per i giochi senza palestre (Sole e Luna, Leggende) | P1-07 (fatto) |
 
 ## P1-04 Copertura PokéAPI: incontri per area
 
@@ -240,22 +240,22 @@ Lacune trovate:
 ### Regali, incontri fissi e scambi in gioco
 
 - PokéAPI li modella come metodi di incontro: `gift` e `gift-egg` per i regali, `static` per gli incontri fissi (leggendari, Pokémon visibili sul campo), `npc-trade` per gli scambi in gioco. Ogni record ha località, specie e livello, e spesso una condizione (fossile da portare, stagione, avanzamento della storia).
-- Nella quinta generazione gli starter sono regali nella città di partenza (`nuvema-town` per Nero e Bianco, `aspertia-city` per Nero 2 e Bianco 2): si usano per l'area speciale `starter` ([decisione 16](../decisioni.md#16-starter-come-incontro-collegato-nellarea-starter)).
+- Nella quinta generazione gli starter sono regali nella città di partenza (`nuvema-town` per Nero e Bianco, `aspertia-city` per Nero 2 e Bianco 2): si usano per l'area speciale `starter` ([decisione 16](../adr/0001-decisioni-di-progetto.md#16-starter-come-incontro-collegato-nellarea-starter)).
 - Presenti in tutti i giochi con incontri; mancano del tutto gli scambi di Nero, Bianco, X, Y, Rubino Omega e Zaffiro Alpha.
 - Conclusione per P1-06: regali, incontri fissi e scambi si possono importare da PokéAPI con chiave propria e località di appartenenza, come chiede la decisione 17; gli scambi di Nero e Bianco vanno aggiunti a mano.
 
 ### Decisioni prese
 
 - Per la quinta generazione PokéAPI è la fonte degli incontri (specie per area, metodi, livelli, regali, fissi e scambi); nuzlocke.data serve come controllo e per l'ordine delle aree (P1-06). Motivo: PokéAPI distingue i metodi e le versioni, nuzlocke.data no.
-- Gli sciami non entrano nei suggerimenti di specie dell'MVP: sono casuali e postgame, e una specie diversa da quella suggerita si sceglie comunque dal Pokédex.
+- ~~Gli sciami non entrano nei suggerimenti di specie dell'MVP.~~ Sostituito il 19 ottobre 2026 dal product owner: gli sciami e White Forest si suggeriscono con le specie di nuzlocke.data, non verificate ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)).
 - White Forest e gli scambi di Nero e Bianco si completano a mano nei dati di gioco, annotando la fonte.
 
 ### Domande aperte
 
 | Domanda | PBI che la chiude |
 | --- | --- |
-| Specie di White Forest e scambi di Nero e Bianco: con quale fonte verificabile completarli (nuzlocke.data copre White Forest, ma con errori)? | P1-06 |
-| Gli sciami vanno mostrati come suggerimento? | P1-19 |
-| Nomi italiani delle aree di Unima: da quale fonte? Le fonti italiane (Pokémon Central) non sono raggiungibili dall'ambiente dell'agente | P1-05 e P1-06 |
-| Incontri di Diamante Lucente, Perla Splendente, Scarlatto, Violetto: affidarsi a nuzlocke.data? Leggende: Arceus e Leggende: Z-A: inserimento manuale o niente suggerimenti? | P1-18, prima dei rilasci 0.5 e 1.0 |
+| Specie di White Forest e scambi di Nero e Bianco: con quale fonte verificabile completarli (nuzlocke.data copre White Forest, ma con errori)? | Decisa il 19 ottobre 2026: si usa nuzlocke.data, non verificato ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)); livelli degli scambi vuoti |
+| Gli sciami vanno mostrati come suggerimento? | Decisa: sì, con le specie di nuzlocke.data (`additionalSpecies`), non verificate |
+| Nomi italiani delle aree di Unima: da quale fonte? Le fonti italiane (Pokémon Central) non sono raggiungibili dall'ambiente dell'agente | Decisa: tutto in inglese per l'MVP |
+| Incontri di Diamante Lucente, Perla Splendente, Scarlatto, Violetto: affidarsi a nuzlocke.data? Leggende: Arceus e Leggende: Z-A: inserimento manuale o niente suggerimenti? | Decisa: nuzlocke.data per i primi quattro; nessun suggerimento per i Leggende |
 | Precisione degli incontri dei giochi diversi dalla quinta generazione (qui solo contati) | Prima del rilascio di ciascun gioco (0.5) |

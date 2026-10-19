@@ -15,7 +15,7 @@ Solo se lavori in un clone locale (le sessioni di Claude Code lo fanno da sé):
 git config core.hooksPath .githooks
 ```
 
-Gli hook di `.githooks/` applicano le regole che GitHub non può imporre su questo repository ([decisione 25](docs/decisioni.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)):
+Gli hook di `.githooks/` applicano le regole che GitHub non può imporre su questo repository ([decisione 25](docs/adr/0001-decisioni-di-progetto.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)):
 
 - `pre-commit`: niente commit su `main` e `develop`, niente `.env` o file di database;
 - `commit-msg`: messaggi in Conventional Commits con l'ID (sotto);

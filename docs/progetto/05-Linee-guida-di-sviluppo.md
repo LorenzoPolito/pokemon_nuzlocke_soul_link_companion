@@ -119,7 +119,7 @@ La documentazione vive accanto al codice che descrive, così invecchia insieme a
 
 - **TSDoc** su ogni elemento esportato da un `index.ts`: cosa fa, parametri, errori di dominio possibili.
 - **README di modulo**: scopo, API pubblica, porte e adattatori, invarianti, note sugli incidenti.
-- **ADR** (Architecture Decision Record) in `docs/adr/NNNN-titolo.md` per ogni scelta difficile da cambiare: contesto, decisione, alternative, conseguenze. Le scelte già prese (SvelteKit, libSQL e Turso, Better Auth, @smogon/calc) diventano le prime ADR in P3-01.
+- **ADR** (Architecture Decision Record) in `docs/adr/NNNN-titolo.md` per ogni scelta difficile da cambiare: contesto, decisione, alternative, conseguenze. Le scelte già prese (SvelteKit, libSQL e Turso, Better Auth, @smogon/calc e le altre) sono nell'[ADR 0001](../adr/0001-decisioni-di-progetto.md); da ora ogni decisione nuova è una ADR separata, secondo il modello di [`docs/adr/README.md`](../adr/README.md).
 - I documenti di progetto (modello dati, API) si aggiornano nella stessa pull request che cambia il codice.
 
 ## Checklist di revisione

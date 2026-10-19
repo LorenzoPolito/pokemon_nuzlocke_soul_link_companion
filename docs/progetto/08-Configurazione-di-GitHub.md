@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-GitHub ospita il codice in un repository privato, senza CI: i controlli girano in locale prima di ogni push, e un solo workflow di GitHub Actions controlla i branch delle pull request. Si segue git flow, con `main` e `develop`. Backlog, bug e registro sessioni sono file del repository in `docs/backlog/` e si aggiornano con le pull request ([decisione 21](../decisioni.md#21-la-documentazione-nel-repository-è-lunica-fonte-valida)).
+GitHub ospita il codice in un repository privato, senza CI: i controlli girano in locale prima di ogni push, e un solo workflow di GitHub Actions controlla i branch delle pull request. Si segue git flow, con `main` e `develop`. Backlog, bug e registro sessioni sono file del repository in `docs/backlog/` e si aggiornano con le pull request ([decisione 21](../adr/0001-decisioni-di-progetto.md#21-la-documentazione-nel-repository-è-lunica-fonte-valida)).
 
 ## Decisioni
 
@@ -14,13 +14,13 @@ Un solo repository contiene app, test, dati di gioco, documentazione e configura
 | Proprietario | Account personale del product owner, `LorenzoPolito` | Creato |
 | Visibilità | Privato | Deciso |
 | Licenza | Necessaria solo se un giorno il repository diventa pubblico | Da decidere dopo P1-10 |
-| Rami | Git flow: `main` per i rilasci, `develop` per l'integrazione, `pbi/…`, `bug/…`, `chore/…` per il lavoro ([decisione 22](../decisioni.md#22-git-flow-main-e-develop)) | Deciso |
-| CI | Nessuna: verifica locale con `npm run verify` e hook pre-push ([decisione 13](../decisioni.md#13-repository-privato-senza-ci-verifica-locale)) | Deciso |
-| GitHub Actions | Solo il workflow `branch-policy`, dentro i minuti gratuiti e con budget di spesa a 0 dollari ([decisione 23](../decisioni.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)) | Deciso |
+| Rami | Git flow: `main` per i rilasci, `develop` per l'integrazione, `pbi/…`, `bug/…`, `chore/…` per il lavoro ([decisione 22](../adr/0001-decisioni-di-progetto.md#22-git-flow-main-e-develop)) | Deciso |
+| CI | Nessuna: verifica locale con `npm run verify` e hook pre-push ([decisione 13](../adr/0001-decisioni-di-progetto.md#13-repository-privato-senza-ci-verifica-locale)) | Deciso |
+| GitHub Actions | Solo il workflow `branch-policy`, dentro i minuti gratuiti e con budget di spesa a 0 dollari ([decisione 23](../adr/0001-decisioni-di-progetto.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)) | Deciso |
 | Immagini Docker | Costruite sul server con `docker build`; GitHub Container Registry privato facoltativo | Deciso |
-| Agente | App Claude per GitHub installata sul repository, al posto dell'account bot previsto all'inizio ([decisione 14](../decisioni.md#14-agente-app-claude-per-github)). Agisce con l'account del product owner; può approvare le proprie pull request con una revisione di tipo commento, non unirle ([decisione 24](../decisioni.md#24-lagente-può-approvare-le-proprie-pull-request)) | Deciso |
+| Agente | App Claude per GitHub installata sul repository, al posto dell'account bot previsto all'inizio ([decisione 14](../adr/0001-decisioni-di-progetto.md#14-agente-app-claude-per-github)). Agisce con l'account del product owner; può approvare le proprie pull request con una revisione di tipo commento, non unirle ([decisione 24](../adr/0001-decisioni-di-progetto.md#24-lagente-può-approvare-le-proprie-pull-request)) | Deciso |
 
-Sul piano Free, regole di protezione e ruleset esistono solo per i repository pubblici; per quelli privati servono GitHub Pro, Team o Enterprise ([fonte](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)). Il 19 ottobre 2026, attivando le regole di protezione, GitHub ha risposto che sui repository privati non vengono applicate senza un account di organizzazione Team o Enterprise. Le protezioni di `main` e `develop` sono quindi affidate agli hook di Claude Code e di git ([decisione 25](../decisioni.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)), al controllo `branch-policy` e alle regole di lavoro. Il controllo segnala una pull request sbagliata, ma non può bloccare il pulsante di unione.
+Sul piano Free, regole di protezione e ruleset esistono solo per i repository pubblici; per quelli privati servono GitHub Pro, Team o Enterprise ([fonte](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)). Il 19 ottobre 2026, attivando le regole di protezione, GitHub ha risposto che sui repository privati non vengono applicate senza un account di organizzazione Team o Enterprise. Le protezioni di `main` e `develop` sono quindi affidate agli hook di Claude Code e di git ([decisione 25](../adr/0001-decisioni-di-progetto.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)), al controllo `branch-policy` e alle regole di lavoro. Il controllo segnala una pull request sbagliata, ma non può bloccare il pulsante di unione.
 
 Con il repository privato il codice può includere tutto ciò che serve all'app, sprite compresi.
 
@@ -34,7 +34,7 @@ Impostazioni generali del repository (le fa il product owner: l'agente non cambi
 - [ ] Titolo del commit di squash = titolo della pull request (che contiene l'ID del PBI).
 - [x] Branch predefinito: resta `main`, perché GitHub non ha permesso di cambiarlo. Ogni nuova pull request va aperta indicando `develop` come destinazione: l'hook di Claude Code lo impone all'agente, `branch-policy` lo segnala per tutti.
 - [ ] Cancellazione automatica dei branch dopo l'unione.
-- [x] Issues attivo, Wiki disattivato (scelta del product owner, 19 ottobre 2026, [decisione 26](../decisioni.md#26-impostazioni-di-github-lasciate-come-sono)); non sostituiscono i file del backlog. Projects resta attivo.
+- [x] Issues attivo, Wiki disattivato (scelta del product owner, 19 ottobre 2026, [decisione 26](../adr/0001-decisioni-di-progetto.md#26-impostazioni-di-github-lasciate-come-sono)); non sostituiscono i file del backlog. Projects resta attivo.
 - [ ] GitHub Actions attivo solo per i workflow del repository (Settings → Actions → General: "Allow LorenzoPolito, and select non-LorenzoPolito, actions and reusable workflows", nessuna azione esterna).
 - [x] Budget di spesa per Actions: non impostato a 0 dollari, per scelta del product owner (decisione 26). Il workflow dura pochi secondi.
 
@@ -44,7 +44,7 @@ Protezione di `main` e `develop` senza ruleset:
   - `pre-push` rifiuta i push su `main` e `develop` e i push forzati, e dal P3-11 esegue anche `npm run verify`;
   - `pre-commit` rifiuta i commit su `main` e `develop` e i file `.env` e di database;
   - `commit-msg` impone i Conventional Commits con l'ID.
-- [x] Hook di Claude Code (`.claude/settings.json`, `.claude/hooks/guard.cjs`): all'agente vietano push e commit su `main` e `develop`, unione di pull request, tag, `--no-verify` e pull request verso il ramo sbagliato; chiedono la conferma del product owner per push forzati, rebase, cancellazioni e modifiche alle protezioni ([decisione 25](../decisioni.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)).
+- [x] Hook di Claude Code (`.claude/settings.json`, `.claude/hooks/guard.cjs`): all'agente vietano push e commit su `main` e `develop`, unione di pull request, tag, `--no-verify` e pull request verso il ramo sbagliato; chiedono la conferma del product owner per push forzati, rebase, cancellazioni e modifiche alle protezioni ([decisione 25](../adr/0001-decisioni-di-progetto.md#25-protezioni-con-gli-hook-di-claude-code-e-di-git)).
 - [x] Workflow `.github/workflows/branch-policy.yml`: segna in rosso una pull request verso `main` che non parte da `develop`, o verso `develop` che non parte da `pbi/…`, `bug/…`, `chore/…`. Per regola una pull request rossa non si unisce.
 - [x] Il modello di pull request chiede l'esito della verifica e i criteri spuntati.
 - [ ] Unisce solo il product owner. L'agente agisce con il suo account e ha tecnicamente il permesso di farlo: è una regola, controllata nel registro delle pull request.
@@ -71,7 +71,7 @@ Questi file rendono le regole di lavoro visibili anche dentro il repository. Que
 | `.github/workflows/branch-policy.yml` | Controllo del branch di partenza delle pull request verso `main` e `develop` | P3-12 |
 | `.github/pull_request_template.md` | ID del PBI o bug, criteri di accettazione da spuntare, esito della verifica, note per la verifica del product owner | P3-12 |
 | `.github/CODEOWNERS` | Il product owner come proprietario di tutto il repository | P3-12 |
-| `docs/decisioni.md` | Registro delle decisioni in stile ADR | P3-12 |
+| `docs/adr/` | Le decisioni, una ADR per decisione (ADR 0001: le prime 26) | P3-12 |
 
 ## Verifica e immagini
 

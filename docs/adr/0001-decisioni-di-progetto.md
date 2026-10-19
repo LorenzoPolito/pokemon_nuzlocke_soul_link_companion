@@ -1,11 +1,13 @@
-# Registro delle decisioni
+# ADR 0001 – Decisioni di progetto 1–26
 
-Registro delle decisioni di progetto in stile ADR (Architecture Decision Record). Ogni voce ha un numero che non si riusa, una data, il contesto, la decisione, le alternative scartate e le conseguenze. Contesto e alternative vengono dai documenti in `docs/`; dove i documenti non ne parlano, la voce dice "non documentato".
+- **Stato**: accettata (le singole decisioni hanno il proprio stato nella tabella)
+- **Data**: 3 ottobre 2026 (decisioni 1–21); 19 ottobre 2026 (decisioni 22–26)
 
-Regole del registro:
+Questo è l'**ADR 0001**: il registro delle prime 26 decisioni di progetto, in un unico file. Ogni voce ha un numero, una data, il contesto, la decisione, le alternative scartate e le conseguenze. Contesto e alternative vengono dai documenti in `docs/`; dove i documenti non ne parlano, la voce dice "non documentato".
 
-- Una decisione si cambia solo con l'approvazione del product owner, aggiungendo una voce nuova che la sostituisce; la vecchia resta, con stato "Sostituita da N".
-- Le linee guida di sviluppo prevedono anche gli ADR in `docs/adr/NNNN-titolo.md` (P3-01): fino a decisione diversa del product owner, questo file è il registro unico e `docs/adr/` non esiste.
+Dal 19 ottobre 2026 ogni decisione nuova è una **ADR separata** in questa cartella (`0002-…`, `0003-…`), secondo il modello e le regole di [`README.md`](README.md) ([ADR 0005](0005-adr-e-scelte-di-processo.md)). Le voci di questo file non si riscrivono: una decisione cambiata si sostituisce con una ADR nuova, e la voce vecchia resta con lo stato "Sostituita da ADR NNNN".
+
+Nei documenti, "decisione N" indica la voce N di questo file.
 
 | N. | Decisione | Stato |
 | --- | --- | --- |
@@ -41,23 +43,23 @@ Regole del registro:
 ## 1. Stack: SvelteKit con adapter Node, TypeScript strict, un solo container
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'app è self-hosted in un unico container Docker e deve restare leggera e veloce anche su telefono. La specifica motiva la scelta con "poco JavaScript nel browser, frontend e backend in un solo progetto" ([Specifica, Architettura e stack](progetto/01-Specifica-dei-requisiti.md#architettura-e-stack)). Le linee guida chiedono TypeScript strict, senza `any` ([Linee guida](progetto/05-Linee-guida-di-sviluppo.md#convenzioni-di-codice-e-interfaccia)).
+- **Contesto**: l'app è self-hosted in un unico container Docker e deve restare leggera e veloce anche su telefono. La specifica motiva la scelta con "poco JavaScript nel browser, frontend e backend in un solo progetto" ([Specifica, Architettura e stack](../progetto/01-Specifica-dei-requisiti.md#architettura-e-stack)). Le linee guida chiedono TypeScript strict, senza `any` ([Linee guida](../progetto/05-Linee-guida-di-sviluppo.md#convenzioni-di-codice-e-interfaccia)).
 - **Decisione**: SvelteKit con adapter Node, TypeScript in modalità strict, tutto (interfaccia, API, SSE, Pokédex) in un solo container costruito con build multi-stage su Node Alpine.
 - **Alternative scartate**: non documentato.
-- **Conseguenze**: un solo processo Node serve tutto; i lock in memoria e l'hub SSE presuppongono una sola istanza, e con più istanze servirebbe un canale di notifica condiviso ([Specifica, Vincoli](progetto/01-Specifica-dei-requisiti.md#vincoli-e-punti-aperti)). Lo scheletro nasce con P3-01, l'immagine con P3-02; dimensione stimata 150–200 MB, da misurare in P1-17.
+- **Conseguenze**: un solo processo Node serve tutto; i lock in memoria e l'hub SSE presuppongono una sola istanza, e con più istanze servirebbe un canale di notifica condiviso ([Specifica, Vincoli](../progetto/01-Specifica-dei-requisiti.md#vincoli-e-punti-aperti)). Lo scheletro nasce con P3-01, l'immagine con P3-02; dimensione stimata 150–200 MB, da misurare in P1-17.
 
 ## 2. Database: libSQL su file locale, Turso opzionale
 
 - **Data**: 3 ottobre 2026
 - **Contesto**: i dati utente devono stare nello stesso container, con la possibilità di passare a un database online cambiando solo variabili d'ambiente. La specifica motiva libSQL con "nessuna rete tra app e database, stesso codice in locale e online, piano gratuito Turso da 5 GB".
 - **Decisione**: libSQL su file locale in un volume Docker (per esempio `/data/app.db`) come predefinito; Turso opzionale, con lo stesso codice, attivato da `TURSO_URL` e `TURSO_TOKEN` (P3-03).
-- **Alternative scartate**: Neon (Postgres gestito), scartato per restare leggeri e in un solo container. Il segnaposto del diagramma di architettura nella specifica ("container, Neon, dati PokéAPI") è un residuo di questa alternativa: il diagramma nel PDF va aggiornato quando si ridisegna.
-- **Conseguenze**: senza volume, ricreando il container si perde tutto; i backup sono a carico di chi installa (copia del file o Litestream), provati in P7-06. Impostazioni all'avvio: WAL, foreign_keys ON, busy_timeout 5000 ms, synchronous NORMAL ([Modello dati](progetto/06-Modello-dati-bozza.md#prestazioni-ed-evoluzione)). Turso entra nel rilascio 1.0 ([MVP e rilasci](progetto/03-MVP-e-rilasci.md)); la fattibilità si prova in P1-12.
+- **Alternative scartate**: Neon (Postgres gestito), scartato per restare leggeri e in un solo container. Il segnaposto del diagramma di architettura nella specifica ("container, Neon, dati PokéAPI") era un residuo di questa alternativa: il 19 ottobre 2026 è stato sostituito da un diagramma senza Neon ([ADR 0005](0005-adr-e-scelte-di-processo.md)); il PDF resta una copia storica.
+- **Conseguenze**: senza volume, ricreando il container si perde tutto; i backup sono a carico di chi installa (copia del file o Litestream), provati in P7-06. Impostazioni all'avvio: WAL, foreign_keys ON, busy_timeout 5000 ms, synchronous NORMAL ([Modello dati](../progetto/06-Modello-dati-bozza.md#prestazioni-ed-evoluzione)). Turso entra nel rilascio 1.0 ([MVP e rilasci](../progetto/03-MVP-e-rilasci.md)); la fattibilità si prova in P1-12.
 
 ## 3. ORM e migrazioni: Drizzle, solo in avanti, all'avvio
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: il modello dati deve evolvere senza rompere le versioni precedenti e senza interventi a mano sul database. Il modello dati prevede migrazioni drizzle-kit applicate all'avvio, con una copia del file prima di ogni migrazione ([Modello dati, Evoluzione dello schema](progetto/06-Modello-dati-bozza.md#prestazioni-ed-evoluzione)).
+- **Contesto**: il modello dati deve evolvere senza rompere le versioni precedenti e senza interventi a mano sul database. Il modello dati prevede migrazioni drizzle-kit applicate all'avvio, con una copia del file prima di ogni migrazione ([Modello dati, Evoluzione dello schema](../progetto/06-Modello-dati-bozza.md#prestazioni-ed-evoluzione)).
 - **Decisione**: Drizzle ORM con drizzle-kit; migrazioni solo in avanti, applicate all'avvio; una correzione è sempre una nuova migrazione.
 - **Alternative scartate**: non documentato.
 - **Conseguenze**: si usa il metodo "espandi e contrai" (colonna nuova nullable, popolata, usata; la vecchia si toglie in un rilascio successivo). Un errore di migrazione blocca l'avvio con un messaggio chiaro (P3-03). Le regole nuove della run non richiedono migrazioni perché le impostazioni sono un JSON versionato.
@@ -65,7 +67,7 @@ Regole del registro:
 ## 4. Autenticazione: Better Auth, admin da variabili d'ambiente
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'app usa account veri con login e un amministratore creato al primo avvio del container ([Specifica, Account](progetto/01-Specifica-dei-requisiti.md#account-ruoli-e-amministrazione)). Better Auth "gira nel container, nessun servizio esterno"; ha un adattatore Drizzle per SQLite e la sua CLI genera lo schema ([Rischi](progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi), rischio basso).
+- **Contesto**: l'app usa account veri con login e un amministratore creato al primo avvio del container ([Specifica, Account](../progetto/01-Specifica-dei-requisiti.md#account-ruoli-e-amministrazione)). Better Auth "gira nel container, nessun servizio esterno"; ha un adattatore Drizzle per SQLite e la sua CLI genera lo schema ([Rischi](../progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi), rischio basso).
 - **Decisione**: Better Auth con email e password; l'admin si crea al primo avvio da `ADMIN_EMAIL` e `ADMIN_PASSWORD`, solo se non esiste già, con cambio password obbligatorio al primo accesso.
 - **Alternative scartate**: non documentato.
 - **Conseguenze**: tabelle user, session, account, verification gestite da Better Auth, con `role`, `must_change_password`, `locale`, `theme`, `disabled_at` aggiunte a user. Se le variabili mancano e non esiste un admin, l'avvio si ferma (P3-08). Prova di fattibilità con il client libSQL asincrono in P1-13.
@@ -73,7 +75,7 @@ Regole del registro:
 ## 5. Lingue: Paraglide, italiano e inglese, cambio con ricarica
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: la lingua è sempre selezionabile, con italiano e inglese completi. Con Paraglide 2 `setLocale()` ricarica la pagina; il cambio senza ricarica è un'eccezione limitata al browser ([Rischi](progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi)).
+- **Contesto**: la lingua è sempre selezionabile, con italiano e inglese completi. Con Paraglide 2 `setLocale()` ricarica la pagina; il cambio senza ricarica è un'eccezione limitata al browser ([Rischi](../progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi)).
 - **Decisione**: interfaccia tradotta con Paraglide, italiano e inglese completi; il cambio lingua ricarica la pagina mantenendo la schermata corrente. Nomi di Pokémon, mosse e abilità dai nomi localizzati di PokéAPI, con l'inglese come riserva.
 - **Alternative scartate**: cambio lingua senza ricarica, scartato perché con Paraglide 2 è un'eccezione limitata al browser; i criteri di P1-14 e P6-07 sono stati corretti di conseguenza.
 - **Conseguenze**: nel browser arriva solo la lingua in uso; un controllo automatico segnala le chiavi mancanti (P3-05). I nomi italiani delle aree potrebbero mancare in PokéAPI: in quel caso stanno nei file dei dati di gioco (P1-05).
@@ -81,7 +83,7 @@ Regole del registro:
 ## 6. Pokédex: SQLite in sola lettura generato in build
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: il Pokédex copre tutte le generazioni e le ricerche "non toccano né il database utente né internet" ([Specifica, Pokédex](progetto/01-Specifica-dei-requisiti.md#pokédex)). PokéAPI ha licenza BSD a 3 clausole.
+- **Contesto**: il Pokédex copre tutte le generazioni e le ricerche "non toccano né il database utente né internet" ([Specifica, Pokédex](../progetto/01-Specifica-dei-requisiti.md#pokédex)). PokéAPI ha licenza BSD a 3 clausole.
 - **Decisione**: un file SQLite in sola lettura, generato nello stage di build dell'immagine da uno snapshot di [PokeAPI/api-data](https://github.com/PokeAPI/api-data) e incluso nell'immagine.
 - **Alternative scartate**: interrogare PokéAPI online durante l'uso, esclusa dalla specifica perché le ricerche non devono toccare internet. Altre alternative: non documentato.
 - **Conseguenze**: i dati Pokémon si aggiornano solo con un nuovo rilascio; la versione dei dati è registrata e visibile all'admin (P3-04). Dimensione e tempi si misurano in P1-15; lo schema si progetta in P2-07. Gli sprite non sono nel file: arrivano dal repository sprite di PokéAPI, in cache nel browser.
@@ -89,7 +91,7 @@ Regole del registro:
 ## 7. Dati di gioco da nuzlocke.data e PokéAPI
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: ordine delle aree, capipalestra, medaglie e level cap non sono in PokéAPI. Il progetto [nuzlocke.data](https://github.com/domtronn/nuzlocke.data) ha aree in ordine e lotte dei boss, ma nessuna licenza; per Cheren in Bianco 2 due fonti danno livelli diversi ([Rischi](progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi), rischio alto).
+- **Contesto**: ordine delle aree, capipalestra, medaglie e level cap non sono in PokéAPI. Il progetto [nuzlocke.data](https://github.com/domtronn/nuzlocke.data) ha aree in ordine e lotte dei boss, ma nessuna licenza; per Cheren in Bianco 2 due fonti danno livelli diversi ([Rischi](../progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi), rischio alto).
 - **Decisione**: si usano i dati di nuzlocke.data senza chiedere, perché l'app resta privata e non commerciale (rischio accettato); i dati Pokémon e gli incontri vengono da PokéAPI. In P1-06 e P1-07 i dati si importano, si verificano e i conflitti si risolvono con una seconda fonte annotata.
 - **Alternative scartate**: chiedere l'autorizzazione all'autore di nuzlocke.data, scartata ("senza chiedere"). La tabella "Dove troveremo i dati" del documento Rischi indicava per capipalestra e level cap una "compilazione manuale" da guide pubbliche ("dati fattuali da ricompilare, non copiare"): la decisione la supera per l'uso privato.
 - **Conseguenze**: se un giorno l'app viene condivisa, i dati presi da nuzlocke.data vanno sostituiti o autorizzati; per questo ogni riga dei file in `data/games/` annota la propria fonte. I file sono validati con Zod all'avvio e un file non valido blocca l'avvio.
@@ -97,7 +99,7 @@ Regole del registro:
 ## 8. Calcolatore danni @smogon/calc, attivabile per run; l'helper non suggerisce
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'helper per le lotte deve "aiutare con informazioni complete, senza suggerire la mossa da usare" ([Specifica, Helper](progetto/01-Specifica-dei-requisiti.md#helper-per-le-lotte)). @smogon/calc copre le meccaniche di tutte le generazioni e accetta dati di specie personalizzati, da cui prende anche i tipi ([Rischi](progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi)).
+- **Contesto**: l'helper per le lotte deve "aiutare con informazioni complete, senza suggerire la mossa da usare" ([Specifica, Helper](../progetto/01-Specifica-dei-requisiti.md#helper-per-le-lotte)). @smogon/calc copre le meccaniche di tutte le generazioni e accetta dati di specie personalizzati, da cui prende anche i tipi ([Rischi](../progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi)).
 - **Decisione**: @smogon/calc è sempre incluso nell'app e si attiva o disattiva per run; riceve gli override del giocatore come dati di specie. L'helper mostra efficacia, STAB, categoria e potenza, ma non ordina, non evidenzia e non suggerisce mai una mossa.
 - **Alternative scartate**: non documentato.
 - **Conseguenze**: con il calcolatore disattivo non compare in nessuna schermata della run (P5-13). Il peso aggiunto al bundle si misura in P1-11; la licenza MIT va confermata in P1-10. Il design system vieta colori, ordini o badge da "mossa migliore". Non è nell'MVP (rilasci 0.3 e 0.4).
@@ -105,7 +107,7 @@ Regole del registro:
 ## 9. Un gioco per run, regole comuni, override per giocatore
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: una run Soul Link coinvolge N giocatori che giocano in parallelo; il collegamento degli incontri per area presuppone le stesse aree per tutti. La scelta del gioco unico è stata introdotta dall'assessment del progetto ([Registro sessioni](backlog/02-Registro-sessioni.md)).
+- **Contesto**: una run Soul Link coinvolge N giocatori che giocano in parallelo; il collegamento degli incontri per area presuppone le stesse aree per tutti. La scelta del gioco unico è stata introdotta dall'assessment del progetto ([Registro sessioni](../backlog/02-Registro-sessioni.md)).
 - **Decisione**: ogni run ha un solo gioco, uguale per tutti i giocatori, che non cambia dopo il primo incontro; le regole scelte alla creazione valgono per tutti. Solo gli override di specie sono del singolo giocatore, con chiave run + giocatore + specie, e valgono solo dentro la run.
 - **Alternative scartate**: non documentato.
 - **Conseguenze**: il gioco è una chiave del file di gioco su `run.game_id`; medaglie e override appartengono al giocatore nella run (`run_member`), non all'utente. Il Pokédex globale e le altre run non vedono mai gli override. Il pulsante "copia override" serve a chi usa lo stesso seed di un randomizer (P5-03).
@@ -113,7 +115,7 @@ Regole del registro:
 ## 10. Run già iniziata
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: la specifica vuole che il companion "si possa adottare in qualsiasi momento" ([Specifica, Run già iniziate](progetto/01-Specifica-dei-requisiti.md#run-giocatori-e-regole)).
+- **Contesto**: la specifica vuole che il companion "si possa adottare in qualsiasi momento" ([Specifica, Run già iniziate](../progetto/01-Specifica-dei-requisiti.md#run-giocatori-e-regole)).
 - **Decisione**: si può creare una run a gioco già avviato indicando medaglie, level cap, aree già visitate (con esito o come "precedenti, non tracciate"), team, box e morti con i collegamenti; i dati mancanti si completano dopo.
 - **Alternative scartate**: non documentato.
 - **Conseguenze**: il modello dati ha `run.started_in_progress` e l'esito `untracked` sugli incontri. La funzione è nel rilascio 0.2, non nell'MVP (P4-19).
@@ -121,7 +123,7 @@ Regole del registro:
 ## 11. Concorrenza: lock consultivi e vince l'ultimo
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: più giocatori modificano la stessa run in tempo reale, spesso da telefono e con reti poco affidabili. La specifica descrive il disegno completo ([Specifica, Concorrenza e lock](progetto/01-Specifica-dei-requisiti.md#concorrenza-e-lock)).
+- **Contesto**: più giocatori modificano la stessa run in tempo reale, spesso da telefono e con reti poco affidabili. La specifica descrive il disegno completo ([Specifica, Concorrenza e lock](../progetto/01-Specifica-dei-requisiti.md#concorrenza-e-lock)).
 - **Decisione**: lock consultivi in memoria sul singolo dato, presi all'apertura del modulo di modifica, con lease di 60 secondi rinnovato ogni 20; se due giocatori salvano lo stesso dato vince l'ultimo, grazie a un numero di versione, e chi è stato sovrascritto riceve un avviso con i valori nuovi. Il valore precedente resta nel diario.
 - **Alternative scartate**: lock salvati nel database, esclusi dal modello dati ("nessuna tabella per i lock"); sblocco forzato da parte di un utente, ritenuto non necessario perché ogni lock scade da solo. Lock che bloccano davvero la modifica: esclusi dalla specifica ("dicono chi sta modificando un dato senza bloccare nessuno").
 - **Conseguenze**: ogni dato modificabile ha una colonna `version`; un riavvio azzera i lock senza errori; presa e rilascio viaggiano via SSE. Il disegno va confermato con il product owner in P1-19, insieme al comportamento con rete instabile. Implementazione in P4-21.
@@ -129,7 +131,7 @@ Regole del registro:
 ## 12. Rete: solo HTTP
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'app deve girare su qualsiasi server. Durante la verifica dei rischi l'HTTPS è stato tolto dall'ambito ([Rischi](progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi), rischio chiuso).
+- **Contesto**: l'app deve girare su qualsiasi server. Durante la verifica dei rischi l'HTTPS è stato tolto dall'ambito ([Rischi](../progetto/07-Rischi-tecnici-e-fonti-dei-dati.md#registro-dei-rischi), rischio chiuso).
 - **Decisione**: l'app parla solo HTTP; chi vuole HTTPS mette davanti un reverse proxy esterno, senza modifiche all'app.
 - **Alternative scartate**: HTTPS gestito dall'app, con certificati propri, tolto dall'ambito; P3-13 è stato ridotto a compatibilità con reverse proxy.
 - **Conseguenze**: dietro un proxy l'app legge protocollo e indirizzo originali dalle intestazioni inoltrate e marca i cookie Secure quando il proxy indica HTTPS; in HTTP il pannello admin avvisa che password e sessioni viaggiano in chiaro (P3-13).
@@ -137,7 +139,7 @@ Regole del registro:
 ## 13. Repository privato senza CI, verifica locale
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'assessment del progetto ha scelto un repository privato senza CI ([Regole di lavoro, Modifiche alle regole](progetto/04-Regole-di-lavoro.md#modifiche-alle-regole)). Sul piano Free di GitHub regole di protezione e ruleset esistono solo per i repository pubblici ([Configurazione di GitHub](progetto/08-Configurazione-di-GitHub.md#decisioni)).
+- **Contesto**: l'assessment del progetto ha scelto un repository privato senza CI ([Regole di lavoro, Modifiche alle regole](../progetto/04-Regole-di-lavoro.md#modifiche-alle-regole)). Sul piano Free di GitHub regole di protezione e ruleset esistono solo per i repository pubblici ([Configurazione di GitHub](../progetto/08-Configurazione-di-GitHub.md#decisioni)).
 - **Decisione**: repository privato, nessuna CI; i controlli girano in locale con `npm run verify` (lint, tipi, test di unità e di sistema, build dell'immagine) e un hook pre-push versionato in `.githooks/`, che blocca anche i push su `main`.
 - **Alternative scartate**: CI su GitHub Actions, scartata dall'assessment; ruleset e protezione di `main`, non disponibili sui repository privati del piano Free (si attiveranno solo con un eventuale passaggio a GitHub Pro).
 - **Conseguenze**: la protezione di `main` è affidata all'hook e alle regole di lavoro; il modello di pull request chiede l'esito della verifica; GitHub Actions resta disattivato. L'hook si attiva a mano con `git config core.hooksPath .githooks`; finché P3-11 non arriva, blocca solo i push su `main`. La decisione 23 riattiva GitHub Actions per il solo controllo dei branch delle pull request; la decisione 22 estende l'hook a `develop`.
@@ -153,10 +155,10 @@ Regole del registro:
 ## 15. Dupes clause per giocatore, su tutta la linea evolutiva
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: le regole di riferimento descrivono la dupes clause come "se il primo incontro è una specie che possiedi già, puoi saltarlo e avere un altro incontro" ([Regole Soullocke](fonti/Regole-Soullocke.pdf)), senza dire come si applica con più giocatori collegati.
+- **Contesto**: le regole di riferimento descrivono la dupes clause come "se il primo incontro è una specie che possiedi già, puoi saltarlo e avere un altro incontro" ([Regole Soullocke](../fonti/Regole-Soullocke.pdf)), senza dire come si applica con più giocatori collegati.
 - **Decisione**: con la regola attiva, la dupes clause vale per il singolo giocatore: solo lui ha un nuovo tentativo nell'area e il gruppo resta aperto; gli incontri degli altri restano validi e il collegamento avviene con il suo nuovo incontro. "Già posseduta" vale per l'intera linea evolutiva e conta tutti gli esemplari del giocatore nella run, anche morti.
 - **Alternative scartate**: non documentato.
-- **Conseguenze**: il controllo usa l'id della catena evolutiva del Pokédex e legge gli esemplari senza filtrare per posizione; il modello dati ha `encounter.attempt` e l'esito `dupe` ([Modello dati](progetto/06-Modello-dati-bozza.md#decisioni-sulle-domande-aperte)). Regola opzionale, nel rilascio 0.2 (P4-08).
+- **Conseguenze**: il controllo usa l'id della catena evolutiva del Pokédex e legge gli esemplari senza filtrare per posizione; il modello dati ha `encounter.attempt` e l'esito `dupe` ([Modello dati](../progetto/06-Modello-dati-bozza.md#decisioni-sulle-domande-aperte)). Regola opzionale, nel rilascio 0.2 (P4-08).
 
 ## 16. Starter come incontro collegato nell'area `starter`
 
@@ -169,10 +171,10 @@ Regole del registro:
 ## 17. Regali, incontri fissi e scambi in gioco
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: le regole di riferimento considerano "quasi universale" che i Pokémon regalati contino come incontri separati da quello dell'area ([Regole Soullocke](fonti/Regole-Soullocke.pdf)); la specifica la rende una regola opzionale.
+- **Contesto**: le regole di riferimento considerano "quasi universale" che i Pokémon regalati contino come incontri separati da quello dell'area ([Regole Soullocke](../fonti/Regole-Soullocke.pdf)); la specifica la rende una regola opzionale.
 - **Decisione**: regali, incontri fissi e scambi in gioco sono incontri separati se la regola è attiva, altrimenti contano come incontro dell'area in cui avvengono. Nei dati di gioco ognuno ha una chiave propria e l'area a cui appartiene.
 - **Alternative scartate**: non documentato.
-- **Conseguenze**: con la regola attiva l'incontro è un gruppo nello slot `gift` con la sua chiave; senza, è l'incontro `main` della sua area ([Modello dati](progetto/06-Modello-dati-bozza.md#decisioni-sulle-domande-aperte)). I regali seguono le stesse regole di link. Regola opzionale, nel rilascio 0.2 (P4-09).
+- **Conseguenze**: con la regola attiva l'incontro è un gruppo nello slot `gift` con la sua chiave; senza, è l'incontro `main` della sua area ([Modello dati](../progetto/06-Modello-dati-bozza.md#decisioni-sulle-domande-aperte)). I regali seguono le stesse regole di link. Regola opzionale, nel rilascio 0.2 (P4-09).
 
 ## 18. Account eliminato e run cancellate
 
@@ -185,7 +187,7 @@ Regole del registro:
 ## 19. MVP 0.1: Bianco, Nero, Bianco 2, Nero 2
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'MVP serve a giocare una vera run Soul Link il prima possibile ([MVP e rilasci](progetto/03-MVP-e-rilasci.md)). Il motivo della scelta della quinta generazione non è documentato.
+- **Contesto**: l'MVP serve a giocare una vera run Soul Link il prima possibile ([MVP e rilasci](../progetto/03-MVP-e-rilasci.md)). Il motivo della scelta della quinta generazione non è documentato.
 - **Decisione**: l'MVP (versione 0.1) supporta Pokémon Bianco, Nero, Bianco 2 e Nero 2; le altre generazioni arrivano con i rilasci 0.5 e 1.0.
 - **Alternative scartate**: non documentato.
 - **Conseguenze**: i PBI di fase 1 sui dati di gioco (P1-01, P1-04, P1-06, P1-07) partono da questi quattro giochi; i dati Pokémon dell'MVP si limitano a specie, tipi e nomi della quinta generazione. L'MVP comprende 59 dei 96 PBI.
@@ -193,8 +195,8 @@ Regole del registro:
 ## 20. Design: Material 3 e Apple, font di sistema, token
 
 - **Data**: 3 ottobre 2026
-- **Contesto**: l'app deve sembrare "leggera come un'app di sistema", soprattutto su telefono ([Design system](design-system/README.md)).
-- **Decisione**: lo stile segue Material Design 3 e le Human Interface Guidelines di Apple; si usano i font di sistema e solo i token del design system in [`design-system/tokens.json`](design-system/tokens.json), come variabili CSS.
+- **Contesto**: l'app deve sembrare "leggera come un'app di sistema", soprattutto su telefono ([Design system](../design-system/README.md)).
+- **Decisione**: lo stile segue Material Design 3 e le Human Interface Guidelines di Apple; si usano i font di sistema e solo i token del design system in [`design-system/tokens.json`](../design-system/tokens.json), come variabili CSS.
 - **Alternative scartate**: non documentato (il design system esclude i font da scaricare in nome della leggerezza).
 - **Conseguenze**: nessun valore esadecimale nei componenti; ogni schermata parte dai mockup e uno scostamento si discute prima. Il canvas dei mockup contiene una copia dei token in `mockup/ds/soullink/tokens.json`: in caso di differenze vale `design-system/tokens.json`.
 
@@ -266,6 +268,6 @@ Regole del registro:
   - **Clone locale**: il product owner non lavora in un clone locale, quindi `git config core.hooksPath .githooks` sul suo computer non serve. Gli hook di git valgono per l'agente, che li attiva da sé a ogni sessione (decisione 25).
 - **Alternative scartate**: non documentato.
 - **Conseguenze**:
-  - Nessun avviso automatico sulle vulnerabilità delle dipendenze. Quando esisterà `package.json`, una mitigazione possibile è `npm audit` dentro `npm run verify` (P3-11): proposta in [Domande aperte](progetto/12-Domande-aperte.md#s-3-npm-audit-nella-verifica-locale-priorità-c), non decisa.
+  - Nessun avviso automatico sulle vulnerabilità delle dipendenze. Quando esisterà `package.json`, una mitigazione possibile è `npm audit` dentro `npm run verify` (P3-11): proposta in [Domande aperte](../progetto/12-Domande-aperte.md#s-3-npm-audit-nella-verifica-locale-priorità-c), non decisa.
   - Senza budget a 0, i minuti di Actions oltre quelli gratuiti sono addebitabili solo se sull'account GitHub c'è un metodo di pagamento; il product owner lo verifica, io non posso. Il workflow usa pochi secondi per PR, quindi i minuti gratuiti non dovrebbero esaurirsi.
   - Il criterio di P3-12 "Dependabot attivo" è sostituito da questa decisione.

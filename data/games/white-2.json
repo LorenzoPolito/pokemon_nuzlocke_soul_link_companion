@@ -2,7 +2,7 @@
   "$schema": "./game.schema.json",
   "schemaVersion": 1,
   "gameId": "white-2",
-  "dataVersion": "2026.10.19-2",
+  "dataVersion": "2026.10.19-3",
   "generation": 5,
   "versionGroup": "black-2-white-2",
   "region": "unova",
@@ -328,10 +328,11 @@
       "phase": "story",
       "source": {
         "entry": "pokeapi@6fd69df locations",
-        "note": "Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo",
+        "note": "Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003)",
         "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "parentAreaKey": "mistralton-cave"
     },
     {
       "key": "chargestone-cave",
@@ -779,10 +780,11 @@
       "phase": "postgame",
       "source": {
         "entry": "pokeapi@6fd69df locations",
-        "note": "Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo",
+        "note": "Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003)",
         "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "parentAreaKey": "underground-ruins"
     },
     {
       "key": "iron-room",
@@ -794,10 +796,11 @@
       "phase": "postgame",
       "source": {
         "entry": "pokeapi@6fd69df locations",
-        "note": "Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo",
+        "note": "Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003)",
         "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "parentAreaKey": "underground-ruins"
     },
     {
       "key": "glacier-room",
@@ -809,10 +812,11 @@
       "phase": "postgame",
       "source": {
         "entry": "pokeapi@6fd69df locations",
-        "note": "Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo",
+        "note": "Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003)",
         "check": "non verificato: area non coperta dagli estratti della seconda fonte consultati"
       },
-      "hasWildEncounters": true
+      "hasWildEncounters": true,
+      "parentAreaKey": "underground-ruins"
     },
     {
       "key": "pinwheel-forest",
@@ -1554,6 +1558,312 @@
       "conditions": [
         "item-plume-fossil"
       ]
+    },
+    {
+      "key": "grotto-abundant-shrine",
+      "type": "grotto",
+      "areaKey": "abundant-shrine",
+      "species": null,
+      "candidates": [
+        "amoonguss",
+        "bronzor",
+        "golduck",
+        "swablu",
+        "vulpix"
+      ],
+      "level": {
+        "min": 35,
+        "max": 39
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-floccesy-ranch",
+      "type": "grotto",
+      "areaKey": "floccesy-ranch",
+      "species": null,
+      "candidates": [
+        "dunsparce",
+        "herdier",
+        "marill"
+      ],
+      "level": {
+        "min": 10,
+        "max": 14
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-giant-chasm",
+      "type": "grotto",
+      "areaKey": "giant-chasm",
+      "species": null,
+      "candidates": [
+        "clefairy",
+        "ditto",
+        "metang",
+        "sneasel"
+      ],
+      "level": {
+        "min": 45,
+        "max": 49
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-lostlorn-forest",
+      "type": "grotto",
+      "areaKey": "lostlorn-forest",
+      "species": null,
+      "candidates": [
+        "combee",
+        "heracross",
+        "leavanny",
+        "pinsir"
+      ],
+      "level": {
+        "min": 20,
+        "max": 24
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-pinwheel-forest",
+      "type": "grotto",
+      "areaKey": "pinwheel-forest",
+      "species": null,
+      "candidates": [
+        "amoonguss",
+        "bagon",
+        "breloom",
+        "butterfree",
+        "hariyama",
+        "medicham",
+        "murkrow",
+        "poliwhirl"
+      ],
+      "level": {
+        "min": 55,
+        "max": 59
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-13",
+      "type": "grotto",
+      "areaKey": "unova-route-13",
+      "species": null,
+      "candidates": [
+        "drifloon",
+        "foongus",
+        "skorupi",
+        "spheal",
+        "tangela"
+      ],
+      "level": {
+        "min": 35,
+        "max": 39
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-18",
+      "type": "grotto",
+      "areaKey": "unova-route-18",
+      "species": null,
+      "candidates": [
+        "chatot",
+        "corsola",
+        "dragonite",
+        "kingler"
+      ],
+      "level": {
+        "min": 55,
+        "max": 59
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-2",
+      "type": "grotto",
+      "areaKey": "unova-route-2",
+      "species": null,
+      "candidates": [
+        "granbull",
+        "nidoran-f",
+        "nidoran-m",
+        "watchog"
+      ],
+      "level": {
+        "min": 55,
+        "max": 59
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-22",
+      "type": "grotto",
+      "areaKey": "unova-route-22",
+      "species": null,
+      "candidates": [
+        "amoonguss",
+        "mienfoo",
+        "pelipper"
+      ],
+      "level": {
+        "min": 40,
+        "max": 44
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-23",
+      "type": "grotto",
+      "areaKey": "unova-route-23",
+      "species": null,
+      "candidates": [
+        "absol",
+        "gligar",
+        "golduck",
+        "seviper",
+        "zangoose"
+      ],
+      "level": {
+        "min": 50,
+        "max": 54
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-3",
+      "type": "grotto",
+      "areaKey": "unova-route-3",
+      "species": null,
+      "candidates": [
+        "bibarel",
+        "lombre",
+        "manectric",
+        "pachirisu",
+        "venonat",
+        "zebstrika"
+      ],
+      "level": {
+        "min": 55,
+        "max": 59
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-5",
+      "type": "grotto",
+      "areaKey": "unova-route-5",
+      "species": null,
+      "candidates": [
+        "foongus",
+        "liepard",
+        "minccino"
+      ],
+      "level": {
+        "min": 20,
+        "max": 24
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-6",
+      "type": "grotto",
+      "areaKey": "unova-route-6",
+      "species": null,
+      "candidates": [
+        "dunsparce",
+        "foongus",
+        "nosepass",
+        "woobat"
+      ],
+      "level": {
+        "min": 25,
+        "max": 29
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-7",
+      "type": "grotto",
+      "areaKey": "unova-route-7",
+      "species": null,
+      "candidates": [
+        "cubchoo",
+        "seviper",
+        "watchog",
+        "zangoose"
+      ],
+      "level": {
+        "min": 30,
+        "max": 34
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
+    },
+    {
+      "key": "grotto-unova-route-9",
+      "type": "grotto",
+      "areaKey": "unova-route-9",
+      "species": null,
+      "candidates": [
+        "bouffalant",
+        "garbodor",
+        "liepard",
+        "muk"
+      ],
+      "level": {
+        "min": 35,
+        "max": 39
+      },
+      "source": {
+        "entry": "pokeapi@6fd69df encounters (hidden-grotto)",
+        "note": "La specie si sceglie dal Pokédex; i candidati sono quelli di PokéAPI (ADR 0003)"
+      }
     }
   ],
   "milestones": [
@@ -1579,7 +1889,7 @@
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:147 (sfida: riga 151); easy: Bulbapedia, Walkthrough Part 2 (Easy/Normal)",
         "check": "confermato: Bulbapedia, Aspertia Gym e Walkthrough Part 2; PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Serebii, notizie di giugno 2012; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
-        "note": "Conflitto risolto: Lillipup Lv. 13 in modalità normale (Lv. 12 è il livello della modalità facile, Lv. 14 della modalità sfida, secondo Bulbapedia)"
+        "note": "Conflitto risolto: Lillipup Lv. 13 in modalità normale (Lv. 12 è il livello della modalità facile, Lv. 14 della modalità sfida, secondo Bulbapedia). Livello facile 12 confermato da Bulbapedia (Aspertia Gym, Walkthrough Part 2)"
       }
     },
     {
@@ -1598,11 +1908,13 @@
       },
       "levelCap": {
         "normal": 18,
-        "challenge": 19
+        "challenge": 19,
+        "easy": 17
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:157 (sfida: riga 161)",
-        "check": "confermato: Bulbapedia, Virbank Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+        "check": "confermato: Bulbapedia, Virbank Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Livello facile 17: Bulbapedia, Virbank Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1621,11 +1933,13 @@
       },
       "levelCap": {
         "normal": 24,
-        "challenge": 26
+        "challenge": 26,
+        "easy": 22
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:166 (sfida: riga 171)",
-        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Livello facile 22: Bulbapedia, Castelia Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1644,11 +1958,13 @@
       },
       "levelCap": {
         "normal": 30,
-        "challenge": 32
+        "challenge": 32,
+        "easy": 28
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:177 (sfida: riga 182)",
-        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Livello facile 28: Bulbapedia, Nimbasa Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1667,11 +1983,13 @@
       },
       "levelCap": {
         "normal": 33,
-        "challenge": 36
+        "challenge": 36,
+        "easy": 30
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:188 (sfida: riga 193)",
-        "check": "confermato: Bulbapedia, Clay; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+        "check": "confermato: Bulbapedia, Clay; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Livello facile 30: Bulbapedia, Driftveil Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1690,12 +2008,13 @@
       },
       "levelCap": {
         "normal": 39,
-        "challenge": 42
+        "challenge": 42,
+        "easy": 36
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:199 (sfida: riga 204)",
         "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
-        "note": "nuzlocke.data (routes) collega la palestra alla squadra della modalità sfida (6c): qui si usa 6n. afterArea: nuzlocke.data mette la palestra prima di Chargestone Cave, la guida di Bulbapedia (Part 9 e 10) dopo"
+        "note": "nuzlocke.data (routes) collega la palestra alla squadra della modalità sfida (6c): qui si usa 6n. afterArea: nuzlocke.data mette la palestra prima di Chargestone Cave, la guida di Bulbapedia (Part 9 e 10) dopo. Livello facile 36: Bulbapedia, Mistralton Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1714,11 +2033,13 @@
       },
       "levelCap": {
         "normal": 48,
-        "challenge": 52
+        "challenge": 52,
+        "easy": 44
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:210 (sfida: riga 215)",
-        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia, Walkthrough Part 13; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia, Walkthrough Part 13; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Livello facile 44: Bulbapedia, Opelucid Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1737,11 +2058,13 @@
       },
       "levelCap": {
         "normal": 51,
-        "challenge": 55
+        "challenge": 55,
+        "easy": 47
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:221 (sfida: riga 226)",
-        "check": "confermato: Bulbapedia, Humilau Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase"
+        "check": "confermato: Bulbapedia, Humilau Gym; nome della medaglia: Bulbapedia, Badge; PokémonDB, PokéBase",
+        "note": "Livello facile 47: Bulbapedia, Humilau Gym (una sola fonte, estratto di ricerca)"
       }
     },
     {
@@ -1839,11 +2162,13 @@
       "badge": null,
       "levelCap": {
         "normal": 59,
-        "challenge": 63
+        "challenge": 63,
+        "easy": 55
       },
       "source": {
         "entry": "nuzlocke.data@baf5df5 leagues/b2w2.txt:294 (sfida: riga 286)",
-        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2"
+        "check": "confermato: PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2",
+        "note": "Livello facile 55: Bulbapedia, Iris (game) (una sola fonte, estratto di ricerca)"
       }
     }
   ]

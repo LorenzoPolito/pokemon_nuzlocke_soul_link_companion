@@ -23,6 +23,7 @@ Output: Piano di test.
 
 - [ ] Test automatici nel browser con 3 giocatori: cattura, link, area saltata, team e box, morte, fine della run.
 - [ ] Coperti anche la run già iniziata e il flag randomizer.
+- [ ] Simulato il calo della rete (browser senza rete): avviso, salvataggio disattivato, riconnessione, recupero degli eventi e lock ripresi ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 ## P7-03 Test di calcoli e override
 

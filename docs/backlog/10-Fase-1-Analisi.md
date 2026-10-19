@@ -8,7 +8,7 @@
 | P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | In verifica |
 | P1-06 | Ordine di progressione delle aree | P1-04 | M | In verifica |
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | In verifica |
-| P1-19 | Sessione di chiarimento dei requisiti | — | S | In corso |
+| P1-19 | Sessione di chiarimento dei requisiti | — | S | Completato |
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Da iniziare |
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Da iniziare |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Da iniziare |
@@ -64,6 +64,8 @@ Output: Analisi delle fonti dati.
 
 - [ ] Percentuale di nomi italiani presenti per Pokémon, mosse, abilità, aree.
 - [ ] Regola di fallback all'inglese definita.
+
+Modifica dei criteri, 19 ottobre 2026 ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)): per l'MVP i nomi di aree e medaglie restano in inglese; la percentuale per le aree è già misurata in P1-04 (nessun nome italiano per le località di Unima). Resta da misurare quella per Pokémon, mosse e abilità.
 
 ## P1-06 Ordine di progressione delle aree
 
@@ -153,6 +155,8 @@ Output: Prove di fattibilità dello stack.
 
 - [ ] Una modifica in un browser compare nell'altro senza ricaricare.
 - [ ] Riconnessione automatica dopo la perdita di connessione.
+- [ ] Al ritorno si recuperano gli eventi mancanti a partire dall'ultimo ricevuto ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [ ] Verificato che un reverse proxy davanti all'app non memorizzi in blocco le risposte SSE.
 
 ## P1-17 Prova: immagine Docker multi-stage
 
@@ -178,8 +182,8 @@ Già deciso: un solo gioco per run, uguale per tutti; impostazioni comuni a tutt
 
 - [x] Dupes clause: deciso il 3 ottobre 2026 che vale per il singolo giocatore; "già posseduta" vale per l'intera linea evolutiva. Contano tutti i Pokémon posseduti dal giocatore, anche quelli morti.
 - [x] Starter: deciso il 3 ottobre 2026, conta come un normale incontro collegato. Incontri fissi e scambi in gioco si trattano come i regali.
-- [ ] Verificato con il product owner il disegno dei lock già scritto nella specifica (lease di 60 secondi, avviso a chi è sovrascritto).
-- [ ] Definito il comportamento con rete instabile durante la partita.
-- [ ] Specifica aggiornata con le decisioni prese.
+- [x] Verificato con il product owner il disegno dei lock già scritto nella specifica (lease di 60 secondi, avviso a chi è sovrascritto): confermato il 19 ottobre 2026.
+- [x] Definito il comportamento con rete instabile durante la partita: nessuna coda, riconnessione e recupero degli eventi, bozze nel browser ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [x] Specifica aggiornata con le decisioni prese.
 
-Output: [Domande aperte](../progetto/12-Domande-aperte.md) (19 ottobre 2026): 19 domande (R-1…R-7 sulla rete instabile, D-1…D-12 dai PBI di fase 1) e 4 scelte dell'agente da confermare (S-1…S-4), ognuna con una proposta. Il PBI resta "In corso": le decisioni spettano al product owner.
+Output: [Domande aperte](../progetto/12-Domande-aperte.md) (19 ottobre 2026): 19 domande (R-1…R-7 sulla rete instabile, D-1…D-12 dai PBI di fase 1) e 4 scelte dell'agente (S-1…S-4), tutte risolte dal product owner il 19 ottobre 2026. Decisioni nelle ADR [0002](../adr/0002-rete-instabile.md), [0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md), [0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md) e [0005](../adr/0005-adr-e-scelte-di-processo.md); specifica, modello dati e dati di gioco aggiornati.

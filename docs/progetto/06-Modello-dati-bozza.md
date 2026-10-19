@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-Bozza del modello entità-relazioni del database dell'app (libSQL), anticipata rispetto alla fase 2: copre l'MVP e prepara le funzioni dei rilasci successivi senza doverle migrare. Va confermata dopo P1-06, P1-07 e P1-19.
+Bozza del modello entità-relazioni del database dell'app (libSQL), anticipata rispetto alla fase 2: copre l'MVP e prepara le funzioni dei rilasci successivi senza doverle migrare. Va confermata dopo P1-06, P1-07 e P1-19. Aggiornata il 19 ottobre 2026 con le decisioni di P1-19 ([ADR 0002](../adr/0002-rete-instabile.md), [ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)): `run_badge` è sostituita da `run_milestone`, le impostazioni della run comprendono la difficoltà e le stanze interne; la conferma completa resta al gate della fase 2 (P2-14).
 
 ## Principi
 
@@ -22,7 +22,7 @@ Il modello rende impossibili gli stati sbagliati invece di controllarli dopo, e 
 
 &#91;embedded content: modello entità-relazioni · database dell'app\]
 
-Un gruppo collegato (link\_group) nasce in un'area e raccoglie l'incontro valido di ogni giocatore, anche dopo un suo nuovo tentativo per dupes clause; ogni cattura diventa un esemplare. Medaglie e override appartengono al giocatore nella run, non all'utente.
+Un gruppo collegato (link\_group) nasce in un'area e raccoglie l'incontro valido di ogni giocatore, anche dopo un suo nuovo tentativo per dupes clause; ogni cattura diventa un esemplare. Tappe superate (medaglie comprese) e override appartengono al giocatore nella run, non all'utente.
 
 ## Tabelle principali
 
@@ -34,13 +34,13 @@ Ogni tabella ha `id` TEXT (UUIDv7) come chiave primaria, salvo dove indicato; `c
 | --- | --- | --- | --- |
 | name | TEXT | NOT NULL, 1–60 caratteri | Nome scelto dal proprietario |
 | owner\_id | TEXT | FK user | Chi ha creato la run |
-| game\_id | TEXT | NOT NULL | Chiave del file di gioco, per esempio `black-2`; non cambia dopo il primo incontro |
+| game\_id | TEXT | NOT NULL | Chiave del file di gioco, che è una **versione** (`black`, `white`, `black-2`, `white-2`), non la coppia; non cambia dopo il primo incontro |
 | game\_data\_version | TEXT | NOT NULL | Versione dei dati di gioco alla creazione, per riconoscere aree cambiate |
 | status | TEXT | CHECK in (active, lost, completed) |  |
-| settings | TEXT (JSON) | NOT NULL | Regole opzionali, randomizer, calcolatore; validate con Zod |
+| settings | TEXT (JSON) | NOT NULL | Regole opzionali, randomizer, calcolatore, `separateRooms` (stanze interne come aree separate, di base vero, non modificabile dopo il primo incontro) e, per Nero 2 e Bianco 2, `difficulty` (`easy`, `normal`, `challenge`, di base `normal`); validate con Zod |
 | settings\_schema | INTEGER | NOT NULL | Versione dello schema di settings |
 | started\_in\_progress | INTEGER | 0 o 1 | Run creata a gioco già avviato |
-| level\_cap\_override | INTEGER | NULL, CHECK 1–100 | Vale per tutti i giocatori |
+| level\_cap\_override | INTEGER | NULL, CHECK 1–100 | Uno solo per la run, vale per tutti i giocatori; il level cap automatico si calcola per giocatore dalle sue tappe |
 | ended\_at, deleted\_at | INTEGER | NULL | Fine della run; cancellazione logica, eliminazione definitiva dopo 30 giorni |
 | version | INTEGER | NOT NULL, default 1 |  |
 
@@ -99,15 +99,18 @@ Il gruppo di Pokémon collegati nato in un'area; tiene posizione e morte per tut
 | moves | TEXT (JSON) | CHECK json\_array\_length ≤ 4 | Chiavi delle mosse attuali |
 | version | INTEGER | NOT NULL |  |
 
-### run\_badge
+### run\_milestone
+
+Sostituisce `run_badge` ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)): una tappa del gioco (palestra, Superquattro, campione, boss della storia, prova) superata da un giocatore. La medaglia è un attributo della tappa nei dati di gioco.
 
 | Colonna | Tipo | Vincoli | Note |
 | --- | --- | --- | --- |
 | run\_id | TEXT | FK run, CASCADE |  |
 | member\_id | TEXT | FK run\_member |  |
-| badge\_index | INTEGER | CHECK ≥ 1 | Posizione della medaglia nei dati di gioco |
+| milestone\_key | TEXT | NOT NULL | Chiave della tappa nei dati di gioco, per esempio `badge-3` o `elite-four-marshal` |
 | obtained\_at | INTEGER | NOT NULL |  |
-|  |  | PRIMARY KEY (member\_id, badge\_index) | Nessun id separato |
+| version | INTEGER | NOT NULL |  |
+|  |  | PRIMARY KEY (member\_id, milestone\_key) | Nessun id separato |
 
 ### species\_override
 
@@ -131,6 +134,8 @@ Il gruppo di Pokémon collegati nato in un'area; tiene posizione e morte per tut
 | entity, entity\_id | TEXT | NOT NULL | Dato toccato |
 | payload | TEXT (JSON) | NOT NULL | Valori prima e dopo |
 |  |  | Nessun UPDATE né DELETE | Bloccati da trigger |
+
+Il diario è anche la base per recuperare gli eventi mancanti dopo una riconnessione: il client invia l'identificativo dell'ultimo evento ricevuto, ordinabile nel tempo ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 ## Tabelle di supporto
 
@@ -190,7 +195,7 @@ Evoluzione dello schema:
 I dati di riferimento sono file in sola lettura dentro l'immagine: si aggiornano con un nuovo rilascio, mai a mano sul server.
 
 - **Pokédex SQLite** (schema in P2-07): specie e forme, tipi per generazione, statistiche, abilità, mosse con i valori per generazione, learnset per version group, aree e incontri, nomi localizzati in una tabella unica (entità, id, lingua, nome). Generato da PokeAPI/api-data.
-- **File dei dati di gioco**, uno per gioco: game\_id, generazione, version group, colore della run, aree in ordine con area\_key stabile e nomi per lingua, medaglie con capopalestra e level cap, numero di versione. Generati da nuzlocke.data e PokéAPI, validati con Zod all'avvio: un file non valido blocca l'avvio con un messaggio chiaro.
+- **File dei dati di gioco**, uno per gioco: game\_id, generazione, version group, colore della run, aree in ordine con area\_key stabile e nomi per lingua, medaglie con capopalestra e level cap, numero di versione. Nei file, le stanze interne portano `parentAreaKey`: con la regola `separateRooms` spenta l'area effettiva di un incontro in una stanza è quella della grotta principale. Le tappe (`milestones`) sostituiscono l'elenco delle sole medaglie. Generati da nuzlocke.data e PokéAPI, validati con Zod all'avvio: un file non valido blocca l'avvio con un messaggio chiaro.
 - Il database dell'app li richiama solo per chiave (`species_id`, `game_id`, `area_key`), così aggiornare i dati non richiede migrazioni.
 
 ## Decisioni sulle domande aperte

@@ -6,7 +6,7 @@ Documento di output di P1-06 (ordine delle aree) e P1-07 (medaglie e level cap).
 
 | Fonte | Versione | Uso | Licenza |
 | --- | --- | --- | --- |
-| [nuzlocke.data](https://github.com/domtronn/nuzlocke.data) | commit `baf5df5` (27 maggio 2023), file `routes/bl.txt`, `wh.txt`, `bl2.txt`, `wh2.txt` e `leagues/bw.txt`, `b2w2.txt` | Ordine delle aree, lotte dei boss | Nessuna: uso privato accettato ([decisione 7](../decisioni.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)) |
+| [nuzlocke.data](https://github.com/domtronn/nuzlocke.data) | commit `baf5df5` (27 maggio 2023), file `routes/bl.txt`, `wh.txt`, `bl2.txt`, `wh2.txt` e `leagues/bw.txt`, `b2w2.txt` | Ordine delle aree, lotte dei boss | Nessuna: uso privato accettato ([decisione 7](../adr/0001-decisioni-di-progetto.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)) |
 | PokéAPI, CSV di [PokeAPI/pokeapi](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) | commit `6fd69df` | Chiavi e nomi inglesi delle località, incontri selvatici, regali, incontri fissi, scambi, starter, nomi dei giochi | BSD a 3 clausole |
 | [Bulbapedia, guida di Nero e Bianco](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Black_and_White) e [di Nero 2 e Bianco 2](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Black_2_and_White_2) | consultata il 19 ottobre 2026 | Seconda fonte per l'ordine: le parti della guida seguono la progressione | CC BY-NC-SA, solo consultazione |
 | Bulbapedia e [Serebii](https://www.serebii.net/blackwhite/trade.shtml), scambi in gioco di Nero e Bianco | consultati il 19 ottobre 2026 | I 5 scambi assenti in PokéAPI | Solo consultazione |
@@ -26,8 +26,8 @@ Un file per gioco, `data/games/<game_id>.json`, dove `game_id` è l'identificato
 | `names` | Nome del gioco in inglese e italiano (da PokéAPI) |
 | `runColor` | Colore della run (`run-accent` del design system); oggi `null`, da definire con il design |
 | `sources` | Fonti usate nel file, con la versione esatta |
-| `areas` | Aree in ordine di progressione (vedi sotto) |
-| `specialEncounters` | Regali, incontri fissi e scambi in gioco (vedi sotto) |
+| `areas` | Aree in ordine di progressione, solo di visualizzazione ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)) (vedi sotto) |
+| `specialEncounters` | Regali, incontri fissi, scambi in gioco e grotte nascoste (vedi sotto) |
 | `milestones` | Tappe in ordine di gioco con level cap e, per le palestre, la medaglia (P1-07, vedi sotto) |
 
 Ogni **area** ha:
@@ -38,13 +38,17 @@ Ogni **area** ha:
 - `phase`: `story` fino alla lotta finale della storia (Ghetsis in Nero e Bianco, Iris campionessa in Nero 2 e Bianco 2), poi `postgame`.
 - `hasWildEncounters`: se PokéAPI ha incontri selvatici per quell'area nella versione del file. Un'area senza incontri selvatici esiste lo stesso se ci sono regali, incontri fissi o scambi.
 - `starters`: solo nell'area `starter`, le specie offerte.
+- `parentAreaKey`: solo per le stanze interne (Guidance Chamber, Trial Chamber, stanze di Underground Ruins): l'area della grotta principale. Con la regola della run `separateRooms` spenta, un incontro nella stanza conta in quell'area; accesa, la stanza è un'area a sé.
+- `additionalSpecies`: solo in Nero e Bianco, le specie che nuzlocke.data elenca per l'area e PokéAPI no (sciami probabili, White Forest). Sono **non verificate** ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)) e si usano come suggerimenti.
 - `source`: la fonte **riga per riga**. `entry` dice da dove viene la riga (per esempio `nuzlocke.data@baf5df5 routes/bl.txt:4`), `check` l'esito della verifica d'ordine con la seconda fonte, `note` le correzioni e le avvertenze.
 
-Ogni **incontro speciale** ha una chiave propria `<tipo>-<area>-<specie>`, il tipo (`gift`, `static`, `trade`), l'area di appartenenza `areaKey`, la specie, il livello (fisso, intervallo o `null`), le eventuali condizioni di PokéAPI (fossile, stagione, avanzamento) e la fonte. Con la regola "regali separati" attiva è un gruppo nello slot `gift`; senza, conta come incontro dell'area `areaKey` ([decisione 17](../decisioni.md#17-regali-incontri-fissi-e-scambi-in-gioco)).
+Ogni **incontro speciale** ha una chiave propria `<tipo>-<area>-<specie>`, il tipo (`gift`, `static`, `trade`, `grotto`), l'area di appartenenza `areaKey`, la specie, il livello (fisso, intervallo o `null`), le eventuali condizioni di PokéAPI (fossile, stagione, avanzamento) e la fonte. Con la regola "regali separati" attiva è un gruppo nello slot `gift`; senza, conta come incontro dell'area `areaKey` ([decisione 17](../adr/0001-decisioni-di-progetto.md#17-regali-incontri-fissi-e-scambi-in-gioco)).
 
-L'area **`starter`** è sempre la prima ([decisione 16](../decisioni.md#16-starter-come-incontro-collegato-nellarea-starter)); gli starter vengono dai regali di PokéAPI nella città di partenza (`nuvema-town` o `aspertia-city`) e non compaiono anche tra gli incontri speciali.
+L'area **`starter`** è sempre la prima ([decisione 16](../adr/0001-decisioni-di-progetto.md#16-starter-come-incontro-collegato-nellarea-starter)); gli starter vengono dai regali di PokéAPI nella città di partenza (`nuvema-town` o `aspertia-city`) e non compaiono anche tra gli incontri speciali.
 
-Non stanno nei file: le specie degli incontri selvatici (si leggono dal Pokédex tramite `pokeapiLocation`), gli sciami e le grotte nascoste (vedi le domande aperte).
+Le **grotte nascoste** di Nero 2 e Bianco 2 sono incontri speciali di tipo `grotto` con `species` nulla (la specie si sceglie dal Pokédex) e i `candidates` di PokéAPI, e seguono la stessa regola degli incontri fissi ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+
+Non stanno nei file: le specie degli incontri selvatici (si leggono dal Pokédex tramite `pokeapiLocation`) e i nomi italiani (restano `null`: nell'MVP aree e medaglie sono in inglese, [ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)).
 
 ## Processo
 
@@ -69,12 +73,12 @@ Data: 19 ottobre 2026. Taglia M.
 
 ### Risultato
 
-| File | Aree | Storia / postgame | Ordine confermato da Bulbapedia | Regali / fissi / scambi |
+| File | Aree | Storia / postgame | Ordine confermato da Bulbapedia | Regali / fissi / scambi / grotte |
 | --- | --- | --- | --- | --- |
-| [`black.json`](../../data/games/black.json) | 51 | 36 / 15 | 36 | 15 / 14 / 5 |
-| [`white.json`](../../data/games/white.json) | 52 (in più White Forest) | 36 / 16 | 37 | 15 / 14 / 5 |
-| [`black-2.json`](../../data/games/black-2.json) | 69 | 41 / 28 | 43 | 15 / 25 / 6 |
-| [`white-2.json`](../../data/games/white-2.json) | 69 | 41 / 28 | 43 | 15 / 25 / 6 |
+| [`black.json`](../../data/games/black.json) | 51 | 36 / 15 | 36 | 15 / 14 / 5 / — |
+| [`white.json`](../../data/games/white.json) | 52 (in più White Forest) | 36 / 16 | 37 | 15 / 14 / 5 / — |
+| [`black-2.json`](../../data/games/black-2.json) | 69 | 41 / 28 | 43 | 15 / 25 / 6 / 15 |
+| [`white-2.json`](../../data/games/white-2.json) | 69 | 41 / 28 | 43 | 15 / 25 / 6 / 15 |
 
 Tutte le località di Unima con incontri selvatici in PokéAPI hanno un'area; nessun incontro speciale resta senza area.
 
@@ -96,57 +100,57 @@ Le tabelle sono generate dai file JSON; in caso di differenze valgono i file.
 | # | Area (`key`) | Nome inglese | Fase | Selvatici in PokéAPI | Ordine verificato | Note |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `starter` | Starter | storia | no | sì, Part 1 (scelta dello starter) | Area speciale (decisione 16). Starter da PokéAPI: regali in `nuvema-town` (snivy, tepig, oshawott, pokeapi@6fd69df encounters gift) |
-| 2 | `unova-route-1` | Route 1 | storia | sì | sì, Part 1 |  |
-| 3 | `unova-route-2` | Route 2 | storia | sì | sì, Part 2 |  |
+| 2 | `unova-route-1` | Route 1 | storia | sì | sì, Part 1 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
+| 3 | `unova-route-2` | Route 2 | storia | sì | sì, Part 2 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 4 | `striaton-city` | Striaton City | storia | sì | sì, Part 2 |  |
 | 5 | `dreamyard` | Dreamyard | storia | sì | sì, Part 2 |  |
-| 6 | `unova-route-3` | Route 3 | storia | sì | sì, Part 3 |  |
+| 6 | `unova-route-3` | Route 3 | storia | sì | sì, Part 3 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 7 | `wellspring-cave` | Wellspring Cave | storia | sì | sì, Part 3 |  |
 | 8 | `nacrene-city` | Nacrene City | storia | no | sì, Part 3 |  |
 | 9 | `pinwheel-forest` | Pinwheel Forest | storia | sì | sì, Part 4 |  |
 | 10 | `castelia-city` | Castelia City | storia | no | sì, Part 4 |  |
-| 11 | `unova-route-4` | Route 4 | storia | sì | sì, Part 5 |  |
-| 12 | `desert-resort` | Desert Resort | storia | sì | sì, Part 5 |  |
+| 11 | `unova-route-4` | Route 4 | storia | sì | sì, Part 5 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
+| 12 | `desert-resort` | Desert Resort | storia | sì | sì, Part 5 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 13 | `relic-castle` | Relic Castle | storia | sì | sì, Part 5 |  |
-| 14 | `unova-route-5` | Route 5 | storia | sì | sì, Part 6 |  |
+| 14 | `unova-route-5` | Route 5 | storia | sì | sì, Part 6 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 15 | `driftveil-drawbridge` | Driftveil Drawbridge | storia | sì | sì, Part 6 |  |
 | 16 | `driftveil-city` | Driftveil City | storia | sì | sì, Part 6 |  |
 | 17 | `cold-storage` | Cold Storage | storia | sì | sì, Part 6 |  |
-| 18 | `unova-route-6` | Route 6 | storia | sì | sì, Part 7 |  |
+| 18 | `unova-route-6` | Route 6 | storia | sì | sì, Part 7 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 19 | `mistralton-cave` | Mistralton Cave | storia | sì | no |  |
-| 20 | `guidance-chamber` | Guidance Chamber | storia | sì | no | Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo |
+| 20 | `guidance-chamber` | Guidance Chamber | storia | sì | no | Stanza di `mistralton-cave`. Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003) |
 | 21 | `chargestone-cave` | Chargestone Cave | storia | sì | sì, Part 7 |  |
-| 22 | `unova-route-7` | Route 7 | storia | sì | sì, Part 7 |  |
+| 22 | `unova-route-7` | Route 7 | storia | sì | sì, Part 7 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 23 | `celestial-tower` | Celestial Tower | storia | sì | sì, Part 7 | Spostata prima di Route 17: in nuzlocke.data è dopo P2 Laboratory, ma la visita è obbligatoria prima della palestra di Mistralton (Bulbapedia, Walkthrough:Pokémon Black and White/Part 7) |
 | 24 | `unova-route-17` | Route 17 | storia | sì | no |  |
-| 25 | `unova-route-18` | Route 18 | storia | sì | no |  |
+| 25 | `unova-route-18` | Route 18 | storia | sì | no | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 26 | `p2-laboratory` | P2 Laboratory | storia | sì | no |  |
 | 27 | `twist-mountain` | Twist Mountain | storia | sì | no |  |
 | 28 | `icirrus-city` | Icirrus City | storia | sì | no |  |
 | 29 | `dragonspiral-tower` | Dragonspiral Tower | storia | sì | no |  |
-| 30 | `unova-route-8` | Route 8 | storia | sì | no |  |
+| 30 | `unova-route-8` | Route 8 | storia | sì | no | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 31 | `moor-of-icirrus` | Moor of Icirrus | storia | sì | no |  |
-| 32 | `unova-route-9` | Route 9 | storia | sì | no |  |
-| 33 | `unova-route-10` | Route 10 | storia | sì | no |  |
+| 32 | `unova-route-9` | Route 9 | storia | sì | no | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
+| 33 | `unova-route-10` | Route 10 | storia | sì | no | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 34 | `unova-victory-road` | Victory Road | storia | sì | no |  |
-| 35 | `trial-chamber` | Trial Chamber | storia | sì | no | Assente in nuzlocke.data; stanza di Victory Road, messa subito dopo |
+| 35 | `trial-chamber` | Trial Chamber | storia | sì | no | Stanza di `unova-victory-road`. Assente in nuzlocke.data; stanza di Victory Road, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003) |
 | 36 | `ns-castle` | N's Castle | storia | no | sì, Part 12 | Assente in nuzlocke.data; incontro fisso con il leggendario della versione, alla fine della storia (Bulbapedia, Walkthrough:Pokémon Black and White/Part 12) |
 | 37 | `challengers-cave` | Challenger's Cave | postgame | sì | sì, Part 14 | Assente in nuzlocke.data; postgame, prima di Route 11 (Bulbapedia, Walkthrough:Pokémon Black and White/Part 14) |
-| 38 | `unova-route-11` | Route 11 | postgame | sì | sì, Part 16 |  |
+| 38 | `unova-route-11` | Route 11 | postgame | sì | sì, Part 16 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 39 | `village-bridge` | Village Bridge | postgame | sì | sì, Part 16 |  |
-| 40 | `unova-route-12` | Route 12 | postgame | sì | sì, Part 16 |  |
-| 41 | `unova-route-13` | Route 13 | postgame | sì | sì, Part 16 |  |
+| 40 | `unova-route-12` | Route 12 | postgame | sì | sì, Part 16 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
+| 41 | `unova-route-13` | Route 13 | postgame | sì | sì, Part 16 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 42 | `giant-chasm` | Giant Chasm | postgame | sì | sì, Part 16 | Assente in nuzlocke.data; dopo Route 13 (Bulbapedia, Walkthrough:Pokémon Black and White/Part 16) |
 | 43 | `undella-town` | Undella Town | postgame | sì | sì, Part 17 |  |
 | 44 | `undella-bay` | Undella Bay | postgame | sì | sì, Part 17 |  |
-| 45 | `unova-route-14` | Route 14 | postgame | sì | sì, Part 17 |  |
+| 45 | `unova-route-14` | Route 14 | postgame | sì | sì, Part 17 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 46 | `abundant-shrine` | Abundant Shrine | postgame | sì | sì, Part 17 |  |
-| 47 | `white-forest` | White Forest | postgame | no | sì, Part 18 | Esclusiva di Bianco. PokéAPI non ha incontri per quest'area: specie da completare a mano (P1-04) |
-| 48 | `unova-route-15` | Route 15 | postgame | sì | sì, Part 18 |  |
+| 47 | `white-forest` | White Forest | postgame | no | sì, Part 18 | Solo Bianca. Esclusiva di Bianco. PokéAPI non ha incontri per quest'area: specie da completare a mano (P1-04). additionalSpecies da nuzlocke.data, non verificato (ADR 0004) |
+| 48 | `unova-route-15` | Route 15 | postgame | sì | sì, Part 18 | additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 49 | `marvelous-bridge` | Marvelous Bridge | postgame | sì | sì, Part 18 |  |
-| 50 | `lostlorn-forest` | Lostlorn Forest | postgame | sì | sì, Part 18 | Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore |
+| 50 | `lostlorn-forest` | Lostlorn Forest | postgame | sì | sì, Part 18 | Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore. additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 | 51 | `liberty-garden` | Liberty Garden | postgame | no | no | Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore. Raggiungibile solo con il Liberty Pass, distribuito come evento |
-| 52 | `unova-route-16` | Route 16 | postgame | sì | sì, Part 18 | Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore |
+| 52 | `unova-route-16` | Route 16 | postgame | sì | sì, Part 18 | Ordine di nuzlocke.data; Bulbapedia, Walkthrough:Pokémon Black and White/Part 18 mette Route 16 prima di Lostlorn Forest. Postgame: l'ordine è a scelta del giocatore. additionalSpecies da nuzlocke.data, non verificato: probabili sciami (ADR 0004) +1 specie da nuzlocke.data. |
 
 #### Nero 2 e Bianco 2
 
@@ -173,7 +177,7 @@ Le tabelle sono generate dai file JSON; in caso di differenze valgono i file.
 | 19 | `driftveil-city` | Driftveil City | storia | no | sì, Part 7 |  |
 | 20 | `unova-route-6` | Route 6 | storia | sì | sì, Part 9 |  |
 | 21 | `mistralton-cave` | Mistralton Cave | storia | sì | sì, Part 9 |  |
-| 22 | `guidance-chamber` | Guidance Chamber | storia | sì | no | Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo |
+| 22 | `guidance-chamber` | Guidance Chamber | storia | sì | no | Stanza di `mistralton-cave`. Assente in nuzlocke.data; parte interna di Mistralton Cave, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003) |
 | 23 | `chargestone-cave` | Chargestone Cave | storia | sì | sì, Part 9 |  |
 | 24 | `unova-route-7` | Route 7 | storia | sì | sì, Part 10 |  |
 | 25 | `celestial-tower` | Celestial Tower | storia | sì | sì, Part 10 |  |
@@ -205,9 +209,9 @@ Le tabelle sono generate dai file JSON; in caso di differenze valgono i file.
 | 51 | `twist-mountain` | Twist Mountain | postgame | sì | no |  |
 | 52 | `clay-tunnel` | Clay Tunnel | postgame | sì | no |  |
 | 53 | `underground-ruins` | Underground Ruins | postgame | sì | no |  |
-| 54 | `rocky-mountain-room` | Rocky Mountain Room | postgame | sì | no | Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo |
-| 55 | `iron-room` | Iron Room | postgame | sì | no | Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo |
-| 56 | `glacier-room` | Glacier Room | postgame | sì | no | Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo |
+| 54 | `rocky-mountain-room` | Rocky Mountain Room | postgame | sì | no | Stanza di `underground-ruins`. Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003) |
+| 55 | `iron-room` | Iron Room | postgame | sì | no | Stanza di `underground-ruins`. Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003) |
+| 56 | `glacier-room` | Glacier Room | postgame | sì | no | Stanza di `underground-ruins`. Assente in nuzlocke.data; stanza di Underground Ruins, messa subito dopo. Stanza interna: conta nell'area principale se la regola separateRooms è spenta (ADR 0003) |
 | 57 | `pinwheel-forest` | Pinwheel Forest | postgame | sì | no |  |
 | 58 | `nacrene-city` | Nacrene City | postgame | no | no |  |
 | 59 | `unova-route-3` | Route 3 | postgame | sì | no |  |
@@ -227,20 +231,23 @@ Le tabelle sono generate dai file JSON; in caso di differenze valgono i file.
 - **Formato**: un file JSON per versione, con chiavi di area uguali agli identificatori delle località PokéAPI e la fonte su ogni riga. Motivo: gli incontri si leggono dal Pokédex senza tabelle di corrispondenza, e le versioni della stessa coppia differiscono (White Forest, incontri, scambi).
 - **Fonte dell'ordine**: nuzlocke.data, corretto dove la seconda fonte lo contraddice per un passaggio obbligato della storia; per le aree opzionali e il postgame resta l'ordine di nuzlocke.data.
 - **Regali, incontri fissi e scambi**: da PokéAPI, più gli scambi di Nero e Bianco a mano; ognuno con chiave propria e area di appartenenza.
-- **Stanze e parti interne** (Guidance Chamber, Trial Chamber, stanze di Underground Ruins) sono aree separate, come in PokéAPI.
+- **Stanze interne** (Guidance Chamber, Trial Chamber, stanze di Underground Ruins): aree separate nei dati, con `parentAreaKey`; la regola della run `separateRooms` (accesa di base) decide se contano a sé o nell'area principale ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 - **Aree personalizzate**: nel database, dopo un'area indicata, con chiave `custom:<id>` (sezione sopra).
 
 ### Domande aperte
 
-| Domanda | PBI che la chiude |
+Risposte del product owner il 19 ottobre 2026 ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md), [ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)):
+
+| Domanda | Risposta |
 | --- | --- |
-| Nomi italiani delle aree: PokéAPI non li ha per Unima e le fonti italiane non sono raggiungibili dall'ambiente dell'agente. Il product owner può indicare una fonte o fornire l'elenco? | P1-05 |
-| 15 aree di Nero e Bianco e 26 di Nero 2 e Bianco 2 hanno l'ordine non verificato con la seconda fonte | Verifica del product owner su questa PR, oppure una sessione con accesso diretto a Bulbapedia |
-| Stanze e parti interne come aree separate (più incontri) o unite all'area principale (Mistralton Cave, Victory Road, Underground Ruins)? | P1-19 |
-| Grotte nascoste di Nero 2 e Bianco 2: incontro dell'area, incontro speciale o niente? | P1-19 |
-| Specie di White Forest: usare l'elenco di nuzlocke.data, non verificato? | P1-19 |
-| Livelli degli scambi di Nero e Bianco | Prima di P4-09 (regali separati, rilascio 0.2) |
-| Colore della run per ogni gioco (`runColor`) | P2-12, con il design |
+| Nomi italiani delle aree | Tutto in inglese per l'MVP |
+| Stanze e parti interne come aree separate o unite | Regola opzionale della run, accesa di base |
+| Grotte nascoste di Nero 2 e Bianco 2 | Come gli incontri fissi, con la specie dal Pokédex |
+| Specie di White Forest | Si usa l'elenco di nuzlocke.data, non verificato |
+| Livelli degli scambi di Nero e Bianco | Vuoti: li scrive il giocatore |
+| Colore della run per ogni gioco (`runColor`) | Lo sceglie il design (P2-12) |
+
+Resta aperta la verifica dell'ordine di 15 aree di Nero e Bianco e 26 di Nero 2 e Bianco 2 con la seconda fonte, segnata riga per riga nei file.
 
 ## P1-07 Medaglie e level cap per gioco
 
@@ -249,7 +256,7 @@ Data: 19 ottobre 2026. Taglia M.
 ### Fonte e licenza
 
 - **Fonte dei dati**: nuzlocke.data, file `leagues/bw.txt` e `leagues/b2w2.txt`, che hanno la squadra completa di ogni boss (specie, livello, mosse). Il level cap di una tappa è il livello più alto nella squadra del boss, come da definizione nel documento [Rischi tecnici](07-Rischi-tecnici-e-fonti-dei-dati.md#dove-troveremo-i-dati).
-- **Licenza**: nuzlocke.data non ha licenza. L'uso è accettato perché l'app è privata e non commerciale ([decisione 7](../decisioni.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)); se l'app venisse condivisa, questi dati vanno sostituiti o autorizzati. Del file si usa solo un numero per tappa (il livello massimo), un dato di fatto che ogni riga verifica con una seconda fonte.
+- **Licenza**: nuzlocke.data non ha licenza. L'uso è accettato perché l'app è privata e non commerciale ([decisione 7](../adr/0001-decisioni-di-progetto.md#7-dati-di-gioco-da-nuzlockedata-e-pokéapi)); se l'app venisse condivisa, questi dati vanno sostituiti o autorizzati. Del file si usa solo un numero per tappa (il livello massimo), un dato di fatto che ogni riga verifica con una seconda fonte.
 - **Seconda fonte**: PokémonDB, Bulbapedia e Serebii, consultati tramite la ricerca web (non raggiungibili direttamente dall'ambiente). Tutti i livelli in modalità normale coincidono con nuzlocke.data; i livelli della modalità sfida vengono solo da nuzlocke.data, tranne quello di Cheren (14, confermato da Bulbapedia).
 - **Nomi delle medaglie**: in inglese da Bulbapedia ("Badge") e PokémonDB; i nomi italiani sono `null`, come quelli delle aree (P1-05).
 
@@ -269,7 +276,7 @@ Medaglie e level cap stanno nell'elenco `milestones` di ogni file di gioco, in o
 - `levelCap`: il livello più alto della squadra per difficoltà; `normal` sempre, `easy` e `challenge` dove esistono (le modalità ci sono solo in Nero 2 e Bianco 2).
 - `source`: riga di `leagues/*.txt` da cui viene la squadra, verifica con la seconda fonte, note.
 
-**Regola del level cap**: il level cap della run è quello della prima tappa, in ordine, non ancora superata; dopo l'ultima tappa non c'è cap. Le tappe del Superquattro hanno tutte lo stesso cap, quindi l'ordine in cui si affrontano non conta. Il cap si può sempre modificare a mano per la run (`run.level_cap_override`).
+**Regola del level cap**: il level cap di un giocatore è quello della prima tappa, in ordine, non ancora superata da lui, con la difficoltà della run ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)); dopo l'ultima tappa non c'è cap. Le tappe del Superquattro hanno tutte lo stesso cap, quindi l'ordine in cui si affrontano non conta. Il cap si può sempre modificare a mano per la run (`run.level_cap_override`).
 
 ### Regola per i giochi senza palestre
 
@@ -312,22 +319,22 @@ Le tabelle sono generate dai file JSON; in caso di differenze valgono i file. Le
 
 #### Nero 2 e Bianco 2
 
-| # | Tappa (`key`) | Tipo | Fase | Allenatore | Medaglia | Level cap normale / sfida | Dopo l'area | Verifica |
+| # | Tappa (`key`) | Tipo | Fase | Allenatore | Medaglia | Level cap facile / normale / sfida | Dopo l'area | Verifica |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `badge-1` | palestra | storia | Cheren | Basic Badge | 13 / 14 (facile 12) | `floccesy-ranch` | Bulbapedia, Aspertia Gym e Walkthrough Part 2; PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Serebii, notizie di giugno 2012 |
-| 2 | `badge-2` | palestra | storia | Roxie | Toxic Badge | 18 / 19 | `virbank-city` | Bulbapedia, Virbank Gym |
-| 3 | `badge-3` | palestra | storia | Burgh | Insect Badge | 24 / 26 | `castelia-sewers` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
-| 4 | `badge-4` | palestra | storia | Elesa | Bolt Badge | 30 / 32 | `relic-castle` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
-| 5 | `badge-5` | palestra | storia | Clay | Quake Badge | 33 / 36 | `driftveil-city` | Bulbapedia, Clay |
-| 6 | `badge-6` | palestra | storia | Skyla | Jet Badge | 39 / 42 | `chargestone-cave` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia |
-| 7 | `badge-7` | palestra | storia | Drayden | Legend Badge | 48 / 52 | `unova-route-9` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia, Walkthrough Part 13 |
-| 8 | `badge-8` | palestra | storia | Marlon | Wave Badge | 51 / 55 | `humilau-city` | Bulbapedia, Humilau Gym |
-| 9 | `story-boss-ghetsis` | boss della storia | storia | Ghetsis | — | 52 / — | `giant-chasm` | Bulbapedia, Ghetsis; Serebii, Trainer Pokémon #635 Hydreigon |
-| 10 | `elite-four-shauntal` | Superquattro | storia | Shauntal | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
-| 11 | `elite-four-grimsley` | Superquattro | storia | Grimsley | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
-| 12 | `elite-four-caitlin` | Superquattro | storia | Caitlin | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
-| 13 | `elite-four-marshal` | Superquattro | storia | Marshal | — | 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
-| 14 | `champion-iris` | campione | storia | Iris | — | 59 / 63 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 1 | `badge-1` | palestra | storia | Cheren | Basic Badge | 12 / 13 / 14 | `floccesy-ranch` | Bulbapedia, Aspertia Gym e Walkthrough Part 2; PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Serebii, notizie di giugno 2012 |
+| 2 | `badge-2` | palestra | storia | Roxie | Toxic Badge | 17 / 18 / 19 | `virbank-city` | Bulbapedia, Virbank Gym |
+| 3 | `badge-3` | palestra | storia | Burgh | Insect Badge | 22 / 24 / 26 | `castelia-sewers` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 4 | `badge-4` | palestra | storia | Elesa | Bolt Badge | 28 / 30 / 32 | `relic-castle` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 5 | `badge-5` | palestra | storia | Clay | Quake Badge | 30 / 33 / 36 | `driftveil-city` | Bulbapedia, Clay |
+| 6 | `badge-6` | palestra | storia | Skyla | Jet Badge | 36 / 39 / 42 | `chargestone-cave` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia |
+| 7 | `badge-7` | palestra | storia | Drayden | Legend Badge | 44 / 48 / 52 | `unova-route-9` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2; Bulbapedia, Walkthrough Part 13 |
+| 8 | `badge-8` | palestra | storia | Marlon | Wave Badge | 47 / 51 / 55 | `humilau-city` | Bulbapedia, Humilau Gym |
+| 9 | `story-boss-ghetsis` | boss della storia | storia | Ghetsis | — | — / 52 / — | `giant-chasm` | Bulbapedia, Ghetsis; Serebii, Trainer Pokémon #635 Hydreigon |
+| 10 | `elite-four-shauntal` | Superquattro | storia | Shauntal | — | — / 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 11 | `elite-four-grimsley` | Superquattro | storia | Grimsley | — | — / 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 12 | `elite-four-caitlin` | Superquattro | storia | Caitlin | — | — / 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 13 | `elite-four-marshal` | Superquattro | storia | Marshal | — | — / 58 / 62 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
+| 14 | `champion-iris` | campione | storia | Iris | — | 55 / 59 / 63 | `unova-victory-road-2` | PokémonDB, Gym Leaders & Elite Four in Pokémon Black 2 & White 2 |
 
 Differenze rispetto a nuzlocke.data, tutte annotate nella riga:
 
@@ -343,10 +350,14 @@ Differenze rispetto a nuzlocke.data, tutte annotate nella riga:
 
 ### Domande aperte
 
-| Domanda | PBI che la chiude |
+Risposte del product owner il 19 ottobre 2026 ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md), [ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)):
+
+| Domanda | Risposta |
 | --- | --- |
-| Il modello dati registra le medaglie (`run_badge.badge_index`), ma il level cap dopo l'ottava medaglia dipende da tappe senza medaglia (Superquattro, boss della storia): serve registrare le tappe superate (per esempio `run_milestone` con la `key` della tappa) | P2-06 |
-| Difficoltà della run in Nero 2 e Bianco 2 (facile, normale, sfida): impostazione della run o sempre normale? | P1-19 |
-| Il level cap è unico per la run o per giocatore (i giocatori possono avere medaglie diverse)? | P1-19 |
-| Livelli della modalità facile, oltre a Cheren | Solo se la difficoltà diventa un'impostazione |
-| Nomi italiani delle medaglie | P1-05 |
+| Come si registrano le tappe senza medaglia | `run_milestone` al posto di `run_badge` (P2-06) |
+| Difficoltà di Nero 2 e Bianco 2 | Impostazione della run, normale di default |
+| Level cap per run o per giocatore | Per giocatore, con un override unico per run |
+| Livelli della modalità facile | Trovati per le otto palestre e per Iris, da una sola fonte (Bulbapedia, estratti di ricerca); **mancano Superquattro e Ghetsis** |
+| Nomi italiani delle medaglie | Tutto in inglese per l'MVP |
+
+Da verificare: le modalità facile e sfida potrebbero non essere disponibili in entrambe le versioni o richiedere uno sblocco; le ricerche non sono univoche.
