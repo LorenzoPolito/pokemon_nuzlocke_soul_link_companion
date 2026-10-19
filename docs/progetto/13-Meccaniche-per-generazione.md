@@ -137,3 +137,90 @@ Le tre tabelle sono in [`data/mechanics/type-chart.json`](../../data/mechanics/t
 ### Domande aperte
 
 Nessuna.
+
+## P1-09 Differenze di meccaniche per generazione
+
+Data: 19 ottobre 2026. Taglia S.
+
+### Fonti e limiti
+
+| Fonte | Uso |
+| --- | --- |
+| Bulbapedia (pagine "Physical move", "Special move", "Category:Abilities that alter damage taken", "Terastal phenomenon"), via ricerca web | Regola fisico/speciale, abilità, Teracristallizzazione |
+| Serebii ("Changes to the Battle System", "The Stellar Type"), via ricerca web | Confronto sul tipo Astrale |
+| PokéBase (PokémonDB) | Confronto sulle abilità |
+| `abilities.csv` di PokéAPI | Generazione in cui compare ogni abilità |
+
+Le pagine non sono apribili direttamente da questo ambiente (rete limitata): i fatti sono letti dai risultati della ricerca, non dalle pagine intere. Dove le fonti divergono o non ho potuto verificare, è scritto.
+
+### Fisico e speciale
+
+- **Generazioni 1–3**: la categoria dipende dal **tipo** della mossa. Fisici: Normale, Lotta, Volante, Veleno, Terra, Roccia, Coleottero, Spettro, Acciaio. Speciali: Fuoco, Acqua, Erba, Elettro, Psico, Ghiaccio, Drago, Buio. Ogni mossa che infligge danno segue il suo tipo.
+- **Dalla generazione 4**: la categoria è una proprietà della **singola mossa**, indipendente dal tipo. Alcune mosse cambiano rispetto alla regola per tipo (per esempio Iper Raggio e Fangobomba diventano speciali).
+- In 1–3 solo Introforza (Hidden Power) e Palla Clima (Weather Ball) possono cadere in entrambe le categorie, perché cambiano tipo; dalla 4 non è più un caso particolare.
+- Nelle generazioni 1–3 Buio esiste solo dalla 2 e Acciaio solo dalla 2: la regola per tipo vale per i tipi della tabella dell'epoca.
+
+Per i dati: PokéAPI conserva la categoria **attuale** di ogni mossa (`damage_class`), non storicizzata ([P1-03](10-Analisi-delle-fonti-dati.md)). Quindi:
+
+- per le generazioni 4 e successive si usa la categoria della mossa, con il rischio (non verificato) che qualche mossa abbia cambiato categoria dopo la quarta;
+- per le generazioni 1–3 si deriva dal tipo della mossa nella versione del gioco, con una tabella di 17 voci nel file di dati.
+
+I giochi dell'MVP sono tutti di quinta generazione, quindi nell'MVP vale sempre la categoria della mossa.
+
+### Abilità che cambiano l'efficacia dei tipi
+
+Generazione in cui l'abilità compare, da `abilities.csv` di PokéAPI. Un'abilità non esiste nei giochi precedenti alla sua generazione.
+
+| Abilità | Gen. | Effetto sul calcolo |
+| --- | --- | --- |
+| Levitazione (Levitate) | 3 | Immunità alle mosse di tipo Terra |
+| Assorbacqua (Water Absorb) | 3 | Immunità a Acqua, cura 1/4 dei PS |
+| Assorbivolt (Volt Absorb) | 3 | Immunità a Elettro, cura 1/4 dei PS |
+| Prodigio (Flash Fire) | 3 | Immunità a Fuoco, potenzia le proprie mosse Fuoco (+50 %) dopo il colpo |
+| Parafulmine (Lightning Rod) | 3 | Attira le mosse Elettro; immunità dalla quinta (da confermare) |
+| Grassospesso (Thick Fat) | 3 | Dimezza il danno di Fuoco e Ghiaccio |
+| Magicguardia (Wonder Guard) | 3 | Subisce solo mosse superefficaci |
+| Pellearida (Dry Skin) | 4 | Immunità a Acqua con cura 1/4; +25 % dal Fuoco |
+| Ignifugo (Heatproof) | 4 | Dimezza il danno di Fuoco |
+| Motorizzato (Motor Drive) | 4 | Immunità a Elettro, +1 Velocità |
+| Acquascolo (Storm Drain) | 4 | Immunità a Acqua, +1 Att. Sp. (dalla quinta, da confermare) |
+| Filtro (Filter) e Roccia (Solid Rock) | 4 | Riducono del 25 % il danno superefficace |
+| Lentiscelta (Tinted Lens) | 4 | Le mosse poco efficaci infliggono danno pieno (raddoppia il danno) |
+| Intrepidopiede (Scrappy) | 4 | Normale e Lotta colpiscono lo Spettro |
+| Rompiforma (Mold Breaker) | 4 | Ignora le abilità difensive del bersaglio |
+| Raccolto (Sap Sipper) | 5 | Immunità a Erba, +1 Attacco |
+| Turbofiamma / Teravolt | 5 | Come Rompiforma (Turboblaze, Teravolt) |
+| Corrente Delta (Delta Stream) | 6 | Elimina le debolezze dei Volanti |
+| Pelle Corazza (Prism Armor) e Pelo Soffice (Fluffy) | 7 | Prism Armor: come Filtro; Fluffy: dimezza il contatto, raddoppia Fuoco |
+| Normalizzazione e simili (Normalize, Aerilate, Pixilate, Refrigerate, Galvanize) | 4–7 | Cambiano il tipo delle mosse in uscita |
+| Guscio Tera (Tera Shell), Terra-Mangiatore (Earth Eater), Sale Purificante (Purifying Salt) e altre della nona | 9 | Si aggiungono all'elenco; non servono nell'MVP |
+
+Note:
+
+- I nomi italiani nella tabella sono indicativi: nell'app i nomi si leggono dai dati di PokéAPI ([P1-05](10-Analisi-delle-fonti-dati.md)), non da qui. I nomi italiani li ho scritti a memoria e non li ho riletti dai dati: vanno trattati come etichette di lavoro, l'identificativo è il nome inglese.
+- Le righe marcate "da confermare" (Parafulmine e Acquascolo come immunità dalla quinta) vengono dalla mia conoscenza del gioco e non da una fonte letta: da verificare in P1-11 con @smogon/calc.
+- Il tipo effettivo di una mossa può cambiare per abilità, strumenti o mosse (Normalizzazione, Introforza, Palla Clima, Pressa Volante, Gelo Secco): non sono nella tabella dei tipi, ma nel calcolo.
+- Nell'MVP (quinta generazione) contano le abilità fino a Raccolto, Turbofiamma e Teravolt.
+
+### Teracristallizzazione (nona generazione)
+
+- **Fuori dall'MVP**: esiste solo in Scarlatto e Violetto (e nelle espansioni), previsti in 1.0.
+- **Difesa**: il Pokémon prende il tipo Teracristallo e perde i tipi originali (Bulbapedia). Fa eccezione il tipo Astrale, vedi sotto.
+- **Attacco (STAB)**: il Pokémon conserva lo STAB dei tipi originali e acquisisce lo STAB del tipo Tera. Se il tipo Tera coincide con uno dei suoi tipi originali, lo STAB per quel tipo passa da 1,5 a 2; con Adattabilità, a 2,25.
+- **Tipo Astrale (Stellar)**: le fonti non coincidono. Bulbapedia scrive che il Pokémon Astrale diventa debole alle mosse Astrali; Serebii e PokéBase riportano che l'Astrale non cambia le debolezze e le resistenze e si limita a un bonus alle mosse (+20 % la prima volta che si usa un tipo, raddoppio per i tipi originali). **Non ho potuto risolvere il conflitto**: non lo decido io. Il tipo Astrale (e Terapagos, che lo ha sempre) è fuori dall'MVP; la scelta si prende prima della 1.0 con una prova su @smogon/calc.
+
+### Cosa serve ai dati
+
+- Una tabella `categoria per tipo` (17 voci) per le generazioni 1–3, accanto alla tabella dei tipi per epoca; dalla 4 si usa la categoria della mossa.
+- Per le abilità: nessun ramo per generazione nel codice; i dati dicono, per ogni abilità, quale tipo bloccano o modificano, e da quale generazione esiste.
+- La Teracristallizzazione è uno stato per Pokémon (tipo Tera) che sostituisce i tipi difensivi: modello dati da prevedere in 1.0.
+
+### Decisioni prese
+
+- La categoria fisica/speciale si decide per tipo in 1–3 e per mossa dalla 4; nell'MVP vale sempre la mossa.
+- Le abilità e la Teracristallizzazione non stanno nella tabella dei tipi: sono modificatori applicati dal modulo `battle`.
+- Il conflitto sul tipo Astrale resta aperto fino alla 1.0.
+
+### Domande aperte
+
+Nessuna per l'MVP. Per la 1.0: effetto difensivo del tipo Astrale (fonti discordi).

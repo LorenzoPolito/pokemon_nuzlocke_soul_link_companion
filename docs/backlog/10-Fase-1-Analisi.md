@@ -13,7 +13,7 @@
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | In verifica |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Completato |
 | P1-08 | Tabelle dei tipi per generazione | — | S | Completato |
-| P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Da iniziare |
+| P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Completato |
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
 | P1-11 | Prova: @smogon/calc con override | — | S | Da iniziare |
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | Da iniziare |
@@ -102,11 +102,13 @@ Nota di chiusura, 19 ottobre 2026: oltre ai 24 campioni, le tabelle costruite da
 
 ## P1-09 Differenze di meccaniche per generazione
 
-Output: Meccaniche per generazione.
+Output: [Meccaniche per generazione](../progetto/13-Meccaniche-per-generazione.md#p1-09-differenze-di-meccaniche-per-generazione).
 
-- [ ] Regola fisico/speciale per tipo (Gen 1–3) e per mossa (Gen 4+) documentata.
-- [ ] Elenco delle abilità che cambiano l'efficacia dei tipi, con effetto.
-- [ ] Effetto della Teracristallizzazione su tipi e STAB documentato.
+- [x] Regola fisico/speciale per tipo (Gen 1–3) e per mossa (Gen 4+) documentata.
+- [x] Elenco delle abilità che cambiano l'efficacia dei tipi, con effetto.
+- [x] Effetto della Teracristallizzazione su tipi e STAB documentato.
+
+Nota di chiusura, 19 ottobre 2026: fonti lette solo tramite ricerca web (rete limitata). Due punti da verificare in P1-11 con @smogon/calc (Parafulmine e Acquascolo come immunità dalla quinta); il conflitto sul tipo Astrale tra Bulbapedia e Serebii è aperto e riguarda solo la 1.0.
 
 ## P1-10 Licenze di dati e sprite
 
