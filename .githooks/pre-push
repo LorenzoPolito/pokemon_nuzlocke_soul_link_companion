@@ -2,19 +2,21 @@
 # Hook pre-push del progetto. Si attiva una volta per clone con:
 #   git config core.hooksPath .githooks
 #
-# Per ora rifiuta solo i push verso main. La verifica completa
+# Rifiuta i push verso main e develop (git flow, decisione 22): ci si
+# arriva solo con una pull request. La verifica completa
 # (npm run verify) si aggiunge con il PBI P3-11.
 
-protected_ref="refs/heads/main"
 status=0
 
 # git passa su stdin una riga per ogni ref da inviare:
 # <ref locale> <sha locale> <ref remoto> <sha remoto>
 while read -r local_ref local_sha remote_ref remote_sha; do
-  if [ "$remote_ref" = "$protected_ref" ]; then
-    echo "pre-push: push su main rifiutato. Apri una pull request da un branch pbi/ o bug/." >&2
-    status=1
-  fi
+  case "$remote_ref" in
+    refs/heads/main | refs/heads/develop)
+      echo "pre-push: push su ${remote_ref#refs/heads/} rifiutato. Apri una pull request: verso develop da un branch pbi/, bug/ o chore/; verso main solo da develop." >&2
+      status=1
+      ;;
+  esac
 done
 
 exit $status

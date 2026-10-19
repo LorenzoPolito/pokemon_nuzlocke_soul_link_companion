@@ -4,7 +4,7 @@
 
 Web app self-hosted, in un unico container Docker, che accompagna le run Nuzlocke Soul Link di Pokémon: più run, N giocatori collegati per run, tracker di incontri, team, box, morti, medaglie e level cap, helper per le lotte che informa senza suggerire, Pokédex completo. L'MVP 0.1 copre Pokémon Bianco, Nero, Bianco 2 e Nero 2. Repository privato, app privata e non commerciale.
 
-Ruoli: il product owner (PO) decide, verifica e unisce; l'agente sviluppa, documenta e apre PR tramite l'app Claude per GitHub. Con il PO si parla sempre in italiano.
+Ruoli: il product owner (PO) decide, verifica e unisce; l'agente sviluppa, documenta, apre PR e può approvarle, tramite l'app Claude per GitHub (che agisce con l'account del PO, `LorenzoPolito`). Con il PO si parla sempre in italiano.
 
 ## Mappa dei documenti
 
@@ -36,8 +36,10 @@ I PDF in `docs/progetto/pdf/` sono copie storiche con i diagrammi: non si aggior
 
 ## Regole sempre valide
 
-- Mai push su `main`, mai unire pull request, mai creare tag: si apre una PR e unisce il PO (squash merge).
-- Un branch e una PR per ogni PBI o bug: `pbi/P1-01-inventario-giochi`, `bug/BUG-007-morte-partner`.
+- Git flow (decisione 22): mai push su `main` o `develop`, mai unire pull request, mai creare tag. Si apre una PR e unisce il PO: squash verso `develop`, merge commit da `develop` a `main`.
+- Un branch e una PR per ogni PBI o bug, creato da `develop` e con PR verso `develop`: `pbi/P1-01-inventario-giochi`, `bug/BUG-007-morte-partner`, `chore/…` per il repository. Verso `main` solo la PR di rilascio da `develop`, aperta dall'agente.
+- Il controllo `branch-policy` (GitHub Actions) deve essere verde; Actions si usa solo per quello, nei minuti gratuiti (decisione 23).
+- Puoi approvare le tue PR con una revisione di tipo commento che comincia con "Approvata dall'agente", con checklist di revisione ed esito della verifica (decisione 24). L'approvazione formale di GitHub non è possibile.
 - Commit in Conventional Commits con l'ID: `docs(P1-01): …`, `feat(P4-06): …`, `fix(BUG-004): …`.
 - Rispetta il budget della taglia (tabella in `04-Regole-di-lavoro.md`). Oltre il 150%: fermati, registra lo stato e proponi di dividere il PBI.
 - I PBI di analisi di taglia XS e S li chiude l'agente (Completato); tutti gli altri vanno a "In verifica".
@@ -68,7 +70,7 @@ Chiusura:
 ## Come trovare il prossimo PBI avviabile
 
 1. Apri i file di fase in `docs/backlog/` in ordine (10, 20, 30, …) e leggi la tabella in testa a ciascuno.
-2. Un PBI è avviabile se è "Da iniziare" e tutte le voci di "Dipende da" sono completate. Poiché i PBI di sviluppo si verificano a gruppi a fine rilascio, per loro si considera completata una dipendenza "In verifica" con la PR unita su `main` (interpretazione da confermare con il PO).
+2. Un PBI è avviabile se è "Da iniziare" e tutte le voci di "Dipende da" sono completate. Poiché i PBI di sviluppo si verificano a gruppi a fine rilascio, per loro si considera completata una dipendenza "In verifica" con la PR unita su `develop` (interpretazione da confermare con il PO).
 3. Tra gli avviabili scegli per fase, poi per ordine della tabella (che riflette la priorità), salvo indicazione del PO; per l'MVP vale l'ordine di `03-MVP-e-rilasci.md`.
 4. Non partono PBI di una fase che dipendono da un gate non ancora approvato (P1-18, P2-14).
 5. Quando le dipendenze sono PR non ancora unite, parti dal branch della PR da cui dipendi e dichiaralo nella descrizione della nuova PR.
@@ -81,11 +83,11 @@ Comandi (da completare in P3-01):
 
 | Comando | Cosa fa |
 | --- | --- |
-| `git config core.hooksPath .githooks` | Attiva l'hook pre-push (oggi blocca solo i push su `main`) |
+| `git config core.hooksPath .githooks` | Attiva l'hook pre-push (oggi blocca solo i push su `main` e `develop`) |
 | `npm run verify` | Lint, tipi, test di unità e di sistema, build dell'immagine (da P3-11) |
 
 Architettura, moduli e convenzioni di codice: `docs/progetto/05-Linee-guida-di-sviluppo.md`.
 
 ## Decisioni
 
-Le 21 decisioni già prese, con contesto, alternative e conseguenze, sono in `docs/decisioni.md`. Una decisione nuova o cambiata si aggiunge lì, solo con l'approvazione del PO.
+Le decisioni già prese (24 al 19 ottobre 2026), con contesto, alternative e conseguenze, sono in `docs/decisioni.md`. Una decisione nuova o cambiata si aggiunge lì, solo con l'approvazione del PO.
