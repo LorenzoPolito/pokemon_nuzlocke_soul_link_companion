@@ -29,7 +29,7 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | [Modello dati](06-Modello-dati-bozza.md) (bozza) | Documento | Tabelle, relazioni, schema del Pokédex | P2-01–P2-07 | Ogni modifica allo schema | Esiste |
 | [Rischi tecnici e fonti dei dati](07-Rischi-tecnici-e-fonti-dei-dati.md) | Documento | Registro dei rischi con esito delle verifiche, fonte di ogni dato | Fase 0, poi fase 1 | Una verifica cambia un rischio o una fonte | Esiste |
 | PDF dei documenti | Copia | `docs/progetto/pdf/`: i 6 documenti con i diagrammi visibili, copia del 3 ottobre 2026 | Fase 0 | Mai: copia storica | Esiste |
-| [Analisi delle fonti dati](10-Analisi-delle-fonti-dati.md) | Documento | Inventario dei giochi, copertura di PokéAPI, nomi localizzati, licenze | P1-01–P1-05, P1-10 | Durante la fase 1 | In corso (P1-01 fatto) |
+| [Analisi delle fonti dati](10-Analisi-delle-fonti-dati.md) | Documento | Inventario dei giochi, copertura di PokéAPI, nomi localizzati, licenze | P1-01–P1-05, P1-10 | Durante la fase 1 | In corso (P1-01 e P1-04 fatti) |
 | Dati di gioco: aree, medaglie, level cap | Documento | Fonti e formato dei dati di progressione, prima per Bianco, Nero, Bianco 2, Nero 2 | P1-06, P1-07 | Durante la fase 1 | Da creare |
 | Meccaniche per generazione | Documento | Tabelle dei tipi e regole di calcolo | P1-08, P1-09 | Durante la fase 1 | Da creare |
 | Prove di fattibilità dello stack | Documento | Esiti e misure delle prove tecniche | P1-11–P1-17 | Durante la fase 1 | Da creare |
