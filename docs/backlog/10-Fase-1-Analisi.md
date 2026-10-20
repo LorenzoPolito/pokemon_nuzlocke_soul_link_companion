@@ -15,7 +15,7 @@
 | P1-08 | Tabelle dei tipi per generazione | — | S | Completato |
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Completato |
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
-| P1-11 | Prova: @smogon/calc con override | — | S | Da iniziare |
+| P1-11 | Prova: @smogon/calc con override | — | S | Completato |
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | Da iniziare |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Da iniziare |
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | Da iniziare |
@@ -121,11 +121,13 @@ Nota di chiusura, 19 ottobre 2026: gli sprite non hanno una licenza d'uso (copyr
 
 ## P1-11 Prova: @smogon/calc con override
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-11-prova-smogoncalc-con-override).
 
-- [ ] Calcolo eseguito con tipi e statistiche di specie modificati.
-- [ ] Verificato in almeno 3 generazioni diverse.
-- [ ] Dimensione aggiunta al bundle misurata.
+- [x] Calcolo eseguito con tipi e statistiche di specie modificati.
+- [x] Verificato in almeno 3 generazioni diverse.
+- [x] Dimensione aggiunta al bundle misurata.
+
+Nota di chiusura, 20 ottobre 2026: generazioni 3, 5 e 8. Bundle 504 KB (117 KB gzip). Confermato che Parafulmine e Acquascolo sono immunità dalla quinta. Attenzione: le chiavi delle statistiche negli override sono `hp, atk, def, spa, spd, spe`, quelle sbagliate vengono ignorate in silenzio.
 
 ## P1-12 Prova: Drizzle e libSQL, locale e Turso
 
