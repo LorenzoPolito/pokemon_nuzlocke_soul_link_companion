@@ -9,7 +9,7 @@
 | P1-06 | Ordine di progressione delle aree | P1-04 | M | In verifica |
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | In verifica |
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Completato |
-| P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Da iniziare |
+| P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | In verifica |
 | P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Da iniziare |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Completato |
 | P1-08 | Tabelle dei tipi per generazione | — | S | Da iniziare |
@@ -36,11 +36,13 @@ Nota di chiusura, 19 ottobre 2026: i rilasci dei giochi diversi dalla quinta gen
 
 ## P1-02 Copertura PokéAPI: specie, forme, statistiche, tipi
 
-Output: Analisi delle fonti dati.
+Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1-02-copertura-pokéapi-specie-forme-statistiche-tipi).
 
-- [ ] Per ogni generazione: numero di specie e forme presenti rispetto al totale atteso.
-- [ ] Verificato come PokéAPI gestisce tipi e statistiche cambiati tra generazioni.
-- [ ] Lacune elencate con la decisione presa per ciascuna.
+- [x] Per ogni generazione: numero di specie e forme presenti rispetto al totale atteso.
+- [x] Verificato come PokéAPI gestisce tipi e statistiche cambiati tra generazioni.
+- [x] Lacune elencate con la decisione presa per ciascuna.
+
+Nota di chiusura, 19 ottobre 2026: le specie sono 1025 su 1025; per varietà e forme non c'è un totale atteso da una fonte raggiungibile, e la copertura è verificata per coerenza interna e per le forme dei giochi dell'MVP. Due domande per P2-04 (varietà dell'esemplare, forme cosmetiche).
 
 ## P1-03 Copertura PokéAPI: mosse, learnset, abilità
 
