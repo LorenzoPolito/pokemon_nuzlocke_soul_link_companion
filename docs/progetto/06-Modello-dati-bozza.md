@@ -142,13 +142,79 @@ Il diario è anche la base per recuperare gli eventi mancanti dopo una riconness
 
 Account, configurazione e funzioni dei rilasci successivi stanno in tabelle piccole e separate, così il nucleo della run resta semplice.
 
-- **user, session, account, verification**: gestite da Better Auth. A user si aggiungono `role` (admin, user), `must_change_password`, `locale`, `theme`, `disabled_at`.
-- **app\_setting**: `key` TEXT come chiave primaria, `value` JSON, `updated_at`. Contiene la modalità di registrazione e le altre impostazioni globali, senza migrazioni per ogni impostazione nuova.
-- **invite**: `token_hash` UNIQUE (il token in chiaro non si salva mai), `kind` (app, run), `run_id` e `role` per gli inviti a una run, `created_by`, `expires_at`, `max_uses`, `uses`.
+- **user, session, account, verification**, **app\_setting** e **invite**: definite in [P2-01](#p2-01-utenti-sessioni-e-ruoli-globali).
 - **custom\_area**: `game_id`, `name`, `after_area_key` (dove inserirla nell'ordine), `created_by`. I gruppi la richiamano come `custom:<id>`.
 - **seen\_trainer** e **seen\_pokemon** (rilascio 0.3): squadre viste in lotta. `seen_trainer` ha `run_id`, nome, area, giocatore che l'ha salvata; `seen_pokemon` ha specie, livello e mosse osservate in JSON.
 - **request\_key**: chiave di idempotenza inviata dal client, utente, esito e risposta salvata. Un doppio invio restituisce la stessa risposta; le righe si eliminano dopo 24 ore.
 - **Nessuna tabella per i lock**: vivono nella memoria del server, come da specifica.
+
+## P2-01 Utenti, sessioni e ruoli globali
+
+Data: 20 ottobre 2026. Definizione di dettaglio delle tabelle di account, verificata con la prova P1-13 ([prove di fattibilità](14-Prove-di-fattibilita.md#p1-13-prova-better-auth-con-admin-da-variabili-dambiente)) su `better-auth` 1.7.12 con il plugin `admin`.
+
+### Tabelle di Better Auth
+
+Le quattro tabelle sono quelle richieste da Better Auth; si riportano senza aggiungere né togliere colonne, tranne le aggiunte alla tabella `user` elencate sotto. Le date sono INTEGER in millisecondi UTC (modalità `timestamp_ms` di Drizzle), come il resto del modello.
+
+| Tabella | Colonne di Better Auth | Note |
+| --- | --- | --- |
+| `user` | `id`, `name`, `email` (UNIQUE), `email_verified`, `image`, `created_at`, `updated_at` | Più le colonne del plugin `admin` e le nostre, sotto |
+| `session` | `id`, `token` (UNIQUE), `expires_at`, `ip_address`, `user_agent`, `user_id` (FK user, CASCADE), `impersonated_by`, `created_at`, `updated_at` | `impersonated_by` è del plugin `admin`; non si usa l'impersonificazione ma la colonna c'è |
+| `account` | `id`, `account_id`, `provider_id`, `user_id` (FK user, CASCADE), `password` (hash), `access_token`, `refresh_token`, `id_token`, `access_token_expires_at`, `refresh_token_expires_at`, `scope`, `created_at`, `updated_at` | Con email e password esiste una riga con `provider_id = 'credential'`; l'hash sta in `account.password`, mai in `user` |
+| `verification` | `id`, `identifier`, `value`, `expires_at`, `created_at`, `updated_at` | Non usata nell'MVP (nessuna email), ma richiesta da Better Auth |
+
+Lo schema si scrive a mano in Drizzle: il generatore `@better-auth/cli` non si installa con la versione provata. Va ricontrollato a ogni aggiornamento di Better Auth.
+
+### Colonne aggiunte a `user`
+
+| Colonna | Tipo | Vincoli | Note |
+| --- | --- | --- | --- |
+| `role` | TEXT | NULL, valori `admin` o `user` | Colonna del plugin `admin`; NULL o `user` valgono utente. Il ruolo globale non dà alcun diritto dentro le run: lì contano `run_member.role` |
+| `banned`, `ban_reason`, `ban_expires` | INTEGER, TEXT, INTEGER | `banned` default 0 | Colonne del plugin `admin`. La **disattivazione** dell'utente (P3-09) è un ban: sostituisce la colonna `disabled_at` della bozza |
+| `must_change_password` | INTEGER | NOT NULL, default 0, 0 o 1 | Vero per l'admin creato all'avvio finché non cambia la password; dichiarata con `additionalFields` e `input: false`, così un client non può impostarla |
+| `locale` | TEXT | NULL, valori `it` o `en` | Lingua scelta; NULL = lingua del browser, poi italiano |
+| `theme` | TEXT | NULL, valori `light`, `dark`, `system` | NULL = `system` |
+| `deleted_at` | INTEGER | NULL | Valorizzato quando l'account è stato anonimizzato |
+
+Le colonne `locale` e `theme` sono dichiarate con `additionalFields` e modificabili dall'utente stesso. `role`, `banned` e `must_change_password` no.
+
+### Ruoli globali
+
+| Ruolo | Chi | Può |
+| --- | --- | --- |
+| `admin` | L'utente creato all'avvio da `ADMIN_EMAIL` e `ADMIN_PASSWORD`; altri admin solo per promozione di un admin | Gestire utenti (disattivare, reimpostare la password, eliminare), modalità di registrazione, inviti all'app, aree personalizzate |
+| `user` | Ogni altro account | Creare run e partecipare alle run a cui è invitato |
+
+Esiste almeno un admin: l'ultimo admin non si può degradare, disattivare né eliminare (invariante controllata nel dominio).
+
+### Eliminazione e anonimizzazione
+
+Una riga `user` non si cancella mai se ha run o diario: si anonimizza. In una transazione: `name` = "Utente eliminato", `email` = `deleted-<id>@invalid` (resta UNIQUE), `image` NULL, `deleted_at` valorizzato, riga `account` eliminata, sessioni eliminate. `run_member` e `run_event` continuano a puntare alla riga. Se l'utente era proprietario di una run, la proprietà passa al giocatore con il posto (`seat`) successivo.
+
+### Modalità di registrazione
+
+Impostazione globale in `app_setting`, chiave `registration.mode`, valore JSON `"open"`, `"invite"` o `"closed"`:
+
+| Valore | Effetto |
+| --- | --- |
+| `open` | Chiunque raggiunga l'app può registrarsi |
+| `invite` | La registrazione richiede un invito all'app valido (tabella `invite`, `kind = 'app'`) |
+| `closed` | Nessuna registrazione; l'admin crea gli account |
+
+Valore predefinito proposto: **`invite`**, perché l'app è privata e raggiungibile dalla rete locale o da internet. Better Auth permette la registrazione per impostazione predefinita: il blocco sta nell'app, che rifiuta la registrazione prima di chiamare Better Auth quando la modalità non la consente (criterio in P3-07). Le modalità `invite` e `closed` non impediscono all'admin di creare un account.
+
+### `app_setting` e `invite`
+
+- `app_setting(key TEXT PRIMARY KEY, value TEXT NOT NULL (JSON), updated_at INTEGER NOT NULL)`. Chiavi iniziali: `registration.mode`. Il valore si valida con uno schema per chiave.
+- `invite(id, token_hash UNIQUE, kind CHECK IN ('app','run'), run_id NULL FK run CASCADE, role NULL CHECK IN ('player','spectator'), created_by FK user, expires_at, max_uses, uses default 0, revoked_at NULL, created_at)`. Il token in chiaro si mostra una volta sola. Un invito `run` richiede `run_id` e `role`; un invito `app` no. Un invito è valido se non è revocato, non è scaduto e `uses < max_uses`.
+
+### Identificativi degli utenti
+
+Il resto del modello usa UUIDv7. Better Auth genera propri identificativi per `user`, `session`, `account` e `verification`. Se la libreria permette di fornire un generatore (da verificare in P3-07), anche questi diventano UUIDv7; altrimenti restano stringhe di Better Auth. Nessun'altra tabella dipende dal formato: i riferimenti a `user.id` sono TEXT.
+
+### Domande aperte
+
+Modalità di registrazione predefinita: la proposta è `invite`. Da confermare con il product owner.
 
 ## Invarianti
 

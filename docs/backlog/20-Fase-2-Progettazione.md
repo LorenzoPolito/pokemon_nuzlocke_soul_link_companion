@@ -4,7 +4,7 @@
 
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
-| P2-01 | Modello dati: utenti, sessioni, ruoli globali | P1-13 | S | Da iniziare |
+| P2-01 | Modello dati: utenti, sessioni, ruoli globali | P1-13 | S | Completato |
 | P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Da iniziare |
 | P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | Da iniziare |
 | P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | Da iniziare |
@@ -21,11 +21,13 @@
 
 ## P2-01 Modello dati: utenti, sessioni, ruoli globali
 
-Output: Modello dati.
+Output: [Modello dati](../progetto/06-Modello-dati-bozza.md#p2-01-utenti-sessioni-e-ruoli-globali).
 
-- [ ] Tabelle richieste da Better Auth riportate senza modifiche non necessarie.
-- [ ] Ruolo globale (admin, utente) e flag di cambio password obbligatorio definiti.
-- [ ] Impostazione della modalità di registrazione (aperta, su invito, chiusa) definita.
+- [x] Tabelle richieste da Better Auth riportate senza modifiche non necessarie.
+- [x] Ruolo globale (admin, utente) e flag di cambio password obbligatorio definiti.
+- [x] Impostazione della modalità di registrazione (aperta, su invito, chiusa) definita.
+
+Nota di chiusura, 20 ottobre 2026: la disattivazione dell'utente usa le colonne di ban del plugin `admin`, al posto di `disabled_at`. Modalità di registrazione predefinita proposta: su invito (da confermare).
 
 ## P2-02 Modello dati: run, giocatori, regole
 
