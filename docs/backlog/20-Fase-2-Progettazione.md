@@ -8,7 +8,7 @@
 | P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Completato |
 | P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | In verifica |
 | P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | In verifica |
-| P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Da iniziare |
+| P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Completato |
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Da iniziare |
 | P2-07 | Schema del Pokédex SQLite | P1-15 | M | Da iniziare |
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Da iniziare |
@@ -63,10 +63,12 @@ Nota, 20 ottobre 2026: il trigger di sola aggiunta del diario lascia passare la 
 
 ## P2-05 Modello dati: override per specie per giocatore
 
-Output: Modello dati.
+Output: [Modello dati](../progetto/06-Modello-dati-bozza.md#p2-05-override-per-specie-per-giocatore).
 
-- [ ] Chiave univoca run + giocatore + specie.
-- [ ] Ogni campo sovrascrivibile (tipi, statistiche, abilità, mosse imparabili) memorizzato separatamente, così il ripristino è per singolo campo.
+- [x] Chiave univoca run + giocatore + specie.
+- [x] Ogni campo sovrascrivibile (tipi, statistiche, abilità, mosse imparabili) memorizzato separatamente, così il ripristino è per singolo campo.
+
+Nota di chiusura, 20 ottobre 2026: la chiave si estende con la varietà (proposta, da confermare); `base_stats` si salva completo; tornare all'originale = eliminare la riga.
 
 ## P2-06 Modello dati: medaglie e level cap
 

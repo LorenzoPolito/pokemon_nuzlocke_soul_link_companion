@@ -497,6 +497,60 @@ Ogni scrittura che cambia dati di gioco scrive **nella stessa transazione** l'ev
 
 Nessuna bloccante. Soglia di recupero degli eventi (500) e tipi di evento da mostrare nella timeline si fissano in P2-10 e P2-12.
 
+## P2-05 Override per specie per giocatore
+
+Data: 20 ottobre 2026. Taglia S. Precisa `species_override` e come si calcolano i dati effettivi.
+
+### Chiave e righe
+
+Un override appartiene a un giocatore della run e a una specie. La chiave della bozza (`member_id`, `species_id`, `field`) si estende con la **varietà**: `variety_id INTEGER NOT NULL DEFAULT 0`, dove 0 vuol dire la varietà predefinita della specie e un altro valore è il `pokemon_id` del Pokédex ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)). Così il Darmanitan in forma Zen o una forma di Wormadam hanno i propri dati, anche nei randomizer. La specifica parla di «specie»; il campo in più è una proposta.
+
+| Colonna | Tipo | Vincoli | Note |
+| --- | --- | --- | --- |
+| `run_id` | TEXT | FK run, CASCADE | |
+| `member_id` | TEXT | FK run_member | Il giocatore a cui valgono; deve essere un giocatore attivo |
+| `species_id` | INTEGER | NOT NULL | Specie del Pokédex |
+| `variety_id` | INTEGER | NOT NULL, default 0 | 0 = varietà predefinita |
+| `field` | TEXT | CHECK in (`types`, `base_stats`, `abilities`, `learnset`) | Un campo per riga |
+| `value` | TEXT (JSON) | NOT NULL | Valido per il campo, vedi sotto |
+| `version` | INTEGER | NOT NULL | |
+| | | UNIQUE (`member_id`, `species_id`, `variety_id`, `field`) | |
+
+Una riga esiste solo se il giocatore ha modificato quel campo: **tornare all'originale = eliminare la riga**, per campo o per tutta la specie. Un campo non modificato non ha riga e vale il Pokédex.
+
+### Valori per campo (validati con Zod)
+
+| Campo | Forma del valore | Regole |
+| --- | --- | --- |
+| `types` | `["water", "flying"]` | Uno o due tipi distinti; chiavi dei tipi dell'epoca del gioco ([P1-08](14-Prove-di-fattibilita.md)); l'ordine è primario, secondario |
+| `base_stats` | `{"hp": 80, "atk": 82, "def": 83, "spa": 100, "spd": 100, "spe": 80}` | Sempre tutte e sei le statistiche (valore completo, non parziale), ognuna intera tra 1 e 255. Per Speciale unico (generazione 1) si useranno le chiavi di quel gioco: non rilevante per l'MVP |
+| `abilities` | `{"slots": ["torrent", "rain-dish"], "hidden": "swift-swim"}` | Da una a due abilità normali, più una nascosta facoltativa; chiavi del Pokédex. Nei giochi senza abilità nascosta (prima della quinta) la chiave `hidden` è assente |
+| `learnset` | `{"moves": [{"move": "surf", "level": 28}, {"move": "ice-beam"}]}` | Elenco completo delle mosse imparabili che **sostituisce** quello del Pokédex. Con `level` è appresa salendo di livello a quel livello; senza `level` è imparabile in altro modo (macchina, tutor, uova). Mosse scelte dall'elenco completo del Pokédex; niente ripetizioni |
+
+Non si possono sovrascrivere evoluzioni, altezza, peso o curva di crescita: la specifica non li prevede. Un randomizer che cambia le evoluzioni non è coperto; lo registriamo come limite.
+
+### Dati effettivi
+
+Una sola funzione del dominio, `effectiveSpecies(run, member, species, variety)`, restituisce per ogni campo il valore dell'override se esiste, altrimenti quello del Pokédex per il version group del gioco della run; ogni campo porta `source: 'override' | 'pokedex'`. Tracker, helper delle lotte e calcolatore usano **solo** questa funzione, così nessuno legge il Pokédex direttamente per una specie di una run. I dati si segnalano come sovrascritti dove `source = 'override'`.
+
+Gli override valgono per tutti gli esemplari di quella specie nel gioco di quel giocatore, suoi e avversari; non toccano le run degli altri giocatori né il Pokédex.
+
+### Copia tra giocatori
+
+«Copia override a un altro giocatore» (per chi usa lo stesso seed): un'operazione che, nella stessa transazione, copia le righe scelte (per specie o tutte) dal giocatore A al giocatore B come righe nuove con `version` 1; dove B ha già una riga per lo stesso campo, la riga di B viene **sostituita** (con conferma in interfaccia). Si scrive un solo evento `override.set` con `source_member_id` nel payload.
+
+### Diario e concorrenza
+
+Ogni impostazione, modifica o ripristino scrive `override.set` o `override.cleared` con valore prima e dopo. Il «vince l'ultimo» e l'avviso a chi è stato sovrascritto valgono come per gli altri dati (`version`). Un lock consultivo è per (giocatore, specie).
+
+### Indici e dimensioni
+
+`species_override(run_id, member_id)` per leggere tutti gli override di un giocatore in una query; in un randomizer completo possono essere centinaia di specie × 4 campi per giocatore, ancora poche migliaia di righe per run.
+
+### Domande aperte
+
+La varietà nella chiave (proposta di questa sezione) e il valore completo per `base_stats` da confermare con il product owner. Chi può modificare gli override di un altro giocatore si decide in P2-08.
+
 ## Invarianti
 
 Ogni regola del Soul Link ha un posto preciso dove viene garantita: prima la struttura, poi il database, infine il dominio con i test.
