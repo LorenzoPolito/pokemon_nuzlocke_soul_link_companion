@@ -300,3 +300,59 @@ I marchi e i nomi dei Pokémon sono di Nintendo, Creatures e Game Freak; il copy
 | Domanda | PBI che la chiude |
 | --- | --- |
 | Se un giorno il repository diventa pubblico: quale licenza per il codice (proposta: MIT) e cosa sostituire (dati di nuzlocke.data) | Decisione del product owner, solo se si decide di pubblicare; chiude il criterio "licenza" di P3-12 |
+
+## P1-05 Nomi localizzati italiano e inglese
+
+Data: 19 ottobre 2026. Taglia S. Fonte: i CSV di nomi di PokéAPI (`pokemon_species_names`, `move_names`, `ability_names`, `type_names`, `nature_names`, `pokemon_form_names`, `location_names`), ramo `master`, commit `6fd69df`, lingue 8 (italiano) e 9 (inglese). Una voce conta come presente se il nome non è vuoto.
+
+### Copertura
+
+| Categoria | Totale | Inglese | Italiano |
+| --- | --- | --- | --- |
+| Specie | 1025 | 100 % | **100 %** (1025) |
+| Mosse | 937 | 100 % | **100 %** (937) |
+| Abilità della serie principale | 314 | 100 % | **99,0 %** (311; mancano 3) |
+| Tipi | 21 | 100 % | **100 %** |
+| Nature | 25 | 100 % | **100 %** |
+| Forme con identificativo proprio | 618 | 93,0 % (575) | **57,6 %** (356) |
+| Località (aree) | 1104 | 99,3 % (1096) | **25,9 %** (286) |
+
+Per generazione (specie e mosse in italiano, presenti su totale): le specie sono 151/151, 100/100, 135/135, 107/107, 156/156, 72/72, 88/88, 96/96 e 120/120 dalla prima alla nona generazione; le mosse 165/165, 86/86, 121/121, 113/113, 92/92, 62/62, 121/121, 108/108 e 69/69. Le abilità sono complete fino all'ottava generazione; nella nona ne mancano 3 su 47 (`eelevate`, `fire-mane`, `aura-guard`).
+
+**Località**, per regione (italiano presente su totale): Hoenn 93/110, Kalos 104/106, Alola 89/101; **zero** per Kanto, Johto, Sinnoh, **Unima (0/122)**, Galar, Hisui, Paldea, Orre e le località senza regione.
+
+### Cosa significa per l'MVP
+
+- Per la quinta generazione e per tutto ciò che l'MVP mostra (specie, mosse, abilità, tipi, nature) il nome italiano c'è sempre.
+- Un controllo di qualità: i nomi italiani delle **mosse** sono traduzioni vere (solo 10 su 937 coincidono con l'inglese); i nomi italiani delle **specie** coincidono con l'inglese in 1004 casi su 1025, perché in italiano quasi tutti i Pokémon mantengono il nome inglese. Non è una lacuna.
+- Le **aree** di Unima non hanno nessun nome italiano: come deciso, nell'MVP aree e medaglie restano in inglese ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)).
+- Le **forme** (per esempio Basculin a strisce rosse, Deerling di stagione) sono il punto debole: il 42 % non ha nome italiano e il 7 % nemmeno inglese. Per le specie fino alla quinta generazione le forme sono 272 e 70 non hanno il nome italiano; sono quasi tutte forme speciali (Pikachu cosplay, forme Gigamax, Mothim per terreno), che l'MVP non usa. La regola di riserva sotto le copre.
+
+### Regola di riserva
+
+Il nome si risolve **per campo e per lingua**, in questo ordine, e si ferma al primo non vuoto:
+
+1. il nome nella lingua scelta dall'utente;
+2. il nome in inglese;
+3. l'identificativo di PokéAPI (per esempio `eelevate`), reso leggibile (trattini sostituiti da spazi, iniziali maiuscole).
+
+Dettagli:
+
+- Vale per specie, forme, mosse, abilità, tipi, nature, località e medaglie.
+- Per una **forma** senza nome proprio si usa il nome della specie, seguito dall'identificativo della forma se serve a distinguerla.
+- La riserva si applica **in lettura** (per esempio con `COALESCE` sulla tabella dei nomi del Pokédex, P2-07) e non copia mai un nome inglese nella colonna italiana: così, quando PokéAPI aggiunge una traduzione, un nuovo rilascio dei dati la prende da sola.
+- Il Pokédex SQLite porta una sola tabella dei nomi (entità, id, lingua, nome); non si salva quale riga è una riserva.
+- Nei file di gioco i nomi mancanti sono `null` e seguono la stessa regola ([Dati di gioco](11-Dati-di-gioco.md#formato-dei-file)).
+- Un controllo automatico in fase di build (P3-04) segnala in un rapporto i nomi italiani mancanti, senza far fallire la build.
+
+### Decisioni prese
+
+- La regola di riserva sopra: lingua scelta, poi inglese, poi identificativo.
+- Nessun lavoro di traduzione per l'MVP: i nomi italiani che mancano si colmano quando PokéAPI li aggiunge.
+
+### Domande aperte
+
+| Domanda | PBI che la chiude |
+| --- | --- |
+| Nomi italiani delle forme (e delle 3 abilità della nona generazione): compilarli a mano o aspettare PokéAPI? | Prima del rilascio che porta quelle forme (0.5 per la sesta generazione in poi); non serve all'MVP |
+| Nomi italiani di aree e medaglie, da una fonte da individuare | Dopo l'MVP: [ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md) li lascia in inglese |
