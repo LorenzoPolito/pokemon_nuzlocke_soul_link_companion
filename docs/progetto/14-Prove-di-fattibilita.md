@@ -180,3 +180,38 @@ Il punto da ricordare nella guida di installazione: **la compressione del proxy 
 ### Domande aperte
 
 Nessuna.
+
+## P1-13 Prova: Better Auth con admin da variabili d'ambiente
+
+Data: 20 ottobre 2026. Taglia S. Esito: **fattibile**, con tre punti da progettare in fase 3.
+
+### Metodo
+
+`better-auth` 1.7.12 con il plugin `admin`, adapter Drizzle su libSQL (file locale, stessa apertura della P1-12), Node 22. Una colonna aggiuntiva `mustChangePassword` sull'utente (`additionalFields`, `input: false`, così un cliente non può impostarla). Lo script di prova chiama l'API del server (`auth.api.*`) senza passare da HTTP. All'avvio: migrazioni, poi creazione dell'admin se non esiste già un utente con ruolo `admin`.
+
+### Esiti
+
+| Criterio | Esito |
+| --- | --- |
+| Registrazione e login su libSQL | **Sì**: registrazione di un giocatore, login, sessione con ruolo `user`; password errata rifiutata |
+| Admin creato al primo avvio da `ADMIN_EMAIL` e `ADMIN_PASSWORD`, non ricreato ai riavvii | **Sì**: primo avvio `created: true`; riavvio e avvio dopo il cambio password `created: false`; un solo admin nel database |
+| Cambio password obbligatorio al primo accesso | **Sì**: l'admin ha `mustChangePassword = true`; finché è vero una verifica lato server rifiuta ogni richiesta; dopo il cambio il flag è spento, la vecchia password non funziona più e la nuova sì |
+
+### Cosa è emerso
+
+1. **Il cancello del cambio password è codice dell'app, non una funzione di Better Auth.** Nella prova è una funzione che guarda il flag della sessione; nell'app vera va in `hooks.server.ts` e in ogni endpoint, con un'eccezione per la pagina e l'endpoint di cambio password. Va coperto da un test di sistema (P3).
+2. **L'avvio non è atomico.** Registrazione e promozione ad admin sono due passi: se il processo cade in mezzo, resta un utente senza ruolo e il riavvio tenterebbe di registrare di nuovo la stessa email. Nell'app vera: cercare l'utente per email, non per ruolo, e completare il passo mancante.
+3. **Il flag si spegne con un aggiornamento diretto del database** dopo il cambio password. Meglio un hook di Better Auth sul cambio password, così non si può dimenticare.
+4. **La registrazione è aperta per impostazione predefinita**: chiunque raggiunga l'app può creare un utente. La specifica prevede l'accesso per invito o con l'admin: da decidere in fase 2 (permessi).
+5. **Il generatore di schema (`@better-auth/cli`) non si installa** insieme a `better-auth` 1.7.12 (versione 1.4.21 del CLI, conflitto di dipendenze di npm). Lo schema delle quattro tabelle (`user`, `session`, `account`, `verification`, più i campi del plugin admin) l'ho scritto a mano per Drizzle; l'adapter ha funzionato. Va ricontrollato a ogni aggiornamento di Better Auth.
+6. Better Auth registra un avviso sul log a ogni password errata (`Invalid password`): utile, da non spegnere.
+
+### Decisioni prese
+
+- Better Auth con adapter Drizzle e plugin `admin`; ruolo e flag `mustChangePassword` nelle colonne dell'utente.
+- Admin creato all'avvio solo se manca, cercandolo per email.
+- Cancello del cambio password nel server dell'app, con test di sistema.
+
+### Domande aperte
+
+Registrazione: aperta, su invito o solo da admin? (fase 2, permessi).
