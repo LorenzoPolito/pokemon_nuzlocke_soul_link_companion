@@ -400,6 +400,103 @@ Più aree dopo la stessa area stanno nell'ordine di creazione. Le aree personali
 - Il gruppo `untracked` e il giocatore che entra a run iniziata (incontri `untracked` automatici) sono una proposta: da confermare nel flusso di P2-11.
 - Con `separateGifts` spento, «vale il primo registrato» tra regalo e selvatico dell'area: va bene o deve decidere il giocatore? La proposta è il primo registrato.
 
+## P2-04 Esemplari, morte ed eventi
+
+Data: 20 ottobre 2026. Taglia M. Precisa `specimen`, la causa della morte in `link_group` e il diario `run_event`.
+
+### Esemplare (`specimen`)
+
+Un esemplare nasce da un incontro `caught`, in un gruppo qualsiasi (anche `open`: il giocatore ha già catturato, aspetta i compagni). Colonne, oltre a quelle della tabella principale:
+
+| Colonna | Tipo | Vincoli | Note |
+| --- | --- | --- | --- |
+| `nickname` | TEXT | NOT NULL, 1–20 | Obbligatorio |
+| `species_id`, `variety_id` | INTEGER | species NOT NULL; variety NULL | Cambiano con l'evoluzione e le forme ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)); le chiavi esistono nel Pokédex (validazione all'ingresso) |
+| `level` | INTEGER | NOT NULL, 1–100 | |
+| `nature` | TEXT | NULL | Chiave del Pokédex; NULL = non nota |
+| `ability` | TEXT | NULL | **Abilità effettiva** dell'esemplare, chiave del Pokédex; NULL = non nota. Deve essere tra quelle possibili della specie (o della sua varietà), considerando gli override del giocatore |
+| `tera_type` | TEXT | NULL | Solo giochi di nona generazione |
+| `moves` | TEXT (JSON) | NOT NULL, default `[]`, CHECK `json_array_length(moves) <= 4` | Chiavi delle mosse, senza ripetizioni (controllo nel dominio); le mosse imparabili sono quelle del Pokédex e degli override |
+| `version` | INTEGER | NOT NULL | |
+
+L'oggetto tenuto e il sesso non sono nell'MVP: si aggiungono come colonne nullable quando serviranno.
+
+**Posizione.** Non è una colonna dell'esemplare: l'esemplare la eredita dal suo gruppo (`link_group.position`). Un esemplare il cui gruppo non è `linked` non ha posizione e l'interfaccia lo mostra «in attesa del collegamento». Il limite di 6 in team vale per giocatore: sono gli esemplari del giocatore nei gruppi con posizione `team`, controllati nel dominio nella transazione che sposta il gruppo.
+
+**Eliminazione.** Gli esemplari non si cancellano: un errore di registrazione si corregge (evento `specimen.corrected`). Per un incontro registrato per sbaglio si elimina l'intero incontro con il suo esemplare, un'operazione del proprietario che scrive un evento con i valori eliminati.
+
+**Evoluzione e forme.** `species_id` (e `variety_id`) cambiano con un evento `specimen.evolved` che porta prima e dopo. La dupes clause usa la catena evolutiva della specie dell'esemplare: la specie attuale e quella originale stanno nella stessa catena, quindi l'evoluzione non cambia il controllo.
+
+### Causa della morte
+
+La morte appartiene al gruppo: `link_group.died_at` (INTEGER, NOT NULL se `position = 'dead'`) e `link_group.death_cause` (JSON, NOT NULL se morto). Chi cade è un esemplare solo; i partner muoiono per il collegamento.
+
+```json
+{
+  "schema": 1,
+  "fallenSpecimenId": "<id dell'esemplare caduto>",
+  "opponent": { "kind": "trainer", "name": "Cheren", "speciesId": 505 },
+  "move": "bite",
+  "areaKey": "unova-route-4",
+  "note": "facoltativa"
+}
+```
+
+| Campo | Regola |
+| --- | --- |
+| `fallenSpecimenId` | Esemplare caduto; i partner dello stesso gruppo risultano morti «per collegamento» |
+| `opponent.kind` | `trainer`, `wild`, `status` (veleno, meteo, danno da status) o `other` |
+| `opponent.name` | Nome dell'allenatore (per `trainer`); facoltativo, testo libero fino a 60 caratteri |
+| `opponent.speciesId` | Specie dell'avversario, se nota; chiave del Pokédex |
+| `move` | Chiave della mossa che ha causato la morte; NULL per `status` e `other` |
+| `areaKey` | Dove è avvenuta la morte: area del gioco o `custom:<id>`, **non necessariamente l'area del gruppo** |
+| `note` | Testo libero fino a 200 caratteri |
+
+Lo schema è validato con Zod; i campi mancanti sono ammessi dove indicato, così si può registrare una morte anche senza sapere tutto. La morte è irreversibile (trigger sul cambio di `position`); una registrazione sbagliata si corregge cambiando `death_cause`, non annullando la morte, con evento `group.death_corrected`.
+
+### Diario (`run_event`)
+
+Tabella in sola aggiunta con `id` UUIDv7. Colonne: `run_id`, `actor_user_id` (NULL per il sistema), `type`, `entity`, `entity_id`, `payload` (JSON con `before` e `after`), `created_at`.
+
+**Blocco di modifica.** Due trigger rifiutano `UPDATE` e `DELETE`. Il trigger di `DELETE` ha la condizione `WHEN EXISTS (SELECT 1 FROM run WHERE id = OLD.run_id)`: scatta solo se la run esiste ancora, e lascia passare la cascata quando una run viene eliminata definitivamente. Provato su SQLite 3.45: l'`UPDATE` e il `DELETE` diretti sono bloccati, l'eliminazione della run porta via i suoi eventi. Da riprovare su libSQL in P3-03.
+
+**Eventi.** Elenco iniziale dei tipi (`entity.azione`); il catalogo completo con i contenuti SSE è in P2-10.
+
+| Tipo | Quando |
+| --- | --- |
+| `run.created`, `run.settings_changed`, `run.status_changed`, `run.owner_changed`, `run.deleted`, `run.restored` | Vita della run |
+| `member.joined`, `member.role_changed`, `member.removed` | Giocatori |
+| `group.created`, `group.linked`, `group.skipped`, `group.moved`, `group.died`, `group.death_corrected` | Gruppi |
+| `encounter.recorded`, `encounter.corrected`, `encounter.deleted` | Incontri |
+| `specimen.created`, `specimen.updated`, `specimen.evolved`, `specimen.corrected` | Esemplari |
+| `milestone.reached`, `milestone.revoked` | Tappe |
+| `override.set`, `override.cleared`, `levelcap.override_set` | Override e level cap |
+
+Ogni scrittura che cambia dati di gioco scrive **nella stessa transazione** l'evento corrispondente; se la transazione fallisce non resta nulla. Una azione di gruppo (morte, spostamento) scrive un solo evento `group.*` e non uno per partner, con i partner nel payload. Gli eventi `group.linked` e `group.skipped` sono conseguenza di una registrazione e portano il suo `id` nel payload.
+
+**Conflitti «vince l'ultimo».** Quando un salvataggio sovrascrive un dato con `version` più nuova di quella letta, il payload registra anche `overwrote`: la versione e i valori sovrascritti, così chi ha perso la modifica li può recuperare dal diario.
+
+**Linea del tempo.** La timeline mostra gli eventi della run in ordine di `id`. Non tutti i tipi sono mostrati allo stesso modo: quelli tecnici (`group.created`, `specimen.corrected`) si possono nascondere con un filtro; la scelta è di P2-12.
+
+**Recupero degli eventi mancanti.** Dopo una riconnessione il client invia l'`id` dell'ultimo evento ricevuto e il server restituisce gli eventi con `id` maggiore ([ADR 0002](../adr/0002-rete-instabile.md)); oltre una soglia (proposta: 500 eventi) conviene ricaricare tutto lo stato. La soglia si fissa in P2-10. Gli `id` sono ordinati nel tempo perché il server è una sola istanza e genera gli UUIDv7 con un contatore monotono.
+
+**Dimensione e conservazione.** Il diario si conserva finché esiste la run e sparisce con la sua eliminazione definitiva. Una run di 4 giocatori e 400 incontri produce poche migliaia di righe: nessuna potatura.
+
+### Indici e invarianti aggiunti
+
+| Cosa | Come |
+| --- | --- |
+| `specimen(encounter_id)` UNIQUE | Già previsto: un esemplare per incontro catturato |
+| Soprannome obbligatorio, mosse al massimo 4, livello 1–100 | NOT NULL e CHECK |
+| Morto se e solo se `died_at` e `death_cause` presenti | CHECK sul gruppo |
+| Il diario non si modifica né si cancella (finché esiste la run) | Trigger |
+| Ogni scrittura scrive il suo evento nella stessa transazione | Dominio, con un test per ogni caso d'uso |
+| Un esemplare ha un'abilità tra quelle possibili | Dominio all'ingresso |
+
+### Domande aperte
+
+Nessuna bloccante. Soglia di recupero degli eventi (500) e tipi di evento da mostrare nella timeline si fissano in P2-10 e P2-12.
+
 ## Invarianti
 
 Ogni regola del Soul Link ha un posto preciso dove viene garantita: prima la struttura, poi il database, infine il dominio con i test.
