@@ -142,13 +142,152 @@ Il diario è anche la base per recuperare gli eventi mancanti dopo una riconness
 
 Account, configurazione e funzioni dei rilasci successivi stanno in tabelle piccole e separate, così il nucleo della run resta semplice.
 
-- **user, session, account, verification**: gestite da Better Auth. A user si aggiungono `role` (admin, user), `must_change_password`, `locale`, `theme`, `disabled_at`.
-- **app\_setting**: `key` TEXT come chiave primaria, `value` JSON, `updated_at`. Contiene la modalità di registrazione e le altre impostazioni globali, senza migrazioni per ogni impostazione nuova.
-- **invite**: `token_hash` UNIQUE (il token in chiaro non si salva mai), `kind` (app, run), `run_id` e `role` per gli inviti a una run, `created_by`, `expires_at`, `max_uses`, `uses`.
+- **user, session, account, verification**, **app\_setting** e **invite**: definite in [P2-01](#p2-01-utenti-sessioni-e-ruoli-globali).
 - **custom\_area**: `game_id`, `name`, `after_area_key` (dove inserirla nell'ordine), `created_by`. I gruppi la richiamano come `custom:<id>`.
 - **seen\_trainer** e **seen\_pokemon** (rilascio 0.3): squadre viste in lotta. `seen_trainer` ha `run_id`, nome, area, giocatore che l'ha salvata; `seen_pokemon` ha specie, livello e mosse osservate in JSON.
 - **request\_key**: chiave di idempotenza inviata dal client, utente, esito e risposta salvata. Un doppio invio restituisce la stessa risposta; le righe si eliminano dopo 24 ore.
 - **Nessuna tabella per i lock**: vivono nella memoria del server, come da specifica.
+
+## P2-01 Utenti, sessioni e ruoli globali
+
+Data: 20 ottobre 2026. Definizione di dettaglio delle tabelle di account, verificata con la prova P1-13 ([prove di fattibilità](14-Prove-di-fattibilita.md#p1-13-prova-better-auth-con-admin-da-variabili-dambiente)) su `better-auth` 1.7.12 con il plugin `admin`.
+
+### Tabelle di Better Auth
+
+Le quattro tabelle sono quelle richieste da Better Auth; si riportano senza aggiungere né togliere colonne, tranne le aggiunte alla tabella `user` elencate sotto. Le date sono INTEGER in millisecondi UTC (modalità `timestamp_ms` di Drizzle), come il resto del modello.
+
+| Tabella | Colonne di Better Auth | Note |
+| --- | --- | --- |
+| `user` | `id`, `name`, `email` (UNIQUE), `email_verified`, `image`, `created_at`, `updated_at` | Più le colonne del plugin `admin` e le nostre, sotto |
+| `session` | `id`, `token` (UNIQUE), `expires_at`, `ip_address`, `user_agent`, `user_id` (FK user, CASCADE), `impersonated_by`, `created_at`, `updated_at` | `impersonated_by` è del plugin `admin`; non si usa l'impersonificazione ma la colonna c'è |
+| `account` | `id`, `account_id`, `provider_id`, `user_id` (FK user, CASCADE), `password` (hash), `access_token`, `refresh_token`, `id_token`, `access_token_expires_at`, `refresh_token_expires_at`, `scope`, `created_at`, `updated_at` | Con email e password esiste una riga con `provider_id = 'credential'`; l'hash sta in `account.password`, mai in `user` |
+| `verification` | `id`, `identifier`, `value`, `expires_at`, `created_at`, `updated_at` | Non usata nell'MVP (nessuna email), ma richiesta da Better Auth |
+
+Lo schema si scrive a mano in Drizzle: il generatore `@better-auth/cli` non si installa con la versione provata. Va ricontrollato a ogni aggiornamento di Better Auth.
+
+### Colonne aggiunte a `user`
+
+| Colonna | Tipo | Vincoli | Note |
+| --- | --- | --- | --- |
+| `role` | TEXT | NULL, valori `admin` o `user` | Colonna del plugin `admin`; NULL o `user` valgono utente. Il ruolo globale non dà alcun diritto dentro le run: lì contano `run_member.role` |
+| `banned`, `ban_reason`, `ban_expires` | INTEGER, TEXT, INTEGER | `banned` default 0 | Colonne del plugin `admin`. La **disattivazione** dell'utente (P3-09) è un ban: sostituisce la colonna `disabled_at` della bozza |
+| `must_change_password` | INTEGER | NOT NULL, default 0, 0 o 1 | Vero per l'admin creato all'avvio finché non cambia la password; dichiarata con `additionalFields` e `input: false`, così un client non può impostarla |
+| `locale` | TEXT | NULL, valori `it` o `en` | Lingua scelta; NULL = lingua del browser, poi italiano |
+| `theme` | TEXT | NULL, valori `light`, `dark`, `system` | NULL = `system` |
+| `deleted_at` | INTEGER | NULL | Valorizzato quando l'account è stato anonimizzato |
+
+Le colonne `locale` e `theme` sono dichiarate con `additionalFields` e modificabili dall'utente stesso. `role`, `banned` e `must_change_password` no.
+
+### Ruoli globali
+
+| Ruolo | Chi | Può |
+| --- | --- | --- |
+| `admin` | L'utente creato all'avvio da `ADMIN_EMAIL` e `ADMIN_PASSWORD`; altri admin solo per promozione di un admin | Gestire utenti (disattivare, reimpostare la password, eliminare), modalità di registrazione, inviti all'app, aree personalizzate |
+| `user` | Ogni altro account | Creare run e partecipare alle run a cui è invitato |
+
+Esiste almeno un admin: l'ultimo admin non si può degradare, disattivare né eliminare (invariante controllata nel dominio).
+
+### Eliminazione e anonimizzazione
+
+Una riga `user` non si cancella mai se ha run o diario: si anonimizza. In una transazione: `name` = "Utente eliminato", `email` = `deleted-<id>@invalid` (resta UNIQUE), `image` NULL, `deleted_at` valorizzato, riga `account` eliminata, sessioni eliminate. `run_member` e `run_event` continuano a puntare alla riga. Se l'utente era proprietario di una run, la proprietà passa al giocatore con il posto (`seat`) successivo.
+
+### Modalità di registrazione
+
+Impostazione globale in `app_setting`, chiave `registration.mode`, valore JSON `"open"`, `"invite"` o `"closed"`:
+
+| Valore | Effetto |
+| --- | --- |
+| `open` | Chiunque raggiunga l'app può registrarsi |
+| `invite` | La registrazione richiede un invito all'app valido (tabella `invite`, `kind = 'app'`) |
+| `closed` | Nessuna registrazione; l'admin crea gli account |
+
+Valore predefinito proposto: **`invite`**, perché l'app è privata e raggiungibile dalla rete locale o da internet. Better Auth permette la registrazione per impostazione predefinita: il blocco sta nell'app, che rifiuta la registrazione prima di chiamare Better Auth quando la modalità non la consente (criterio in P3-07). Le modalità `invite` e `closed` non impediscono all'admin di creare un account.
+
+### `app_setting` e `invite`
+
+- `app_setting(key TEXT PRIMARY KEY, value TEXT NOT NULL (JSON), updated_at INTEGER NOT NULL)`. Chiavi iniziali: `registration.mode`. Il valore si valida con uno schema per chiave.
+- `invite(id, token_hash UNIQUE, kind CHECK IN ('app','run'), run_id NULL FK run CASCADE, role NULL CHECK IN ('player','spectator'), created_by FK user, expires_at, max_uses, uses default 0, revoked_at NULL, created_at)`. Il token in chiaro si mostra una volta sola. Un invito `run` richiede `run_id` e `role`; un invito `app` no. Un invito è valido se non è revocato, non è scaduto e `uses < max_uses`.
+
+### Identificativi degli utenti
+
+Il resto del modello usa UUIDv7. Better Auth genera propri identificativi per `user`, `session`, `account` e `verification`. Se la libreria permette di fornire un generatore (da verificare in P3-07), anche questi diventano UUIDv7; altrimenti restano stringhe di Better Auth. Nessun'altra tabella dipende dal formato: i riferimenti a `user.id` sono TEXT.
+
+### Domande aperte
+
+Modalità di registrazione predefinita: la proposta è `invite`. Da confermare con il product owner.
+
+## P2-02 Run, giocatori e regole
+
+Data: 20 ottobre 2026. Completa le tabelle `run` e `run_member` della sezione "Tabelle principali" con le regole, gli stati e i vincoli.
+
+### Una run, un gioco
+
+`run.game_id` è la chiave di un file di gioco, cioè una **versione** (`black`, `white`, `black-2`, `white-2`): è uguale per tutti i giocatori della run, che non hanno un gioco proprio. Le regole e le impostazioni stanno una volta sola nella riga della run e valgono per tutti; solo `species_override` è per giocatore.
+
+Non cambiano dopo il primo incontro: `game_id`, `game_data_version`, `settings.separateRooms` e `settings.difficulty`. Il «primo incontro» è la prima riga di `encounter` della run, comprese quelle `untracked` create alla nascita di una run già iniziata: per quelle run il blocco vale dalla creazione. Il vincolo è nel dominio (nessun trigger: serve un messaggio d'errore chiaro) con un test dedicato.
+
+### Regole sempre attive
+
+Non sono impostazioni e non si possono spegnere: un incontro per area, Pokémon esausto = morto, soprannome obbligatorio, collegamento degli incontri della stessa area, stesso destino dei partner, morte di tutti i partner, area saltata per tutti se un giocatore perde l'incontro. Vivono nel dominio (vedi "Invarianti"), non in `settings`.
+
+### Impostazioni della run (`run.settings`)
+
+Documento JSON validato con Zod, `settings_schema` = versione dello schema (oggi 1). Una regola nuova si aggiunge con un valore predefinito e una funzione che porta il documento alla versione corrente in lettura.
+
+| Chiave | Tipo | Predefinito | Regola |
+| --- | --- | --- | --- |
+| `dupesClause` | booleano | vero | Dupes clause: se un giocatore ha già la linea evolutiva della specie incontrata (anche morta), solo lui ha un altro tentativo |
+| `typeClause` | booleano | falso | Restrizione del tipo primario: niente tipi primari ripetuti nel team |
+| `separateGifts` | booleano | vero | Regali, incontri fissi e scambi in gioco come incontri separati: non consumano l'incontro dell'area |
+| `separateRooms` | booleano | vero | Stanze interne come aree separate ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)); non modificabile dopo il primo incontro |
+| `randomizer` | booleano | falso | Senza tabelle di incontro: la specie si sceglie dal Pokédex |
+| `damageCalculator` | booleano | vero | Mostra il calcolatore dei danni |
+| `difficulty` | `easy`, `normal`, `challenge` | `normal` | Solo per `black-2` e `white-2`; assente per gli altri giochi. Determina il level cap |
+
+I valori predefiniti sono una proposta: la specifica elenca le regole opzionali ma non dice quali partono accese. `typeClause` parte spenta perché cambia molto il modo di giocare; `dupesClause` e `separateGifts` partono accese perché sono le regole comuni del Soul Link e le due già descritte come caso normale nella specifica. Il proprietario le sceglie alla creazione; quali si possono cambiare dopo è nel paragrafo seguente.
+
+Quali impostazioni si possono cambiare in corso di run: `damageCalculator`, `typeClause`, `randomizer`, `dupesClause` e `separateGifts` sì, con un evento nel diario (la regola vale da quel momento, gli incontri passati non si rivalutano); `separateRooms` e `difficulty` no, perché cambiano le aree e il level cap già registrati.
+
+### Stato della run
+
+`run.status`: `active`, `lost`, `completed`.
+
+| Da | A | Quando |
+| --- | --- | --- |
+| `active` | `lost` | Un giocatore resta senza Pokémon vivi (wipe), oppure il proprietario dichiara la run persa |
+| `active` | `completed` | Il proprietario dichiara la run completata (di norma dopo il campione) |
+| `lost` o `completed` | `active` | Il proprietario riapre la run, per correggere un errore; scrive un evento nel diario |
+
+`ended_at` è valorizzato in `lost` e `completed`, NULL in `active`. Nuova colonna **`end_info`** (TEXT JSON, NULL): per `lost` registra il motivo (`wipe` con il giocatore, oppure `declared`) e, se noto, l'area. Una run non `active` resta consultabile ma non accetta scritture sui dati di gioco (incontri, esemplari, tappe, override), tranne la riapertura. La condizione di wipe si calcola nel dominio nella stessa transazione della morte; non è un trigger.
+
+### Giocatori e ruoli nella run
+
+`run_member` collega utenti e run. Completa la tabella principale così:
+
+| Regola | Come |
+| --- | --- |
+| Un solo proprietario per run | Indice UNIQUE parziale su `run_member(run_id)` dove `role = 'owner'` |
+| Il proprietario è anche un giocatore? | Sì, di norma: il proprietario ha `role = 'owner'` e partecipa alla run come giocatore con un posto. Un proprietario che non gioca è ammesso solo se ha `seat` NULL |
+| Spettatore | `role = 'spectator'`, `seat` NULL, sola lettura |
+| Posto | `seat` è NULL per gli spettatori e un intero 1…N per proprietario e giocatori; UNIQUE (`run_id`, `seat`) dove `seat` non è NULL |
+| Numero di giocatori | Nessun limite nel database; limite dell'interfaccia da fissare in P2-12 (proposta: 8) |
+| Cambio di proprietario | Il proprietario cede il ruolo a un altro giocatore, oppure passa automaticamente al posto successivo se l'account è eliminato. Nella stessa transazione: il vecchio proprietario diventa `player`, il nuovo `owner` |
+| Rimozione di un giocatore | Il proprietario rimuove un giocatore o lo trasforma in spettatore; i suoi dati (incontri, esemplari, tappe, override) restano e si leggono ancora, ma il gruppo non aspetta più il suo incontro. Questa regola cambia l'invariante «gruppo collegato quando tutti hanno catturato»: vale per i giocatori **attivi** (con `role` ≠ `spectator`). Da trattare con attenzione in P2-03 |
+
+### Nuove colonne e indici
+
+- `run.end_info` TEXT JSON NULL.
+- `run_member`: indice UNIQUE parziale sul proprietario; UNIQUE parziale su (`run_id`, `seat`).
+- `run(deleted_at)`: indice per il job di eliminazione definitiva dopo 30 giorni.
+
+### Run già iniziata
+
+`run.started_in_progress` = 1: alla creazione il proprietario indica quali aree sono già passate e per ciascun giocatore la situazione; le aree precedenti ricevono un incontro `untracked` per ogni giocatore, il che blocca `game_id` e `separateRooms` dalla creazione. I dettagli del flusso sono in P2-11.
+
+### Domande aperte
+
+- Valori predefiniti delle regole opzionali (tabella sopra): da confermare.
+- Un proprietario che non gioca: permesso o no? La proposta lo permette con `seat` NULL.
 
 ## Invarianti
 
