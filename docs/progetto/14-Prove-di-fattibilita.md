@@ -93,3 +93,36 @@ Da questo ambiente `turso.tech` risponde 403 dal proxy e un URL `libsql://…` f
 ### Domande aperte
 
 Un database Turso di prova e l'accesso di rete, per chiudere il criterio rimasto.
+
+## P1-14 Prova: Paraglide con cambio lingua
+
+Data: 20 ottobre 2026. Taglia XS. Esito: **cambio lingua e memoria fattibili; "solo la lingua in uso nel browser" non è ottenuto**.
+
+### Metodo
+
+Progetto SvelteKit 3 minimo con adapter Node, `@inlang/paraglide-js` 2.29.1, Vite 8, Svelte 5, Node 22. Messaggi in `messages/it.json` e `messages/en.json` (italiano come lingua di base). Strategia di lingua `['cookie', 'baseLocale']`: nessuna lingua nell'URL, quindi la schermata corrente non cambia. Il middleware `paraglideMiddleware` è in `hooks.server.ts`; l'attributo `lang` dell'HTML è impostato dal server. Prova automatica con Chromium (Playwright) contro la build di produzione.
+
+### Esiti
+
+| Criterio | Esito |
+| --- | --- |
+| Cambio tra italiano e inglese con una ricarica che mantiene la schermata | **Sì**: da `/run` il pulsante EN ricarica e resta su `/run`, testi e `<html lang>` passano a inglese |
+| Lingua ricordata tra le sessioni | **Sì** con un cookie: una nuova scheda dello stesso browser parte in inglese; un browser nuovo parte in italiano (lingua di base) |
+| Nel browser arriva solo la lingua in uso | **No**: la build mette italiano e inglese nello stesso file JavaScript del client (3,2 KB per due messaggi con due lingue) |
+
+### Cosa è emerso
+
+- Paraglide include tutte le lingue di ogni messaggio usato da una pagina; elimina i messaggi non usati, non le lingue non usate. Con N messaggi e due lingue il peso dei testi raddoppia, ma resta testo: per un'app con alcune centinaia di messaggi sono decine di KB.
+- Il file di progetto di Paraglide carica per impostazione predefinita il plugin dei messaggi da una CDN (`cdn.jsdelivr.net`), non raggiungibile da questo ambiente e fragile per una build in Docker. Si risolve installando `@inlang/plugin-message-format` da npm e puntando a `./node_modules/...` nelle impostazioni.
+- SvelteKit 3 ha rimosso l'alias `$lib`: si usa `#lib` (campo `imports` di `package.json`) o si ripristina l'alias. In SvelteKit 3 l'adapter si passa a `sveltekit({ adapter })` in `vite.config.ts`. Va ricordato in P3-01.
+- Il cookie di lingua permette anche un cambio di lingua per giocatore senza toccare il database; se si vuole la lingua sul profilo, si imposta il cookie al login.
+
+### Decisioni prese
+
+- Strategia `cookie` poi lingua di base, senza lingua nell'URL.
+- Plugin dei messaggi installato da npm, nessuna dipendenza da CDN in build.
+- `#lib` al posto di `$lib` nel progetto reale.
+
+### Domande aperte
+
+Accettare che il client riceva entrambe le lingue? Il costo è dell'ordine delle decine di KB e la via alternativa (due build o caricamento dei messaggi a richiesta) aggiunge complessità. Proposta: accettare.

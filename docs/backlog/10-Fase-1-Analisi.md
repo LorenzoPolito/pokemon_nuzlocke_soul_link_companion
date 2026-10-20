@@ -18,7 +18,7 @@
 | P1-11 | Prova: @smogon/calc con override | — | S | Completato |
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | In corso |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Da iniziare |
-| P1-14 | Prova: Paraglide con cambio lingua | — | XS | Da iniziare |
+| P1-14 | Prova: Paraglide con cambio lingua | — | XS | In corso |
 | P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Da iniziare |
 | P1-16 | Prova: sync SSE tra due browser | — | S | Da iniziare |
 | P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Da iniziare |
@@ -149,11 +149,13 @@ Output: Prove di fattibilità dello stack.
 
 ## P1-14 Prova: Paraglide con cambio lingua
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua).
 
-- [ ] Cambio tra italiano e inglese con una ricarica della pagina che mantiene la schermata corrente.
-- [ ] Lingua scelta ricordata tra le sessioni.
-- [ ] Verificato che nel browser arrivi solo la lingua in uso.
+- [x] Cambio tra italiano e inglese con una ricarica della pagina che mantiene la schermata corrente.
+- [x] Lingua scelta ricordata tra le sessioni.
+- [ ] Verificato che nel browser arrivi solo la lingua in uso. (verificato: arrivano entrambe le lingue; serve la decisione del PO)
+
+Nota, 20 ottobre 2026: il terzo criterio non è soddisfatto così com'è. Proposta: accettare entrambe le lingue nel client (decine di KB).
 
 ## P1-15 Prova: build del Pokédex SQLite
 
