@@ -19,7 +19,7 @@
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | In corso |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Completato |
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | In corso |
-| P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Da iniziare |
+| P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | In verifica |
 | P1-16 | Prova: sync SSE tra due browser | — | S | Completato |
 | P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Completato |
 | P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | Da iniziare |
@@ -161,11 +161,13 @@ Nota, 20 ottobre 2026: il terzo criterio non è soddisfatto così com'è. Propos
 
 ## P1-15 Prova: build del Pokédex SQLite
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-15-prova-build-del-pokédex-sqlite) e [`tools/prove/build_pokedex.py`](../../tools/prove/build_pokedex.py).
 
-- [ ] Script che genera il file SQLite da PokeAPI/api-data.
-- [ ] Dimensione del file e tempo di build misurati.
-- [ ] Tempo di una ricerca per nome misurato.
+- [x] Script che genera il file SQLite da PokeAPI/api-data.
+- [x] Dimensione del file e tempo di build misurati.
+- [x] Tempo di una ricerca per nome misurato.
+
+Nota di chiusura, 20 ottobre 2026: 40,8 MB, circa 10 s di build, ricerca per nome sotto 0,2 ms. Misure con Python, non con libSQL di Node. Lo script è di prova; quello vero nasce in fase 3.
 
 ## P1-16 Prova: sync SSE tra due browser
 

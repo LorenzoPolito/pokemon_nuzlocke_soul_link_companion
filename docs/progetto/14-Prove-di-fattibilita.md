@@ -248,3 +248,45 @@ Il Pokédex SQLite (P1-15) e i dati di gioco si aggiungeranno all'immagine: la d
 ### Domande aperte
 
 Nessuna.
+
+## P1-15 Prova: build del Pokédex SQLite
+
+Data: 20 ottobre 2026. Taglia M. Esito: **fattibile**.
+
+### Metodo
+
+Lo script di prova [`tools/prove/build_pokedex.py`](../../tools/prove/build_pokedex.py) (Python 3, solo libreria standard) legge i file JSON di [PokeAPI/api-data](https://github.com/PokeAPI/api-data) (commit `447bd5c`, 20 ottobre 2026) e scrive un file SQLite. Il repository si prende con un clone parziale: `git clone --depth 1 --filter=blob:none --sparse` e `git sparse-checkout set` sulle cartelle `pokemon`, `pokemon-species`, `move`, `ability`, `type` di `data/api/v2` (399 MB di JSON, 5 secondi). Lo script è solo di prova: lo script vero nasce in fase 3, in TypeScript come il resto del progetto.
+
+Contenuto del file: tipi, abilità, mosse, specie e varietà con i nomi in italiano e in inglese; tipi e statistiche di ogni varietà con lo storico (colonna `until_generation`, 99 per i valori attuali, con la convenzione "ultima generazione con i valori vecchi" di P1-02); abilità per slot; learnset per version group (638 321 righe). Nomi con indice senza distinzione tra maiuscole e minuscole.
+
+### Esiti
+
+| Criterio | Misura |
+| --- | --- |
+| Script che genera il file SQLite da PokeAPI/api-data | Fatto: 4,7 s di generazione, 5 s di clone parziale |
+| Dimensione del file | **40,8 MB** (9,3 MB compresso con gzip); 638 321 righe di learnset ne sono il grosso |
+| Tempo di build | **circa 10 s** in tutto (clone più generazione), senza contare l'installazione delle dipendenze |
+| Ricerca per nome | Nome esatto 0,008 ms in media (p99 0,04 ms); prefisso di 3 lettere 0,019 ms (p99 0,06 ms); "contiene" 0,17 ms (p99 0,37 ms). Learnset di un Pokémon per un gioco: 0,06 ms (p99 0,14 ms). Misure con la libreria SQLite di Python su 2 000 interrogazioni, file in sola lettura |
+
+### Controlli di coerenza
+
+- Conteggi uguali a quelli di P1-02 e P1-03: 1 025 specie, 1 351 varietà, 937 mosse, 374 abilità; le righe di learnset (638 321) coincidono con quelle del CSV di PokéAPI usato in P1-03 (638 322 righe meno l'intestazione).
+- Storico dei tipi: Clefairy ha Normale fino alla quinta generazione e Folletto dopo (riga con `until_generation` 5 e riga a 99), come previsto dalla convenzione.
+- Nomi: Megapugno / Mega Punch per la mossa 5.
+
+### Limiti
+
+- Le ricerche sono state misurate con Python, non con `@libsql/client` di Node: l'ordine di grandezza dovrebbe essere lo stesso, ma non l'ho misurato.
+- Non ci sono: evoluzioni, incontri, macchine, tabelle dei tipi, forme, flavor text, nomi di aree. Aggiungerli aumenta le dimensioni, ma di poco rispetto al learnset.
+- Le ricerche "contiene" con `LIKE '%x%'` non usano l'indice: sono veloci solo perché le tabelle dei nomi sono piccole (2 050 righe).
+- Le specie senza nome italiano in PokéAPI hanno solo la riga inglese (regola di riserva di P1-05, applicata in lettura).
+
+### Decisioni prese
+
+- Il file si genera in build da `PokeAPI/api-data` con clone parziale; la versione (commit) dei dati sta in un file nel repository e si aggiorna a mano.
+- Lo storico di tipi e statistiche è salvato come righe con `until_generation`, non come JSON.
+- Il learnset si conserva per version group, con le chiavi di PokéAPI.
+
+### Domande aperte
+
+Nessuna.
