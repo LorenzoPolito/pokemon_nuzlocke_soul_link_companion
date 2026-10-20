@@ -17,7 +17,7 @@
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
 | P1-11 | Prova: @smogon/calc con override | — | S | Completato |
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | In corso |
-| P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Da iniziare |
+| P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Completato |
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | In corso |
 | P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Da iniziare |
 | P1-16 | Prova: sync SSE tra due browser | — | S | Completato |
@@ -141,11 +141,13 @@ Nota, 20 ottobre 2026: manca la parte Turso. Servono un database di prova, il to
 
 ## P1-13 Prova: Better Auth con admin da variabili d'ambiente
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-13-prova-better-auth-con-admin-da-variabili-dambiente).
 
-- [ ] Registrazione e login funzionanti su libSQL.
-- [ ] Admin creato al primo avvio da `ADMIN_EMAIL` e `ADMIN_PASSWORD`, non ricreato ai riavvii.
-- [ ] Cambio password obbligatorio al primo accesso dimostrato.
+- [x] Registrazione e login funzionanti su libSQL.
+- [x] Admin creato al primo avvio da `ADMIN_EMAIL` e `ADMIN_PASSWORD`, non ricreato ai riavvii.
+- [x] Cambio password obbligatorio al primo accesso dimostrato.
+
+Nota di chiusura, 20 ottobre 2026: provato su libSQL in locale (la parte Turso resta aperta in P1-12). Il cancello del cambio password è codice dell'app; l'avvio dell'admin va reso idempotente; la registrazione è aperta di base; il CLI di schema non si installa, schema scritto a mano.
 
 ## P1-14 Prova: Paraglide con cambio lingua
 
