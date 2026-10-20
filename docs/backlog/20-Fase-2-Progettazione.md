@@ -5,7 +5,7 @@
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
 | P2-01 | Modello dati: utenti, sessioni, ruoli globali | P1-13 | S | Completato |
-| P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Da iniziare |
+| P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Completato |
 | P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | Da iniziare |
 | P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | Da iniziare |
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Da iniziare |
@@ -31,12 +31,14 @@ Nota di chiusura, 20 ottobre 2026: la disattivazione dell'utente usa le colonne 
 
 ## P2-02 Modello dati: run, giocatori, regole
 
-Output: Modello dati.
+Output: [Modello dati](../progetto/06-Modello-dati-bozza.md#p2-02-run-giocatori-e-regole).
 
-- [ ] Una run ha un solo gioco, uguale per tutti gli N giocatori; impostazioni e regole valgono per tutti, salvo gli override per specie.
-- [ ] Regole opzionali e flag (randomizer, calcolatore) memorizzati per run.
-- [ ] Stato della run (in corso, persa, completata) definito.
-- [ ] Il gioco della run è una versione; le impostazioni comprendono la regola "stanze interne come aree separate" (accesa di base, non modificabile dopo il primo incontro) e, per Nero 2 e Bianco 2, la difficoltà ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [x] Una run ha un solo gioco, uguale per tutti gli N giocatori; impostazioni e regole valgono per tutti, salvo gli override per specie.
+- [x] Regole opzionali e flag (randomizer, calcolatore) memorizzati per run.
+- [x] Stato della run (in corso, persa, completata) definito.
+- [x] Il gioco della run è una versione; le impostazioni comprendono la regola "stanze interne come aree separate" (accesa di base, non modificabile dopo il primo incontro) e, per Nero 2 e Bianco 2, la difficoltà ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+
+Nota di chiusura, 20 ottobre 2026: i valori predefiniti delle regole opzionali e il proprietario che non gioca sono proposte da confermare. Cambia l'invariante del gruppo collegato quando un giocatore viene rimosso (da trattare in P2-03).
 
 ## P2-03 Modello dati: aree, incontri, link Soul Link
 
