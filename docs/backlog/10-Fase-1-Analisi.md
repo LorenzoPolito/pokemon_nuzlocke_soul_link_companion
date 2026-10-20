@@ -16,7 +16,7 @@
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Completato |
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
 | P1-11 | Prova: @smogon/calc con override | — | S | Completato |
-| P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | Da iniziare |
+| P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | In corso |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Da iniziare |
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | Da iniziare |
 | P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Da iniziare |
@@ -131,11 +131,13 @@ Nota di chiusura, 20 ottobre 2026: generazioni 3, 5 e 8. Bundle 504 KB (117 KB g
 
 ## P1-12 Prova: Drizzle e libSQL, locale e Turso
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-12-prova-drizzle-e-libsql-locale-e-turso).
 
-- [ ] Stesso codice funzionante su file locale e su Turso, cambiando solo variabili d'ambiente.
-- [ ] Migrazioni applicate all'avvio in entrambi i casi.
-- [ ] Modalità WAL attiva in locale.
+- [ ] Stesso codice funzionante su file locale e su Turso, cambiando solo variabili d'ambiente. (locale sì; Turso non raggiungibile da questo ambiente)
+- [ ] Migrazioni applicate all'avvio in entrambi i casi. (solo in locale)
+- [x] Modalità WAL attiva in locale.
+
+Nota, 20 ottobre 2026: manca la parte Turso. Servono un database di prova, il token come segreto dell'ambiente e la rete verso `*.turso.io`.
 
 ## P1-13 Prova: Better Auth con admin da variabili d'ambiente
 

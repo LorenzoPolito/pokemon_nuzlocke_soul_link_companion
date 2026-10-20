@@ -51,3 +51,45 @@ Pacchetto npm: 4,4 MB su disco (comprende sorgenti, dist e bundle). Bundle `esbu
 ### Domande aperte
 
 Nessuna. Dove gira il calcolo (server o browser) si decide in fase 2 con l'architettura.
+
+## P1-12 Prova: Drizzle e libSQL, locale e Turso
+
+Data: 20 ottobre 2026. Taglia S. Esito: **fattibile in locale; la parte Turso non è verificata** (rete bloccata).
+
+### Metodo
+
+`drizzle-orm` 0.45.4, `drizzle-kit` 0.31.11, `@libsql/client` 0.18.0, Node 22, in una cartella vuota. Uno schema di una tabella (`run`), migrazioni generate con `drizzle-kit generate`, applicate all'avvio con `migrate()` di `drizzle-orm/libsql/migrator`. L'unico punto che dipende dall'ambiente è l'apertura del database:
+
+```ts
+const url = process.env.DATABASE_URL ?? 'file:./data/app.db';
+const client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN });
+if (url.startsWith('file:')) {
+  await client.execute('PRAGMA journal_mode = WAL');
+  await client.execute('PRAGMA foreign_keys = ON');
+}
+const db = drizzle(client, { schema });
+await migrate(db, { migrationsFolder: './drizzle' });
+```
+
+### Esiti in locale
+
+| Passo | Esito |
+| --- | --- |
+| Prima migrazione generata e primo avvio | Tabella creata, 1 riga scritta, `journal_mode` = `wal`, 1 migrazione registrata |
+| Riavvio senza nuove migrazioni | La migrazione non si riapplica (resta 1); i dati restano (2 righe) |
+| Nuova colonna, seconda migrazione, avvio | La migrazione si applica all'avvio (2 registrate); i dati restano |
+
+Le migrazioni sono solo in avanti: `migrate()` applica solo quelle nuove e non ne esiste una di ritorno.
+
+### Turso: non verificato
+
+Da questo ambiente `turso.tech` risponde 403 dal proxy e un URL `libsql://…` fallisce con `fetch failed`. Il codice è lo stesso, cambia solo `DATABASE_URL` (e `DATABASE_AUTH_TOKEN`), ma **non l'ho visto funzionare**: il criterio resta aperto. Per chiuderlo serve un database Turso di prova, il suo token come segreto dell'ambiente (mai in chat o nel repository) e il permesso di rete verso `*.turso.io` (vedi la documentazione dell'ambiente, pagina "environment.network").
+
+### Decisioni prese
+
+- Un solo punto di apertura del database, scelto da `DATABASE_URL`; WAL e chiavi esterne si impostano solo per i file locali.
+- Migrazioni generate con `drizzle-kit generate` e committate; applicate all'avvio con il migratore di Drizzle.
+
+### Domande aperte
+
+Un database Turso di prova e l'accesso di rete, per chiudere il criterio rimasto.
