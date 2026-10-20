@@ -36,7 +36,7 @@ I PDF in `docs/progetto/pdf/` sono copie storiche con i diagrammi: non si aggior
 
 ## Regole sempre valide
 
-- Git flow (decisione 22): mai push su `main` o `develop`, mai unire pull request, mai creare tag. Si apre una PR e unisce il PO: squash verso `develop`, merge commit da `develop` a `main`.
+- Git flow (decisione 22): mai push su `main` o `develop`, mai unire pull request, mai creare tag. Si apre una PR e unisce il PO: squash verso `develop` per una PR singola, merge commit per le PR impilate (ADR 0007) e da `develop` a `main`.
 - Un branch e una PR per ogni PBI o bug, creato da `develop` e con PR verso `develop`: `pbi/P1-01-inventario-giochi`, `bug/BUG-007-morte-partner`, `chore/…` per il repository. Verso `main` solo la PR di rilascio da `develop`, aperta dall'agente.
 - Il controllo `branch-policy` (GitHub Actions) deve essere verde; Actions si usa solo per quello, nei minuti gratuiti (decisione 23). Il branch predefinito di GitHub è `main`: apri sempre le PR con `base: develop`.
 - Le protezioni sono hook (decisione 25): `.claude/hooks/guard.cjs` nega o chiede conferma per le azioni vietate o distruttive, `.githooks/` controlla commit, messaggi e push. Non aggirarli mai (niente `--no-verify`, niente cambio di `core.hooksPath`); se un hook ti blocca, chiedi al PO.

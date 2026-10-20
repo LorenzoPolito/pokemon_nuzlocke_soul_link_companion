@@ -48,7 +48,7 @@ Un commit per passo logico; ogni commit compila e passa i test.
 - Verso `develop`, titolo con l'ID: `P3-01 Scheletro del progetto SvelteKit`. Il branch predefinito di GitHub è `main`: scegli `develop` come destinazione a mano.
 - Descrizione secondo il [modello](.github/pull_request_template.md): criteri di accettazione spuntati, test aggiunti, esito di `npm run verify`.
 - L'agente può approvare le proprie pull request con una revisione di tipo commento che comincia con "Approvata dall'agente". GitHub non permette l'approvazione formale, perché l'agente usa l'account del product owner.
-- Unisce solo il product owner: squash merge verso `develop`, merge commit per la pull request di rilascio verso `main`.
+- Unisce solo il product owner: squash merge verso `develop` per una PR singola, **merge commit per le PR impilate** ([ADR 0007](docs/adr/0007-pr-impilate-e-merge-commit.md)), merge commit per la pull request di rilascio verso `main`.
 
 ## Verifica locale
 

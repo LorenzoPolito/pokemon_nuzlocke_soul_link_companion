@@ -410,8 +410,8 @@ I tipi in PokéAPI sono 21: i 18 della serie principale (Acciaio e Buio dalla se
 
 | Domanda | PBI che la chiude |
 | --- | --- |
-| Un esemplare registra solo la specie oppure anche la varietà (Wormadam sabbia, Rotom lavatrice), che cambia tipi e statistiche? Proposta: `species_id` più una varietà facoltativa, vuota per la forma predefinita | P2-04 (modello degli esemplari) |
-| Forme cosmetiche: ignorarle (proposta) o mostrarle come informazione | P2-04 |
+| Un esemplare registra solo la specie oppure anche la varietà (Wormadam sabbia, Rotom lavatrice), che cambia tipi e statistiche? | Deciso il 19 ottobre 2026: anche la varietà, facoltativa ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)); si recepisce in P2-04 |
+| Forme cosmetiche: ignorarle (proposta) o mostrarle come informazione | Proposta di ignorarle, in attesa di conferma esplicita (ADR 0006); si chiude in P2-04 |
 
 ## P1-03 Copertura PokéAPI: mosse, learnset, abilità
 

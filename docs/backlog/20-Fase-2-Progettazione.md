@@ -49,7 +49,7 @@ Output: Modello dati.
 
 Output: Modello dati.
 
-- [ ] Esemplare con soprannome, specie, livello, natura, abilità, 4 mosse, posizione (team, box, morto).
+- [ ] Esemplare con soprannome, specie, varietà facoltativa, livello, natura, abilità, 4 mosse, posizione (team, box, morto) ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)).
 - [ ] Causa della morte con avversario, mossa e area.
 - [ ] Eventi della timeline con tipo, data e riferimenti, scritti in sola aggiunta.
 
