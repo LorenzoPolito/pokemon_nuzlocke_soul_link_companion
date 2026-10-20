@@ -72,7 +72,7 @@ Alternativa scartata: ogni giocatore modifica tutto. È più comodo tra amici, m
 
 ### Come si applica
 
-- `authorize` riceve l'utente della sessione, l'azione (un nome del catalogo di [P2-09](#p2-09-catalogo-delle-api)), la risorsa (run, membro, dato) e restituisce permesso o motivo del rifiuto. Il ruolo nella run si legge da `run_member` a ogni richiesta; non si fida mai di un ruolo inviato dal client.
+- `authorize` riceve l'utente della sessione, l'azione (un nome del catalogo delle API, P2-09), la risorsa (run, membro, dato) e restituisce permesso o motivo del rifiuto. Il ruolo nella run si legge da `run_member` a ogni richiesta; non si fida mai di un ruolo inviato dal client.
 - La matrice è una tabella di dati nel codice e **un test la percorre tutta**: per ogni azione e ogni ruolo (compresi non membro, disattivato, cambio password pendente, run non attiva) il risultato atteso è scritto una volta e provato.
 - Gli abbonamenti SSE controllano l'appartenenza all'apertura e ogni volta che si riapre il flusso; un membro rimosso viene scollegato.
 - Le scritture accettano solo richieste dello stesso sito con corpo JSON (il controllo di origine di SvelteKit rifiuta le altre, come visto nelle prove di P1-16) e portano la chiave di idempotenza ([ADR 0002](../adr/0002-rete-instabile.md)).
