@@ -21,7 +21,7 @@
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | In corso |
 | P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Da iniziare |
 | P1-16 | Prova: sync SSE tra due browser | — | S | Completato |
-| P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Da iniziare |
+| P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Completato |
 | P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | Da iniziare |
 
 ## P1-01 Inventario dei giochi supportati
@@ -180,11 +180,13 @@ Nota di chiusura, 20 ottobre 2026: con nginx la compressione (`gzip` sul tipo `t
 
 ## P1-17 Prova: immagine Docker multi-stage
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage).
 
-- [ ] Dimensione dell'immagine misurata.
-- [ ] Tempo di avvio a freddo misurato.
-- [ ] Database su volume sopravvive alla ricreazione del container.
+- [x] Dimensione dell'immagine misurata.
+- [x] Tempo di avvio a freddo misurato.
+- [x] Database su volume sopravvive alla ricreazione del container.
+
+Nota di chiusura, 20 ottobre 2026: 300 MB, avvio 0,8–0,9 s. Attenzione ai permessi di `/data` e all'apertura del database durante la build. Dipendeva da P1-12, rimasto "In corso" per la sola parte Turso: la prova usa il file locale.
 
 ## P1-18 Stime e chiusura del gate 1
 

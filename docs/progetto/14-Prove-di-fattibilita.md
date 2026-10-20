@@ -215,3 +215,36 @@ Data: 20 ottobre 2026. Taglia S. Esito: **fattibile**, con tre punti da progetta
 ### Domande aperte
 
 Registrazione: aperta, su invito o solo da admin? (fase 2, permessi).
+
+## P1-17 Prova: immagine Docker multi-stage
+
+Data: 20 ottobre 2026. Taglia S. Esito: **fattibile**; due trappole da ricordare nel Dockerfile vero.
+
+### Metodo
+
+Applicazione SvelteKit 3 con adapter Node, Drizzle e libSQL su `file:/data/app.db`, migrazioni all'avvio e un endpoint `/api/health` che registra un avvio e li conta. Dockerfile a due stadi su `node:22-alpine` (Docker 29.8): lo stadio di build fa `npm ci`, `npm run build` e `npm prune --omit=dev`; lo stadio finale copia solo `build/`, `node_modules/` di produzione e le migrazioni, gira come utente `node` e dichiara `VOLUME /data`. Le misure sono del 20 ottobre 2026 su questa macchina di lavoro. Per costruire dentro questo ambiente servono `--network host` e il certificato del proxy, che stanno nello stadio di build e non nell'immagine finale; sul server del PO non servono.
+
+### Esiti
+
+| Criterio | Misura |
+| --- | --- |
+| Dimensione dell'immagine | **300 MB**, di cui 237,5 MB la base `node:22-alpine`; l'app aggiunge circa 63 MB (`node_modules` di produzione 47 MB, `build` 1,9 MB; il grosso è `@libsql` 20 MB e `drizzle-orm` 17 MB) |
+| Avvio a freddo | **0,8–0,9 s** dal `docker run` alla prima risposta HTTP, con la migrazione applicata |
+| Database su volume sopravvive alla ricreazione del contenitore | **Sì**: dopo aver cancellato e ricreato il contenitore con lo stesso volume, il contatore degli avvii passa da 1 a 2 |
+
+Il Pokédex SQLite (P1-15) e i dati di gioco si aggiungeranno all'immagine: la dimensione finale va rimisurata in P3-11.
+
+### Due trappole
+
+1. **Permessi del volume.** Con `USER node` e un volume nominato nuovo il database non si apre (`Unable to open connection to local database /data/app.db: 14`, cioè `SQLITE_CANTOPEN`): `/data` è di root. Si risolve creando la cartella con il proprietario giusto *prima* di `VOLUME` (`RUN mkdir /data && chown node:node /data`); un volume nominato eredita il proprietario alla prima creazione. Chi monta una cartella dell'host (bind mount) deve invece dare i permessi a mano: va scritto nella guida di installazione.
+2. **La build di SvelteKit importa i moduli del server.** Se il database si apre appena il modulo viene caricato, `npm run build` fallisce nello stadio di build (non c'è `/data`). L'apertura va rinviata quando `building` (da `$app/environment`) è vero.
+
+### Decisioni prese
+
+- Immagine a due stadi su `node:22-alpine`, utente `node`, `VOLUME /data` creato con il proprietario giusto.
+- Il database si apre e migra solo a runtime, mai durante la build.
+- Alpine (musl) funziona con `@libsql/client`: non serve passare a Debian. Non ho misurato la variante `-slim`.
+
+### Domande aperte
+
+Nessuna.

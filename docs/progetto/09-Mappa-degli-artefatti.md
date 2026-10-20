@@ -35,7 +35,7 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | [Meccaniche per generazione](13-Meccaniche-per-generazione.md) | Documento | Tabelle dei tipi e regole di calcolo | P1-08, P1-09 | Durante la fase 1 | Esiste (P1-08 e P1-09 fatti) |
 | Tabella dei tipi per epoca | Dati | `data/mechanics/type-chart.json`: moltiplicatori di efficacia per le epoche 1, 2–5 e 6+, derivati da PokéAPI e verificati con @smogon/calc | P1-08, poi P5-05 | Cambia una tabella dei tipi | Esiste |
 | [Domande aperte](12-Domande-aperte.md) | Documento | Le domande di P1-19 con proposta e risposta del product owner: rete instabile e quanto emerso dai PBI di fase 1 | P1-19 | Storico: non si aggiorna più (le nuove domande vanno in ADR "Proposta") | Esiste |
-| [Prove di fattibilità dello stack](14-Prove-di-fattibilita.md) | Documento | Esiti e misure delle prove tecniche | P1-11–P1-17 | Durante la fase 1 | In corso (P1-11 fatto, P1-12 a metà, P1-14 a metà, P1-13 e P1-16 fatti) |
+| [Prove di fattibilità dello stack](14-Prove-di-fattibilita.md) | Documento | Esiti e misure delle prove tecniche | P1-11–P1-17 | Durante la fase 1 | In corso (P1-11 fatto, P1-12 a metà, P1-14 a metà, P1-13, P1-16 e P1-17 fatti) |
 | Architettura e API | Documento | Permessi, catalogo API, eventi SSE e lock | P2-08–P2-10 | Ogni modifica a un endpoint o evento | Da creare |
 | Flussi e schermate | Documento | Percorsi utente e bozze delle schermate | P2-11–P2-13 | Ogni modifica a un flusso | Da creare |
 | Piano di test | Documento | Casi di test di sistema ed end-to-end | P7-01 | Ogni nuova regola o bug corretto | Da creare |
