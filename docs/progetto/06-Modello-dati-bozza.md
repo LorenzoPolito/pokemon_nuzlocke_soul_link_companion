@@ -63,8 +63,8 @@ Il gruppo di Pokémon collegati nato in un'area; tiene posizione e morte per tut
 | run\_id | TEXT | FK run, CASCADE |  |
 | area\_key | TEXT | NOT NULL | Area del file di gioco o `custom:<id>` |
 | slot | TEXT | CHECK in (main, gift) | Incontro dell'area, oppure regalo, incontro fisso o scambio separato (con la chiave propria in area\_key) |
-| status | TEXT | CHECK in (open, linked, skipped) | open finché manca l'incontro valido di qualche giocatore |
-| position | TEXT | NULL, CHECK in (team, box, dead) | Valorizzata solo se linked |
+| status | TEXT | CHECK in (open, linked, skipped, untracked) | open finché manca l'incontro valido di qualche giocatore attivo; regole complete in [P2-03](#p2-03-aree-incontri-e-link-soul-link) |
+| position | TEXT | NULL, CHECK in (team, box, dead) | Valorizzata se e solo se status = linked |
 | died\_at | INTEGER | NULL |  |
 | death\_cause | TEXT (JSON) | NULL | Chi è caduto, avversario, mossa |
 | version | INTEGER | NOT NULL |  |
@@ -78,7 +78,7 @@ Il gruppo di Pokémon collegati nato in un'area; tiene posizione e morte per tut
 | link\_group\_id | TEXT | FK link\_group, CASCADE |  |
 | member\_id | TEXT | FK run\_member |  |
 | attempt | INTEGER | NOT NULL, default 1 | Tentativo del singolo giocatore: la dupes clause vale solo per chi ha già la specie |
-| outcome | TEXT | CHECK in (caught, fled, defeated, dupe, untracked) | dupe = scartato per dupes clause, dà diritto a un nuovo tentativo; untracked per le run già iniziate |
+| outcome | TEXT | CHECK in (caught, failed, fled, dupe, untracked) | failed = non catturato (esausto, palle finite); fled = il Pokémon è fuggito; dupe = scartato per dupes clause, dà diritto a un nuovo tentativo; untracked per le run già iniziate |
 | species\_id | INTEGER | NULL | Specie incontrata (Pokédex) |
 | level\_met | INTEGER | NULL, CHECK 1–100 |  |
 | version | INTEGER | NOT NULL |  |
@@ -143,7 +143,7 @@ Il diario è anche la base per recuperare gli eventi mancanti dopo una riconness
 Account, configurazione e funzioni dei rilasci successivi stanno in tabelle piccole e separate, così il nucleo della run resta semplice.
 
 - **user, session, account, verification**, **app\_setting** e **invite**: definite in [P2-01](#p2-01-utenti-sessioni-e-ruoli-globali).
-- **custom\_area**: `game_id`, `name`, `after_area_key` (dove inserirla nell'ordine), `created_by`. I gruppi la richiamano come `custom:<id>`.
+- **custom\_area**: aree aggiunte dall'admin, definite in [P2-03](#p2-03-aree-incontri-e-link-soul-link).
 - **seen\_trainer** e **seen\_pokemon** (rilascio 0.3): squadre viste in lotta. `seen_trainer` ha `run_id`, nome, area, giocatore che l'ha salvata; `seen_pokemon` ha specie, livello e mosse osservate in JSON.
 - **request\_key**: chiave di idempotenza inviata dal client, utente, esito e risposta salvata. Un doppio invio restituisce la stessa risposta; le righe si eliminano dopo 24 ore.
 - **Nessuna tabella per i lock**: vivono nella memoria del server, come da specifica.
@@ -288,6 +288,117 @@ Quali impostazioni si possono cambiare in corso di run: `damageCalculator`, `typ
 
 - Valori predefiniti delle regole opzionali (tabella sopra): da confermare.
 - Un proprietario che non gioca: permesso o no? La proposta lo permette con `seat` NULL.
+
+## P2-03 Aree, incontri e link Soul Link
+
+Data: 20 ottobre 2026. Taglia M. Definisce come un'area del gioco diventa un gruppo collegato, come si registra un incontro e come si calcola lo stato del gruppo con N giocatori. Aggiorna le tabelle `link_group` e `encounter` e aggiunge `custom_area`.
+
+### Dall'area al gruppo
+
+I dati di gioco ([`data/games/<game_id>.json`](11-Dati-di-gioco.md)) elencano le aree in ordine, con una chiave stabile. Il database non ha una tabella delle aree: un gruppo (`link_group`) nasce **quando si registra il primo incontro** di quell'area, da parte di un giocatore qualsiasi. L'elenco delle aree si costruisce incrociando i dati di gioco (in ordine) con i gruppi esistenti, per `area_key` e `slot`: un'area senza gruppo è un'area non ancora visitata da nessuno.
+
+La chiave di un gruppo è (`run_id`, `area_key`, `slot`):
+
+| Caso | `area_key` | `slot` |
+| --- | --- | --- |
+| Incontro selvatico dell'area, starter compreso (l'area `starter` è la prima) | Chiave **effettiva** dell'area | `main` |
+| Regalo, incontro fisso, scambio o grotta nascosta, con `separateGifts` acceso | Chiave propria dell'incontro speciale (`gift-driftveil-city-zorua`) | `gift` |
+| Gli stessi, con `separateGifts` spento | Chiave effettiva dell'area in cui avvengono | `main` |
+| Area personalizzata | `custom:<id>` | `main` |
+
+**Chiave effettiva**: con `separateRooms` acceso è la chiave dell'area; con `separateRooms` spento, per un'area con `parentAreaKey` è la chiave dell'area principale (si risale finché c'è un padre). Si calcola alla registrazione e si scrive nel gruppo; non cambia mai, perché `separateRooms` è bloccato dopo il primo incontro. Per gli incontri speciali vale la chiave effettiva dell'area dichiarata nel dato (`areaKey`).
+
+Con `separateGifts` spento un regalo e un incontro selvatico della stessa area condividono lo stesso gruppo: **vale il primo che il giocatore registra**, il secondo è rifiutato dal server (un incontro valido per giocatore per gruppo). Le grotte nascoste di Nero 2 e Bianco 2 seguono la stessa regola dei regali e hanno la specie scelta dal Pokédex ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+
+Le chiavi dei dati di gioco sono **stabili**: un aggiornamento dei dati non cancella né rinomina una chiave già usata da una run. Un'area che sparisce o cambia si sostituisce con una chiave nuova e l'area vecchia resta nel file marcata come obsoleta (regola da riportare nel processo dei dati di gioco). Il controllo periodico dei riferimenti rotti segnala quel che sfugge.
+
+### Incontro (`encounter`)
+
+Un incontro è ciò che **un giocatore** registra in un gruppo. Colonne aggiunte o precisate rispetto alla tabella principale:
+
+| Colonna | Tipo | Vincoli | Note |
+| --- | --- | --- | --- |
+| `special_key` | TEXT | NULL | Chiave dell'incontro speciale (regalo, fisso, scambio, grotta) se l'incontro viene da lì; il tipo (`gift`, `static`, `trade`, `grotto`) si legge dai dati di gioco |
+| `outcome` | TEXT | CHECK in (`caught`, `failed`, `fled`, `dupe`, `untracked`) | Vedi sotto |
+| `species_id` | INTEGER | NULL | Obbligatoria con `caught` e `dupe` (CHECK) |
+| `level_met` | INTEGER | NULL, CHECK 1–100 | |
+
+Esiti, come richiesti dalla specifica:
+
+| Esito | Significato | Effetto sul gruppo |
+| --- | --- | --- |
+| `caught` | Catturato (anche un regalo, uno scambio o un incontro fisso: la loro natura sta in `special_key`) | Crea l'esemplare (P2-04); conta come incontro valido |
+| `failed` | Non catturato: Pokémon esausto, palle finite, battaglia persa | L'area è persa per tutti |
+| `fled` | Il Pokémon selvatico è fuggito | L'area è persa per tutti |
+| `dupe` | Specie della stessa linea evolutiva di un Pokémon già posseduto dal giocatore (anche morto), con la dupes clause accesa | Non è un incontro valido: dà diritto a un nuovo tentativo di quel giocatore, il gruppo resta aperto |
+| `untracked` | Area precedente alla creazione di una run già iniziata, di cui non si sa nulla | Non blocca e non fa perdere l'area |
+
+La voce «regalo» della specifica non è un esito ma una provenienza: un regalo si registra come `caught` con `special_key` di tipo `gift`. Un regalo non può essere `failed` né `fled`.
+
+**Tentativi**: `attempt` parte da 1 e cresce di uno solo dopo un `dupe`. Per ogni (gruppo, giocatore) c'è al più **un incontro valido**, cioè con esito diverso da `dupe` (indice UNIQUE parziale già previsto). Gli incontri `dupe` restano come storia. La dupes clause si valuta per giocatore sulla sua linea evolutiva, quindi un `dupe` non tocca gli incontri degli altri.
+
+Gli incontri dei giocatori **spettatori** non esistono. `member_id` deve riferirsi a un `run_member` con ruolo `owner` o `player` (controllo nel dominio).
+
+### Stato del gruppo
+
+`link_group.status` si ricalcola **nella stessa transazione** di ogni scrittura che tocca un incontro del gruppo, sui soli giocatori **attivi** (ruolo diverso da `spectator`), con questa precedenza:
+
+1. `skipped` se un incontro valido di qualunque giocatore è `failed` o `fled` (l'area è persa per tutti, anche per chi non l'ha ancora incontrata).
+2. `open` se qualche giocatore attivo non ha ancora un incontro valido (non ha registrato nulla oppure ha solo `dupe`).
+3. Altrimenti tutti hanno un incontro valido, tutti `caught` o `untracked`: `linked` se almeno uno è `caught`, `untracked` se sono tutti `untracked`.
+
+| Stato | `position` | Note |
+| --- | --- | --- |
+| `open` | NULL | In attesa di qualcuno |
+| `linked` | `team`, `box` o `dead` (alla creazione `box`; il giocatore sposta in team) | I partner hanno sempre la stessa posizione |
+| `skipped` | NULL | Terminale |
+| `untracked` | NULL | Terminale; area di una run già iniziata |
+
+CHECK: `(status = 'linked') = (position IS NOT NULL)` e `(position = 'dead') = (died_at IS NOT NULL)`. Uno stato terminale non si riapre, salvo correzione del proprietario con evento nel diario (da dettagliare in P2-09). Un `skipped` può essere riaperto solo se l'incontro che lo ha causato viene corretto.
+
+Cambiamenti di giocatori attivi:
+
+- **Nuovo giocatore** (o spettatore che diventa giocatore): nella stessa transazione riceve un incontro `untracked` per ogni gruppo già in stato `linked`, `skipped` o `untracked`; per i gruppi `open` dovrà fare il suo incontro e lo stato si ricalcola quando lo registra.
+- **Giocatore rimosso o reso spettatore**: i suoi incontri e i suoi esemplari restano e si leggono; i gruppi `open` si ricalcolano senza di lui (possono diventare `linked` o `untracked`); i gruppi `linked` non cambiano. Il suo esemplare in un gruppo `linked` continua a seguire la posizione del gruppo.
+
+Il ricalcolo è una funzione pura del dominio: dato l'elenco dei giocatori attivi e dei loro incontri validi restituisce stato e posizione. Si prova con test generati (proprietà: l'ordine in cui arrivano gli incontri non cambia lo stato finale).
+
+### Concorrenza
+
+Due giocatori possono registrare lo stesso gruppo nello stesso momento. La creazione del gruppo è un `INSERT … ON CONFLICT (run_id, area_key, slot) DO NOTHING` seguito da una lettura, dentro la transazione; il ricalcolo dello stato avviene dopo ogni inserimento, e l'ultimo a scrivere vede tutti gli incontri. `version` su gruppo e incontro sostiene l'avviso «vince l'ultimo» ([principi](#principi)).
+
+### Aree personalizzate (`custom_area`)
+
+Aggiunte dall'admin per i casi che i dati di gioco non coprono (una route di una ROM hack, un'area dimenticata).
+
+| Colonna | Tipo | Vincoli | Note |
+| --- | --- | --- | --- |
+| `id` | TEXT | PK, UUIDv7 | La chiave nei gruppi è `custom:<id>` |
+| `game_id` | TEXT | NOT NULL | Valida per le run di quel gioco |
+| `name` | TEXT | NOT NULL, 1–60 | Un solo nome, nella lingua di chi la crea |
+| `after_area_key` | TEXT | NULL | Chiave dell'area (di gioco o personalizzata) dopo cui compare nell'elenco; NULL = in fondo |
+| `created_by` | TEXT | FK user | |
+| `archived_at` | INTEGER | NULL | Un'area già usata non si cancella: si archivia e sparisce dall'elenco delle run nuove |
+| | | UNIQUE (`game_id`, `name`) | |
+
+Più aree dopo la stessa area stanno nell'ordine di creazione. Le aree personalizzate non hanno stanze (`parentAreaKey`) né incontri speciali.
+
+### Invarianti aggiunte
+
+| Invariante | Garantita da |
+| --- | --- |
+| Un solo gruppo per area e slot | UNIQUE (`run_id`, `area_key`, `slot`) |
+| Un solo incontro valido per giocatore e gruppo | Indice UNIQUE parziale su `encounter` |
+| `position` presente se e solo se il gruppo è `linked` | CHECK sul gruppo |
+| Specie obbligatoria con `caught` e `dupe` | CHECK sull'incontro |
+| Un regalo non fallisce né fugge | Dominio, controllato su `special_key` |
+| Lo stato del gruppo è funzione degli incontri | Dominio: una sola funzione di ricalcolo, chiamata in ogni scrittura, con test di proprietà |
+| La chiave effettiva dipende da `separateRooms` e non cambia | Dominio, con un test dedicato |
+
+### Domande aperte
+
+- Il gruppo `untracked` e il giocatore che entra a run iniziata (incontri `untracked` automatici) sono una proposta: da confermare nel flusso di P2-11.
+- Con `separateGifts` spento, «vale il primo registrato» tra regalo e selvatico dell'area: va bene o deve decidere il giocatore? La proposta è il primo registrato.
 
 ## Invarianti
 
