@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-Dopo i requisiti (fase 0, completata) il progetto procede in 7 fasi; ogni fase produce documenti dedicati e si chiude con un gate. La prossima fase è la 1, raccolta dati e analisi tecnica, che parte dai giochi Bianco, Nero, Bianco 2 e Nero 2. Le durate non sono ancora fissate e si stimano alla chiusura della fase 1.
+Dopo i requisiti (fase 0, completata) il progetto procede in 7 fasi; ogni fase produce documenti dedicati e si chiude con un gate. La prossima fase è la 1, raccolta dati e analisi tecnica, che parte dai giochi Bianco, Nero, Bianco 2 e Nero 2. Le durate delle fasi 2–7 sono stimate in [Stime delle fasi 2–7](#stime-delle-fasi-27-gate-1), come ipotesi da ricalibrare.
 
 ## Fasi
 
@@ -34,6 +34,31 @@ Stack tecnico (piccole prove di fattibilità):
 - [ ] Immagine Docker multi-stage: dimensione e tempo di avvio reali.
 
 Gate di uscita: ogni dato ha una fonte o una decisione di inserimento manuale, ogni prova di fattibilità ha un esito, e le durate delle fasi successive sono stimate.
+
+## Stime delle fasi 2–7 (gate 1)
+
+Stime del 20 ottobre 2026, ricavate dai PBI del backlog e dalla [tabella dei budget](04-Regole-di-lavoro.md) (XS: 5–15 min e 10–50k token; S: 15–45 min e 50–150k; M: 45–120 min e 150–400k). Sono **ipotesi non calibrate**: i token reali della fase 1 non sono stati misurati, quindi il confronto previsto dalla ricalibrazione non è ancora possibile. Il tempo è quello di lavoro dell'agente, senza le attese del product owner.
+
+| Fase | PBI (XS / S / M) | Tempo agente | Token |
+| --- | --- | --- | --- |
+| 2 Progettazione | 14 (1 / 7 / 6) | 6–18 ore | 1,3–3,5 M |
+| 3 Fondamenta | 13 (0 / 8 / 5) | 6–16 ore | 1,2–3,2 M |
+| 4 Run e tracker | 21 (2 / 7 / 12) | 11–30 ore | 2,2–6,0 M |
+| 5 Lotte e override | 14 (1 / 7 / 6) | 6–18 ore | 1,3–3,5 M |
+| 6 Pokédex | 8 (1 / 4 / 3) | 3–9 ore | 0,7–1,9 M |
+| 7 Test e rilascio | 7 (0 / 5 / 2) | 3–8 ore | 0,6–1,6 M |
+| **Totale** | **77** | **35–98 ore** | **7,1–19,6 M** |
+
+La fase 3 comprende P3-12, già iniziato. Le durate in calendario dipendono dal ritmo di lavoro e dalle verifiche del product owner, che non è nota: a titolo di esempio, con una sessione al giorno e 3–5 PBI per sessione la fase 2 richiederebbe 3–5 giorni di lavoro dell'agente, la fase 4 da 5 a 7, e il totale da circa 3 a 4 settimane, più le attese di verifica. Le durate si ricalibrano a ogni gate con i consumi reali; da ora la sessione di lavoro registra i token quando sono noti.
+
+## Rischi emersi dalla fase 1 che toccano le fasi successive
+
+- **Turso non verificato**: si prova in P3-03 ([ADR 0008](../adr/0008-esiti-della-fase-1.md)).
+- **Registrazione aperta di base in Better Auth**, avvio dell'admin non atomico, blocco del cambio password da scrivere nell'app: criteri aggiunti a P3-07 e P3-08.
+- **Compressione del reverse proxy** trattiene il flusso SSE: criterio in P3-13 e nella guida di installazione.
+- **Permessi di `/data`** e apertura del database durante la build: criteri in P3-02 e P3-03.
+- **SvelteKit 3** ha rimosso `$lib`: criterio in P3-01.
+- **Fonti non verificabili**: aree e medaglie vengono da una sola fonte (nuzlocke.data), livelli facili di Superquattro e Ghetsis mancanti, storico delle categorie delle mosse non disponibile ([analisi](10-Analisi-delle-fonti-dati.md)).
 
 ## Documenti collegati
 

@@ -25,6 +25,8 @@ Output: repository dell'app.
 - [ ] SvelteKit con adapter Node e TypeScript in modalità strict.
 - [ ] Lint, formattazione e test runner configurati, con un test di esempio verde.
 - [ ] Comandi di sviluppo documentati nel README.
+- [ ] Alias dei moduli con `#lib` (SvelteKit 3 ha rimosso `$lib`) e adapter passato a `sveltekit({ adapter })` in `vite.config.ts` ([prove](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua)).
+
 
 ## P3-02 Dockerfile multi-stage e volume dati
 
@@ -34,6 +36,8 @@ Output: repository dell'app, Guida di installazione.
 - [ ] Database su `/data`, dichiarato come volume.
 - [ ] Healthcheck che risponde quando l'app è pronta.
 - [ ] Il container gira con un utente non root.
+- [ ] `/data` creata con il proprietario dell'utente non root prima di `VOLUME`; la guida di installazione spiega i permessi di una cartella montata dall'host ([prove](../progetto/14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).
+
 
 ## P3-03 Configurazione database e migrazioni
 
@@ -42,6 +46,9 @@ Output: repository dell'app.
 - [ ] Senza variabili di Turso l'app usa il file locale su `/data`.
 - [ ] Con `TURSO_URL` e `TURSO_TOKEN` l'app usa Turso senza altre modifiche.
 - [ ] Migrazioni applicate all'avvio; un errore di migrazione blocca l'avvio con un messaggio chiaro.
+- [ ] Il database non si apre durante `npm run build` (usare `building` di `$app/environment`).
+- [ ] Verifica su Turso con un database di prova creato dal product owner ([ADR 0008](../adr/0008-esiti-della-fase-1.md)).
+
 
 ## P3-04 Pokédex SQLite generato nella build
 
@@ -58,6 +65,8 @@ Output: repository dell'app.
 - [ ] Italiano e inglese completi; lingua iniziale dal browser, con inglese come riserva.
 - [ ] Selettore sempre visibile, scelta salvata per l'utente.
 - [ ] Un controllo automatico segnala chiavi di traduzione mancanti.
+- [ ] Plugin dei messaggi di Paraglide installato da npm, senza CDN in build ([prove](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua)).
+
 
 ## P3-06 Layout base e navigazione
 
@@ -74,6 +83,8 @@ Output: repository dell'app.
 - [ ] Registrazione rispetta la modalità impostata (aperta, su invito, chiusa).
 - [ ] Password salvate solo come hash; sessioni con scadenza.
 - [ ] Tentativi di login ripetuti limitati.
+- [ ] La registrazione aperta di Better Auth è disattivata a livello di app quando la modalità non è "aperta".
+
 
 ## P3-08 Admin creato all'avvio e cambio password
 
@@ -82,6 +93,9 @@ Output: repository dell'app, Guida di installazione.
 - [ ] Admin creato da `ADMIN_EMAIL` e `ADMIN_PASSWORD` solo se non esiste già.
 - [ ] Al primo accesso l'admin non può fare altro prima di cambiare la password.
 - [ ] Se le variabili mancano e non esiste un admin, l'avvio si ferma con un messaggio chiaro.
+- [ ] L'avvio cerca l'admin per email e completa i passi mancanti (registrazione e ruolo non sono atomici).
+- [ ] Il blocco del cambio password è nel server dell'app (hook e endpoint), con test di sistema; il flag si spegne con un hook sul cambio password.
+
 
 ## P3-09 Pannello admin: utenti e registrazioni
 
@@ -98,6 +112,8 @@ Output: repository dell'app.
 - [ ] Un client si iscrive agli eventi di una run solo se ha accesso a quella run.
 - [ ] Riconnessione automatica con riallineamento dello stato.
 - [ ] Connessioni chiuse rilasciate senza perdite di memoria.
+- [ ] Eventi con `id` crescente, ripresa da `Last-Event-ID`, segnale ogni 15 secondi e registro nel database per sopravvivere a un riavvio ([ADR 0002](../adr/0002-rete-instabile.md)).
+
 
 ## P3-11 Verifica locale e hook pre-push
 
@@ -129,3 +145,5 @@ Output: repository dell'app, Guida di installazione.
 - [ ] Dietro un reverse proxy con HTTPS l'app riconosce protocollo e indirizzo originali dalle intestazioni inoltrate (ORIGIN e intestazioni configurabili); nessun certificato gestito dall'app.
 - [ ] Quando il proxy indica HTTPS, i cookie di sessione sono marcati Secure.
 - [ ] In HTTP il pannello admin mostra un avviso: password e sessioni viaggiano in chiaro.
+- [ ] La guida di installazione dice di non comprimere `/api/stream` nel proxy: con `gzip` su `text/event-stream` nginx trattiene il flusso ([prove](../progetto/14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser)).
+
