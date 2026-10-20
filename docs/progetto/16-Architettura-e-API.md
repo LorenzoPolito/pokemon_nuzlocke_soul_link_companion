@@ -208,7 +208,7 @@ Le regole del Soul Link sono **applicate dal server** in una sola transazione pe
 | `POST /api/runs/{id}/locks` | `resource` (`encounter:<id>`, `specimen:<id>`, `milestones:<memberId>`, `overrides:<memberId>:<speciesId>`, `settings`) | Lock (`holder`, `expiresAt`) o lo stato attuale se è di un altro | 403 spettatore | `lock.take` |
 | `PUT /api/runs/{id}/locks/{resource}` | | Lease rinnovato (60 s) | 404 se scaduto | `lock.take` |
 | `DELETE /api/runs/{id}/locks/{resource}` | | 204 | | `lock.take` |
-| `GET /api/runs/{id}/stream` | `Last-Event-ID` (intestazione) | Flusso SSE, vedi P2-10 | 404 | `run.stream` |
+| `GET /api/runs/{id}/stream` | `Last-Event-ID` (intestazione) | Flusso SSE, vedi [P2-10](#p2-10-catalogo-degli-eventi-sse) | 404 | `run.stream` |
 
 Il lock è consultivo: un salvataggio senza lock o con lock di altri passa comunque (l'interfaccia ha chiesto conferma); il server non lo impone.
 
@@ -224,3 +224,98 @@ Squadre viste in lotta (`seen_trainer`, `seen_pokemon`, rilascio 0.3), esportazi
 
 - Cancellare un incontro catturato (ricalcolo del gruppo, esemplare eliminato) è riservato al proprietario: da confermare.
 - `GET /api/runs/{id}` restituisce l'intera istantanea: una run ha qualche centinaio di righe, quindi un'unica risposta va bene; si rivaluta dopo la prima partita vera.
+
+## P2-10 Catalogo degli eventi SSE
+
+Data: 20 ottobre 2026. Taglia S. Il flusso `GET /api/runs/{id}/stream` ([P2-09](#p2-09-catalogo-delle-api)) porta i cambiamenti della run a tutti i collegati. Le regole di rete sono quelle dell'[ADR 0002](../adr/0002-rete-instabile.md); la prova di fattibilità è [P1-16](14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser).
+
+### Formato
+
+Ogni evento è un messaggio SSE con `event:` = nome dell'evento, `data:` = JSON, e, **solo per gli eventi persistenti**, `id:` = identificativo della riga del diario (`run_event.id`, UUIDv7, ordinato nel tempo). Gli eventi senza `id` non cambiano `Last-Event-ID`.
+
+- **Persistenti**: ogni riga del diario ([P2-04](06-Modello-dati-bozza.md#p2-04-esemplari-morte-ed-eventi)); si possono recuperare dopo una riconnessione. Il nome è il `type` del diario (`encounter.recorded`, `group.died`, …).
+- **Effimeri**: lock, segnale, controllo; nessun `id`, nessun recupero.
+
+I dati di un evento persistente:
+
+```json
+{
+  "id": "0192f3…",
+  "type": "group.died",
+  "actorUserId": "…",
+  "createdAt": 1790000000000,
+  "entity": "link_group",
+  "entityId": "…",
+  "payload": { "before": {}, "after": {} },
+  "changes": [
+    { "entity": "link_group", "id": "…", "version": 7, "value": { } },
+    { "entity": "specimen", "id": "…", "version": 3, "value": { } },
+    { "entity": "run", "id": "…", "version": 12, "value": null }
+  ]
+}
+```
+
+`changes` elenca **tutte le entità cambiate** con il loro valore completo e la nuova `version` (`value: null` se eliminata). Il client non ricalcola mai le regole del Soul Link: applica le `changes`. Una azione di gruppo (morte, spostamento) è un solo evento con tutti i partner in `changes`. Il client applica una `change` solo se la sua `version` è maggiore o uguale a quella locale, e ignora un evento con `id` già applicato: così un evento ripetuto non fa danni.
+
+### Eventi persistenti
+
+Destinatari: **tutti i membri** della run (proprietario, giocatori, spettatori), salvo dove indicato. Le entità in `changes` sono tra `run`, `run_member`, `link_group`, `encounter`, `specimen`, `run_milestone`, `species_override`.
+
+| Evento | Quando | Entità in `changes` |
+| --- | --- | --- |
+| `run.created`, `run.deleted`, `run.restored` | Vita della run | `run` |
+| `run.settings_changed`, `run.status_changed`, `run.owner_changed` | Impostazioni, stato, proprietario | `run`, `run_member` |
+| `levelcap.override_set` | Override del level cap | `run` |
+| `member.joined`, `member.role_changed`, `member.removed` | Giocatori; con `member.removed` il server chiude il flusso del membro rimosso | `run_member`, gruppi ricalcolati |
+| `group.created`, `group.linked`, `group.skipped`, `group.moved`, `group.died`, `group.death_corrected` | Gruppi | `link_group`, `specimen` dei partner |
+| `encounter.recorded`, `encounter.corrected`, `encounter.deleted` | Incontri | `encounter`, `link_group`, `specimen` |
+| `specimen.created`, `specimen.updated`, `specimen.evolved`, `specimen.corrected` | Esemplari | `specimen` |
+| `milestone.reached`, `milestone.revoked` | Tappe | `run_milestone` |
+| `override.set`, `override.cleared` | Override | `species_override` |
+
+`group.linked` e `group.skipped` non sono eventi a sé quando seguono una registrazione: viaggiano come `changes` dell'evento `encounter.recorded`, che porta anche il motivo nel payload; restano tipi del diario per la timeline.
+
+### Eventi effimeri
+
+| Evento | Destinatari | Dati | Quando |
+| --- | --- | --- | --- |
+| `hello` | Il solo client che si collega | `bootId` (cambia a ogni avvio del server), `serverTime`, `lastEventId` della run, `heartbeatSeconds` (15) | A ogni connessione, per primo |
+| `ping` | Ogni client | `serverTime` | Ogni 15 secondi |
+| `reset` | Il solo client | `reason`: `too_many_events`, `unknown_event_id`, `server_restarted`, `access_changed` | Quando non si può recuperare per eventi: il client ricarica l'istantanea |
+| `locks.snapshot` | Il solo client | Lock attivi: `resource`, `holder` (utente), `expiresAt` | Dopo `hello` e dopo il recupero |
+| `lock.taken`, `lock.renewed` | Membri non spettatori e spettatori | `resource`, `holder`, `expiresAt` | Presa e rinnovo ogni 20 secondi |
+| `lock.released` | Idem | `resource` | Rilascio, annullamento, chiusura, scadenza |
+| `conflict.overwritten` | **Solo l'utente la cui modifica è stata sovrascritta** (tutte le sue connessioni) | `entity`, `id`, `yourVersion`, `newVersion`, `newValue`, `byUserId` | Un salvataggio con `baseVersion` vecchia |
+| `session.expired` | Il client | | La sessione è scaduta o l'utente è stato disattivato; il flusso si chiude |
+
+`ping` è un evento con nome e non un commento SSE: l'API `EventSource` del browser non mostra i commenti, e il client deve poter vedere che il flusso è vivo per mostrare l'avviso dopo 40 secondi. (La prova P1-16 usava un commento per tenere aperta la connessione: basta per il proxy, non per l'avviso del client.)
+
+### Connessione e recupero
+
+1. Il client carica l'istantanea (`GET /api/runs/{id}`), che include `lastEventId`, e apre il flusso con quell'identificativo.
+2. L'identificativo si passa con l'intestazione `Last-Event-ID` (riconnessione automatica del browser) **o** con il parametro `?lastEventId=` (apertura manuale, necessaria per l'attesa crescente di 1, 2, 4, 8… fino a 30 secondi, che `EventSource` non fa da solo).
+3. Il server controlla l'accesso, manda `hello`, poi:
+   - se `lastEventId` manca: nessun recupero, solo eventi nuovi;
+   - se esiste e gli eventi successivi sono al massimo **500**: li rimanda in ordine, con i loro `id`;
+   - se sono più di 500, o l'`id` non esiste nel diario della run: manda `reset` e il client ricarica l'istantanea;
+   - se `bootId` è diverso da quello visto dal client (riavvio del server): il client considera persi i lock e ricarica l'istantanea (ADR 0002), anche se il recupero sarebbe possibile.
+4. Poi `locks.snapshot` e gli eventi in tempo reale. Gli eventi arrivati mentre si faceva il recupero si mettono in coda e si inviano dopo, senza duplicati né buchi (il recupero e l'iscrizione agli eventi nuovi avvengono nella stessa sezione critica).
+5. Il client che aveva moduli aperti riprende i propri lock con `POST /locks`; se qualcuno li ha presi nel frattempo, l'interfaccia lo dice e il salvataggio chiede conferma ([ADR 0002](../adr/0002-rete-instabile.md)).
+
+### Segnale e avviso
+
+- Il server manda `ping` ogni 15 secondi; qualunque evento ricevuto azzera il timer del client.
+- Dopo **40 secondi senza alcun evento** il client mostra l'avviso «I dati potrebbero non essere aggiornati» e apre una nuova connessione; l'avviso sparisce da solo al riallineamento.
+- Senza connessione i pulsanti di salvataggio sono disattivati e le bozze restano nel browser.
+
+### Permessi e limiti
+
+- Il flusso richiede `run.stream` (qualunque membro). Se il permesso cambia (`member.removed`, `member.role_changed` a spettatore per i lock), il server chiude il flusso interessato con `reset` (`access_changed`) o lo restringe.
+- Un utente può avere al massimo **5 connessioni** aperte per run (telefono, computer, schede); la sesta chiude la più vecchia con `reset`.
+- Coda per connessione: al massimo 200 eventi in attesa; se un client lento non li consuma la connessione si chiude e il client recupera riconnettendosi.
+- Le connessioni chiuse (cancel del flusso, errore di scrittura) liberano subito abbonamento e timer; un test di carico di P3-10 le conta.
+- Il server è una sola istanza: lo stato dei lock e degli abbonamenti è in memoria ([specifica](01-Specifica-dei-requisiti.md#concorrenza-e-lock)).
+
+### Domande aperte
+
+Nessuna. Le soglie (500 eventi, 5 connessioni, coda di 200) sono proposte da ritoccare dopo la prima partita vera.
