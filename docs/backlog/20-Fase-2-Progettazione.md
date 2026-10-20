@@ -7,7 +7,7 @@
 | P2-01 | Modello dati: utenti, sessioni, ruoli globali | P1-13 | S | Completato |
 | P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Completato |
 | P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | In verifica |
-| P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | Da iniziare |
+| P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | In verifica |
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Da iniziare |
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Da iniziare |
 | P2-07 | Schema del Pokédex SQLite | P1-15 | M | Da iniziare |
@@ -53,11 +53,13 @@ Nota, 20 ottobre 2026: l'esito `defeated` della bozza diventa `failed`; «regalo
 
 ## P2-04 Modello dati: esemplari, stato, eventi
 
-Output: Modello dati.
+Output: [Modello dati](../progetto/06-Modello-dati-bozza.md#p2-04-esemplari-morte-ed-eventi).
 
-- [ ] Esemplare con soprannome, specie, varietà facoltativa, livello, natura, abilità, 4 mosse, posizione (team, box, morto) ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)).
-- [ ] Causa della morte con avversario, mossa e area.
-- [ ] Eventi della timeline con tipo, data e riferimenti, scritti in sola aggiunta.
+- [x] Esemplare con soprannome, specie, varietà facoltativa, livello, natura, abilità, 4 mosse, posizione (team, box, morto) ([ADR 0006](../adr/0006-varieta-dell-esemplare.md)).
+- [x] Causa della morte con avversario, mossa e area.
+- [x] Eventi della timeline con tipo, data e riferimenti, scritti in sola aggiunta.
+
+Nota, 20 ottobre 2026: il trigger di sola aggiunta del diario lascia passare la cascata dell'eliminazione della run (provato su SQLite 3.45; da riprovare su libSQL in P3-03).
 
 ## P2-05 Modello dati: override per specie per giocatore
 
