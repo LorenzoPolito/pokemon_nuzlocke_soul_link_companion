@@ -10,7 +10,7 @@
 | P1-07 | Medaglie e level cap per gioco | P1-01 | M | In verifica |
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Completato |
 | P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | In verifica |
-| P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Da iniziare |
+| P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | In verifica |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Completato |
 | P1-08 | Tabelle dei tipi per generazione | — | S | Da iniziare |
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Da iniziare |
@@ -46,11 +46,13 @@ Nota di chiusura, 19 ottobre 2026: le specie sono 1025 su 1025; per varietà e f
 
 ## P1-03 Copertura PokéAPI: mosse, learnset, abilità
 
-Output: Analisi delle fonti dati.
+Output: [Analisi delle fonti dati](../progetto/10-Analisi-delle-fonti-dati.md#p1-03-copertura-pokéapi-mosse-learnset-abilità).
 
-- [ ] Learnset disponibili per version group, con i giochi mancanti elencati.
-- [ ] Verificato se potenza, tipo e categoria delle mosse sono storicizzati per generazione.
-- [ ] Lacune elencate con la decisione presa per ciascuna.
+- [x] Learnset disponibili per version group, con i giochi mancanti elencati.
+- [x] Verificato se potenza, tipo e categoria delle mosse sono storicizzati per generazione.
+- [x] Lacune elencate con la decisione presa per ciascuna.
+
+Nota di chiusura, 19 ottobre 2026: potenza, tipo, precisione e PP sono storicizzati per version group (con una convenzione diversa da quella di tipi e statistiche dei Pokémon); la categoria no. I learnset dei giochi dell'MVP sono completi; mancano quelli delle espansioni di Spada, Scudo, Scarlatto e Violetto e di Leggende: Z-A.
 
 ## P1-04 Copertura PokéAPI: incontri per area
 
