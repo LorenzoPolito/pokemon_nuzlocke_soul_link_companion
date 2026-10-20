@@ -216,6 +216,79 @@ Il resto del modello usa UUIDv7. Better Auth genera propri identificativi per `u
 
 Modalità di registrazione predefinita: la proposta è `invite`. Da confermare con il product owner.
 
+## P2-02 Run, giocatori e regole
+
+Data: 20 ottobre 2026. Completa le tabelle `run` e `run_member` della sezione "Tabelle principali" con le regole, gli stati e i vincoli.
+
+### Una run, un gioco
+
+`run.game_id` è la chiave di un file di gioco, cioè una **versione** (`black`, `white`, `black-2`, `white-2`): è uguale per tutti i giocatori della run, che non hanno un gioco proprio. Le regole e le impostazioni stanno una volta sola nella riga della run e valgono per tutti; solo `species_override` è per giocatore.
+
+Non cambiano dopo il primo incontro: `game_id`, `game_data_version`, `settings.separateRooms` e `settings.difficulty`. Il «primo incontro» è la prima riga di `encounter` della run, comprese quelle `untracked` create alla nascita di una run già iniziata: per quelle run il blocco vale dalla creazione. Il vincolo è nel dominio (nessun trigger: serve un messaggio d'errore chiaro) con un test dedicato.
+
+### Regole sempre attive
+
+Non sono impostazioni e non si possono spegnere: un incontro per area, Pokémon esausto = morto, soprannome obbligatorio, collegamento degli incontri della stessa area, stesso destino dei partner, morte di tutti i partner, area saltata per tutti se un giocatore perde l'incontro. Vivono nel dominio (vedi "Invarianti"), non in `settings`.
+
+### Impostazioni della run (`run.settings`)
+
+Documento JSON validato con Zod, `settings_schema` = versione dello schema (oggi 1). Una regola nuova si aggiunge con un valore predefinito e una funzione che porta il documento alla versione corrente in lettura.
+
+| Chiave | Tipo | Predefinito | Regola |
+| --- | --- | --- | --- |
+| `dupesClause` | booleano | vero | Dupes clause: se un giocatore ha già la linea evolutiva della specie incontrata (anche morta), solo lui ha un altro tentativo |
+| `typeClause` | booleano | falso | Restrizione del tipo primario: niente tipi primari ripetuti nel team |
+| `separateGifts` | booleano | vero | Regali, incontri fissi e scambi in gioco come incontri separati: non consumano l'incontro dell'area |
+| `separateRooms` | booleano | vero | Stanze interne come aree separate ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)); non modificabile dopo il primo incontro |
+| `randomizer` | booleano | falso | Senza tabelle di incontro: la specie si sceglie dal Pokédex |
+| `damageCalculator` | booleano | vero | Mostra il calcolatore dei danni |
+| `difficulty` | `easy`, `normal`, `challenge` | `normal` | Solo per `black-2` e `white-2`; assente per gli altri giochi. Determina il level cap |
+
+I valori predefiniti sono una proposta: la specifica elenca le regole opzionali ma non dice quali partono accese. `typeClause` parte spenta perché cambia molto il modo di giocare; `dupesClause` e `separateGifts` partono accese perché sono le regole comuni del Soul Link e le due già descritte come caso normale nella specifica. Il proprietario le sceglie alla creazione; quali si possono cambiare dopo è nel paragrafo seguente.
+
+Quali impostazioni si possono cambiare in corso di run: `damageCalculator`, `typeClause`, `randomizer`, `dupesClause` e `separateGifts` sì, con un evento nel diario (la regola vale da quel momento, gli incontri passati non si rivalutano); `separateRooms` e `difficulty` no, perché cambiano le aree e il level cap già registrati.
+
+### Stato della run
+
+`run.status`: `active`, `lost`, `completed`.
+
+| Da | A | Quando |
+| --- | --- | --- |
+| `active` | `lost` | Un giocatore resta senza Pokémon vivi (wipe), oppure il proprietario dichiara la run persa |
+| `active` | `completed` | Il proprietario dichiara la run completata (di norma dopo il campione) |
+| `lost` o `completed` | `active` | Il proprietario riapre la run, per correggere un errore; scrive un evento nel diario |
+
+`ended_at` è valorizzato in `lost` e `completed`, NULL in `active`. Nuova colonna **`end_info`** (TEXT JSON, NULL): per `lost` registra il motivo (`wipe` con il giocatore, oppure `declared`) e, se noto, l'area. Una run non `active` resta consultabile ma non accetta scritture sui dati di gioco (incontri, esemplari, tappe, override), tranne la riapertura. La condizione di wipe si calcola nel dominio nella stessa transazione della morte; non è un trigger.
+
+### Giocatori e ruoli nella run
+
+`run_member` collega utenti e run. Completa la tabella principale così:
+
+| Regola | Come |
+| --- | --- |
+| Un solo proprietario per run | Indice UNIQUE parziale su `run_member(run_id)` dove `role = 'owner'` |
+| Il proprietario è anche un giocatore? | Sì, di norma: il proprietario ha `role = 'owner'` e partecipa alla run come giocatore con un posto. Un proprietario che non gioca è ammesso solo se ha `seat` NULL |
+| Spettatore | `role = 'spectator'`, `seat` NULL, sola lettura |
+| Posto | `seat` è NULL per gli spettatori e un intero 1…N per proprietario e giocatori; UNIQUE (`run_id`, `seat`) dove `seat` non è NULL |
+| Numero di giocatori | Nessun limite nel database; limite dell'interfaccia da fissare in P2-12 (proposta: 8) |
+| Cambio di proprietario | Il proprietario cede il ruolo a un altro giocatore, oppure passa automaticamente al posto successivo se l'account è eliminato. Nella stessa transazione: il vecchio proprietario diventa `player`, il nuovo `owner` |
+| Rimozione di un giocatore | Il proprietario rimuove un giocatore o lo trasforma in spettatore; i suoi dati (incontri, esemplari, tappe, override) restano e si leggono ancora, ma il gruppo non aspetta più il suo incontro. Questa regola cambia l'invariante «gruppo collegato quando tutti hanno catturato»: vale per i giocatori **attivi** (con `role` ≠ `spectator`). Da trattare con attenzione in P2-03 |
+
+### Nuove colonne e indici
+
+- `run.end_info` TEXT JSON NULL.
+- `run_member`: indice UNIQUE parziale sul proprietario; UNIQUE parziale su (`run_id`, `seat`).
+- `run(deleted_at)`: indice per il job di eliminazione definitiva dopo 30 giorni.
+
+### Run già iniziata
+
+`run.started_in_progress` = 1: alla creazione il proprietario indica quali aree sono già passate e per ciascun giocatore la situazione; le aree precedenti ricevono un incontro `untracked` per ogni giocatore, il che blocca `game_id` e `separateRooms` dalla creazione. I dettagli del flusso sono in P2-11.
+
+### Domande aperte
+
+- Valori predefiniti delle regole opzionali (tabella sopra): da confermare.
+- Un proprietario che non gioca: permesso o no? La proposta lo permette con `seat` NULL.
+
 ## Invarianti
 
 Ogni regola del Soul Link ha un posto preciso dove viene garantita: prima la struttura, poi il database, infine il dominio con i test.
