@@ -14,7 +14,7 @@
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Completato |
 | P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | In verifica |
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Completato |
-| P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Da iniziare |
+| P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Completato |
 | P2-12 | Bozze schermate: tracker | P2-11 | M | Da iniziare |
 | P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | Da iniziare |
 | P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | Da iniziare |
@@ -121,10 +121,12 @@ Nota di chiusura, 20 ottobre 2026: il segnale è un evento con nome (`ping`) e n
 
 ## P2-11 Flussi: creazione run, inviti, run già iniziata
 
-Output: Flussi e schermate.
+Output: [Flussi e schermate](../progetto/17-Flussi-e-schermate.md#p2-11-flussi-creazione-run-inviti-run-già-iniziata).
 
-- [ ] Flusso di creazione per run nuova e per run già iniziata, passo per passo.
-- [ ] Flusso di invito e accettazione di un giocatore.
+- [x] Flusso di creazione per run nuova e per run già iniziata, passo per passo.
+- [x] Flusso di invito e accettazione di un giocatore.
+
+Nota di chiusura, 20 ottobre 2026: dal flusso è emersa una modifica al modello, i **posti in attesa** (`run_member.user_id` può essere NULL, `display_name`, `invite.member_id`); aggiunti `invite.decline` e l'evento `member.declined`. Elenco delle differenze tra mockup e decisioni nel documento, da chiudere in P2-12.
 
 ## P2-12 Bozze schermate: tracker
 
