@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-Bozza del modello entità-relazioni del database dell'app (libSQL), anticipata rispetto alla fase 2: copre l'MVP e prepara le funzioni dei rilasci successivi senza doverle migrare. Va confermata dopo P1-06, P1-07 e P1-19. Aggiornata il 19 ottobre 2026 con le decisioni di P1-19 ([ADR 0002](../adr/0002-rete-instabile.md), [ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)): `run_badge` è sostituita da `run_milestone`, le impostazioni della run comprendono la difficoltà e le stanze interne; la conferma completa resta al gate della fase 2 (P2-14).
+Bozza del modello entità-relazioni del database dell'app (libSQL), anticipata rispetto alla fase 2: copre l'MVP e prepara le funzioni dei rilasci successivi senza doverle migrare. Va confermata dopo P1-06, P1-07 e P1-19. Aggiornata il 19 ottobre 2026 con le decisioni di P1-19 ([ADR 0002](../adr/0002-rete-instabile.md), [ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)): `run_badge` è sostituita da `run_milestone`, le impostazioni della run comprendono la difficoltà e le stanze interne; la conferma completa resta al gate della fase 2 (P2-14). Aggiornata il 20 ottobre 2026 con la fase 2: sezioni P2-01…P2-06 e P2-11 sotto «Tabelle principali» e «Tabelle di supporto», schema del Pokédex in [un documento a parte](15-Schema-del-Pokedex.md).
 
 ## Principi
 
@@ -20,7 +20,56 @@ Il modello rende impossibili gli stati sbagliati invece di controllarli dopo, e 
 
 ## Diagramma entità-relazioni
 
-&#91;embedded content: modello entità-relazioni · database dell'app\]
+```mermaid
+erDiagram
+  user ||--o{ run_member : "partecipa"
+  user ||--o{ run_event : "attore"
+  user ||--o{ invite : "crea"
+  run ||--o{ run_member : "ha"
+  run ||--o{ link_group : "ha"
+  run ||--o{ run_event : "diario"
+  run ||--o{ invite : "inviti"
+  run_member |o--o| invite : "posto in attesa"
+  link_group ||--o{ encounter : "raccoglie"
+  run_member ||--o{ encounter : "registra"
+  encounter ||--o| specimen : "se catturato"
+  link_group ||--o{ specimen : "posizione e morte"
+  run_member ||--o{ specimen : "possiede"
+  run_member ||--o{ run_milestone : "supera"
+  run_member ||--o{ species_override : "modifica"
+  user {
+    text id PK
+  }
+  run {
+    text id PK
+  }
+  run_member {
+    text id PK
+  }
+  link_group {
+    text id PK
+  }
+  encounter {
+    text id PK
+  }
+  specimen {
+    text id PK
+  }
+  run_milestone {
+    text member_id PK
+  }
+  species_override {
+    text id PK
+  }
+  run_event {
+    text id PK
+  }
+  invite {
+    text id PK
+  }
+```
+
+Fuori dal diagramma: `session`, `account` e `verification` (Better Auth, legate a `user`), `app_setting`, `request_key` e `custom_area` (tabelle senza relazioni verso la run). Il diagramma è generato dal testo di questo documento ed è il solo da aggiornare; i PDF in `progetto/pdf/` sono copie storiche.
 
 Un gruppo collegato (link\_group) nasce in un'area e raccoglie l'incontro valido di ogni giocatore, anche dopo un suo nuovo tentativo per dupes clause; ogni cattura diventa un esemplare. Tappe superate (medaglie comprese) e override appartengono al giocatore nella run, non all'utente.
 

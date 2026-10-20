@@ -48,6 +48,7 @@ Output: repository dell'app.
 - [ ] Migrazioni applicate all'avvio; un errore di migrazione blocca l'avvio con un messaggio chiaro.
 - [ ] Il database non si apre durante `npm run build` (usare `building` di `$app/environment`).
 - [ ] Verifica su Turso con un database di prova creato dal product owner ([ADR 0008](../adr/0008-esiti-della-fase-1.md)).
+- [ ] Tabella `request_key` e middleware di idempotenza (chiave del client, risposta salvata, 24 ore) con job di pulizia ([catalogo API](../progetto/16-Architettura-e-API.md#convenzioni)).
 
 
 ## P3-04 Pokédex SQLite generato nella build
@@ -84,6 +85,8 @@ Output: repository dell'app.
 - [ ] Password salvate solo come hash; sessioni con scadenza.
 - [ ] Tentativi di login ripetuti limitati.
 - [ ] La registrazione aperta di Better Auth è disattivata a livello di app quando la modalità non è "aperta".
+- [ ] Una sola funzione `authorize` decide ogni permesso; un test percorre tutta la matrice azioni × ruoli (non membro compreso, utente disattivato, cambio password pendente, run non attiva) ([permessi](../progetto/16-Architettura-e-API.md#p2-08-modello-dei-permessi)).
+- [ ] Profilo: l'utente cambia nome, lingua, tema e password ([mockup `Profilo`](../mockup/Profilo.dc.html)).
 
 
 ## P3-08 Admin creato all'avvio e cambio password

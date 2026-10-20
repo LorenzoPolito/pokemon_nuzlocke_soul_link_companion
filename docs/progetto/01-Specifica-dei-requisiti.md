@@ -190,11 +190,11 @@ Il database dell'app è libSQL (file locale o Turso); non c'è nessun servizio d
 | Framework | SvelteKit con adapter Node | Poco JavaScript nel browser, frontend e backend in un solo progetto |
 | Database | libSQL con Drizzle ORM: file locale su volume Docker (default) o Turso online | Nessuna rete tra app e database, stesso codice in locale e online, piano gratuito Turso da 5 GB |
 | Autenticazione | Better Auth | Gira nel container, nessun servizio esterno |
-| Lingue | Paraglide | Traduzioni compilate, si carica solo la lingua in uso |
+| Lingue | Paraglide | Traduzioni compilate e tree-shaken; il client riceve entrambe le lingue (misurato in P1-14, accettato nell'[ADR 0008](../adr/0008-esiti-della-fase-1.md)) |
 | Calcolo danni | @smogon/calc | Meccaniche di tutte le generazioni, dati di specie personalizzabili |
 | Pokédex | SQLite in sola lettura nell'immagine | Ricerche veloci, nessuna dipendenza esterna |
 | Tempo reale | Server-Sent Events | Nessun servizio extra, tutte le scritture passano dal container |
-| Immagine | Build multi-stage su Node Alpine | Circa 150-200 MB (stima) |
+| Immagine | Build multi-stage su Node Alpine | Circa 300 MB misurati nella prova P1-17 (base Node 237 MB); il Pokédex da 42 MB si aggiunge |
 
 ## Vincoli e punti aperti
 
@@ -207,4 +207,4 @@ Il database dell'app è libSQL (file locale o Turso); non c'è nessun servizio d
 * I primi giochi supportati sono Bianco, Nero, Bianco 2 e Nero 2, nell'MVP. Nel rilascio 0.5 arrivano i 17 giochi per cui nuzlocke.data ha aree e boss; nel 1.0 Let's Go, Leggende: Arceus e Leggende: Z-A ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)).
 * Il comportamento con rete instabile è definito in [Rete instabile](#rete-instabile).
 
-- [ ] Modello dati (prossimo passo).
+- [x] Modello dati: fase 2, [modello dati](06-Modello-dati-bozza.md), [schema del Pokédex](15-Schema-del-Pokedex.md), [architettura e API](16-Architettura-e-API.md) e [flussi e schermate](17-Flussi-e-schermate.md), in attesa del gate 2.

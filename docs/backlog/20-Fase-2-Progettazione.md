@@ -17,7 +17,7 @@
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Completato |
 | P2-12 | Bozze schermate: tracker | P2-11 | M | In verifica |
 | P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | In verifica |
-| P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | Da iniziare |
+| P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | In corso |
 
 ## P2-01 Modello dati: utenti, sessioni, ruoli globali
 
@@ -148,7 +148,10 @@ Nota, 20 ottobre 2026: criterio di neutralità verificato per le mosse e per il 
 
 ## P2-14 Revisione e approvazione (gate 2)
 
-Output: Piano di progetto.
+Output: [Revisione del gate 2](../progetto/18-Revisione-del-gate-2.md).
 
-- [ ] Modello dati, API e schermate rivisti insieme e approvati.
-- [ ] Ogni requisito della specifica collegato ad almeno un PBI delle fasi 3–7.
+- [x] Modello dati, API e schermate rivisti insieme. (revisione incrociata fatta)
+- [ ] Modello dati, API e schermate approvati. (in attesa del product owner)
+- [x] Ogni requisito della specifica collegato ad almeno un PBI delle fasi 3–7.
+
+Nota, 20 ottobre 2026: tracciabilità fatta per 55 requisiti; manca un PBI per i giochi dei rilasci 0.5 e 1.0 (R-53), segnalato. Le decisioni da confermare sono 13, elencate nella revisione. Il PBI resta «In corso» fino all'approvazione del gate.

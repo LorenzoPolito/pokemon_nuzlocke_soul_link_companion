@@ -31,12 +31,16 @@
 - [ ] Si scelgono nome, gioco e regole opzionali (dupes clause, tipo primario, regali separati, randomizer, calcolatore, stanze interne come aree separate, accesa di base); per Nero 2 e Bianco 2 anche la difficoltà, normale di default ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 - [ ] Le regole base e Soul Link sono sempre attive e non disattivabili.
 - [ ] Chi crea la run ne diventa proprietario.
+- [ ] Elenco «Le mie run» con filtri In corso / Finite / Tutte e riepilogo (medaglie del proprio giocatore, gruppi vivi e morti) ([flussi](../progetto/17-Flussi-e-schermate.md#p2-12-bozze-schermate-tracker)).
+
 
 ## P4-02 Inviti e ruoli nella run
 
 - [ ] Il proprietario invita utenti come giocatori o spettatori.
 - [ ] Lo spettatore vede tutto ma non modifica nulla, verificato lato server.
 - [ ] Il proprietario può rimuovere un partecipante finché la run non ha incontri registrati.
+- [ ] Posti in attesa: il proprietario riserva un posto con nome e invito; chi accetta lo occupa con i dati già inseriti; chi rifiuta lascia il posto in attesa ([modello](../progetto/06-Modello-dati-bozza.md#p2-11-posti-in-attesa)).
+
 
 ## P4-03 Gioco unico della run
 
@@ -104,6 +108,9 @@
 - [ ] La run risulta persa quando un giocatore resta senza esemplari vivi o registra un wipe.
 - [ ] Il proprietario può segnare la run come completata.
 - [ ] Una run finita resta consultabile in sola lettura; una run eliminata resta recuperabile dal proprietario per 30 giorni, poi viene cancellata definitivamente.
+- [ ] Riepilogo della run finita (durata in sessioni di eventi con pause fino a 3 ore, medaglie, aree, morti) e «Crea una nuova run con gli stessi giocatori» ([flussi](../progetto/17-Flussi-e-schermate.md#p2-12-bozze-schermate-tracker)).
+- [ ] Job di eliminazione definitiva delle run cancellate da più di 30 giorni, all'avvio e una volta al giorno.
+
 
 ## P4-15 Medaglie e level cap
 
@@ -132,6 +139,8 @@
 - [ ] Le aree visitate si registrano con esito o come "precedenti, non tracciate".
 - [ ] Team, box e morti attuali si inseriscono con i link tra giocatori, rispettando le regole Soul Link.
 - [ ] I dati mancanti si completano dopo la creazione.
+- [ ] La creazione è una sola transazione (`POST /api/runs` con avanzamento) con controllo `group_inconsistent`; gli eventi di caricamento portano `imported` ([flussi](../progetto/17-Flussi-e-schermate.md#b-run-già-iniziata-4-passi-i-due-precedenti-più-due)).
+
 
 ## P4-20 Flag randomizer
 

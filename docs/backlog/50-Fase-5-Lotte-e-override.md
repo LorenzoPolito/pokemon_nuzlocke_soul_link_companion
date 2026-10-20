@@ -71,6 +71,8 @@
 
 - [ ] Le mosse si aggiungono durante la lotta quando vengono viste.
 - [ ] Per ogni mossa osservata: efficacia su ogni membro del proprio team.
+- [ ] Endpoint `seen_trainer` e `seen_pokemon` (elenco, aggiunta, rimozione) aggiunti al catalogo API prima dell'inizio.
+
 
 ## P5-11 Squadre incontrate nel log della run
 
@@ -82,6 +84,8 @@
 - [ ] Il calcolo usa @smogon/calc con le meccaniche della generazione della run.
 - [ ] Tipi e statistiche passati al calcolo sono i dati effettivi del giocatore.
 - [ ] Risultati verificati su almeno 10 casi confrontati con il calcolatore di riferimento.
+- [ ] Il calcolo gira sul server con `@smogon/calc` e i dati effettivi (`POST /api/runs/{id}/battle/damage`), se il product owner conferma la proposta di P2-13.
+
 
 ## P5-13 Calcolatore attivabile per run
 
