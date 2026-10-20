@@ -177,13 +177,13 @@ Generazione in cui l'abilità compare, da `abilities.csv` di PokéAPI. Un'abilit
 | Assorbacqua (Water Absorb) | 3 | Immunità a Acqua, cura 1/4 dei PS |
 | Assorbivolt (Volt Absorb) | 3 | Immunità a Elettro, cura 1/4 dei PS |
 | Prodigio (Flash Fire) | 3 | Immunità a Fuoco, potenzia le proprie mosse Fuoco (+50 %) dopo il colpo |
-| Parafulmine (Lightning Rod) | 3 | Attira le mosse Elettro; immunità dalla quinta (da confermare) |
+| Parafulmine (Lightning Rod) | 3 | Attira le mosse Elettro; immunità dalla quinta (confermato con @smogon/calc, P1-11) |
 | Grassospesso (Thick Fat) | 3 | Dimezza il danno di Fuoco e Ghiaccio |
 | Magicguardia (Wonder Guard) | 3 | Subisce solo mosse superefficaci |
 | Pellearida (Dry Skin) | 4 | Immunità a Acqua con cura 1/4; +25 % dal Fuoco |
 | Ignifugo (Heatproof) | 4 | Dimezza il danno di Fuoco |
 | Motorizzato (Motor Drive) | 4 | Immunità a Elettro, +1 Velocità |
-| Acquascolo (Storm Drain) | 4 | Immunità a Acqua, +1 Att. Sp. (dalla quinta, da confermare) |
+| Acquascolo (Storm Drain) | 4 | Immunità a Acqua, +1 Att. Sp. (dalla quinta, confermato con @smogon/calc, P1-11) |
 | Filtro (Filter) e Roccia (Solid Rock) | 4 | Riducono del 25 % il danno superefficace |
 | Lentiscelta (Tinted Lens) | 4 | Le mosse poco efficaci infliggono danno pieno (raddoppia il danno) |
 | Intrepidopiede (Scrappy) | 4 | Normale e Lotta colpiscono lo Spettro |
@@ -198,7 +198,7 @@ Generazione in cui l'abilità compare, da `abilities.csv` di PokéAPI. Un'abilit
 Note:
 
 - I nomi italiani nella tabella sono indicativi: nell'app i nomi si leggono dai dati di PokéAPI ([P1-05](10-Analisi-delle-fonti-dati.md)), non da qui. I nomi italiani li ho scritti a memoria e non li ho riletti dai dati: vanno trattati come etichette di lavoro, l'identificativo è il nome inglese.
-- Le righe marcate "da confermare" (Parafulmine e Acquascolo come immunità dalla quinta) vengono dalla mia conoscenza del gioco e non da una fonte letta: da verificare in P1-11 con @smogon/calc.
+- Parafulmine e Acquascolo sono immunità dalla quinta generazione: verificato in P1-11 con @smogon/calc 0.12.0 (nelle generazioni 3 e 4 il Pokémon subisce il danno pieno; dalla 5 il danno è 0). Vedi le [prove di fattibilità](14-Prove-di-fattibilita.md#p1-11-prova-smogoncalc-con-override).
 - Il tipo effettivo di una mossa può cambiare per abilità, strumenti o mosse (Normalizzazione, Introforza, Palla Clima, Pressa Volante, Gelo Secco): non sono nella tabella dei tipi, ma nel calcolo.
 - Nell'MVP (quinta generazione) contano le abilità fino a Raccolto, Turbofiamma e Teravolt.
 
