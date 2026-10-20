@@ -20,7 +20,7 @@
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Da iniziare |
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | In corso |
 | P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Da iniziare |
-| P1-16 | Prova: sync SSE tra due browser | — | S | Da iniziare |
+| P1-16 | Prova: sync SSE tra due browser | — | S | Completato |
 | P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Da iniziare |
 | P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | Da iniziare |
 
@@ -167,12 +167,14 @@ Output: Prove di fattibilità dello stack.
 
 ## P1-16 Prova: sync SSE tra due browser
 
-Output: Prove di fattibilità dello stack.
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser).
 
-- [ ] Una modifica in un browser compare nell'altro senza ricaricare.
-- [ ] Riconnessione automatica dopo la perdita di connessione.
-- [ ] Al ritorno si recuperano gli eventi mancanti a partire dall'ultimo ricevuto ([ADR 0002](../adr/0002-rete-instabile.md)).
-- [ ] Verificato che un reverse proxy davanti all'app non memorizzi in blocco le risposte SSE.
+- [x] Una modifica in un browser compare nell'altro senza ricaricare.
+- [x] Riconnessione automatica dopo la perdita di connessione.
+- [x] Al ritorno si recuperano gli eventi mancanti a partire dall'ultimo ricevuto ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [x] Verificato che un reverse proxy davanti all'app non memorizzi in blocco le risposte SSE.
+
+Nota di chiusura, 20 ottobre 2026: con nginx la compressione (`gzip` sul tipo `text/event-stream`) trattiene il flusso; va spenta per `/api/stream` (da scrivere nella guida di installazione). Provato solo nginx.
 
 ## P1-17 Prova: immagine Docker multi-stage
 
