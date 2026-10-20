@@ -2,7 +2,7 @@
 
 Oct 3, 2026 · @Lorenzo
 
-Dopo i requisiti (fase 0, completata) il progetto procede in 7 fasi; ogni fase produce documenti dedicati e si chiude con un gate. La prossima fase è la 1, raccolta dati e analisi tecnica, che parte dai giochi Bianco, Nero, Bianco 2 e Nero 2. Le durate delle fasi 2–7 sono stimate in [Stime delle fasi 2–7](#stime-delle-fasi-27-gate-1), come ipotesi da ricalibrare.
+Dopo i requisiti (fase 0, completata) il progetto procede in 7 fasi; ogni fase produce documenti dedicati e si chiude con un gate. La fase 1, raccolta dati e analisi tecnica, è chiusa (gate 1 approvato il 20 ottobre 2026); la prossima è la 2, progettazione. Le durate delle fasi 2–7 sono stimate in [Stime delle fasi 2–7](#stime-delle-fasi-27-gate-1), come ipotesi da ricalibrare.
 
 ## Fasi
 
@@ -34,6 +34,8 @@ Stack tecnico (piccole prove di fattibilità):
 - [ ] Immagine Docker multi-stage: dimensione e tempo di avvio reali.
 
 Gate di uscita: ogni dato ha una fonte o una decisione di inserimento manuale, ogni prova di fattibilità ha un esito, e le durate delle fasi successive sono stimate.
+
+**Gate 1 approvato dal product owner il 20 ottobre 2026.**
 
 ## Stime delle fasi 2–7 (gate 1)
 
