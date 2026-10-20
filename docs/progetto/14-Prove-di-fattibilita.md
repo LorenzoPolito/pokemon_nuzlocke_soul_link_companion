@@ -126,3 +126,57 @@ Progetto SvelteKit 3 minimo con adapter Node, `@inlang/paraglide-js` 2.29.1, Vit
 ### Domande aperte
 
 Accettare che il client riceva entrambe le lingue? Il costo è dell'ordine delle decine di KB e la via alternativa (due build o caricamento dei messaggi a richiesta) aggiunge complessità. Proposta: accettare.
+
+## P1-16 Prova: sync SSE tra due browser
+
+Data: 20 ottobre 2026. Taglia S. Esito: **fattibile; un solo punto di attenzione sul reverse proxy (compressione)**.
+
+### Metodo
+
+Progetto SvelteKit 3 con adapter Node (stesso della P1-14), Node 22.
+
+- `GET /api/stream`: risposta `text/event-stream` da un `ReadableStream`. Ogni evento ha `id` crescente; all'apertura il server legge l'intestazione `Last-Event-ID` e rinvia gli eventi con id maggiore; `retry: 1000`; un commento `: ping` ogni 15 secondi ([ADR 0002](../adr/0002-rete-instabile.md)); intestazioni `cache-control: no-cache, no-transform` e `x-accel-buffering: no`.
+- `POST /api/events`: aggiunge un evento a un registro in memoria e lo invia agli abbonati.
+- Pagina: `EventSource` che mostra stato (aperto o riconnessione) e l'elenco degli eventi.
+- Prova automatica con due contesti Chromium (due browser distinti, Playwright) contro la build di produzione. Per simulare la perdita di rete: il server chiude i flussi (`/api/drop`) e le richieste a `/api/stream` del browser A vengono bloccate mentre B invia due eventi.
+- Reverse proxy: nginx 1.24 davanti all'app.
+
+### Esiti
+
+| Criterio | Esito |
+| --- | --- |
+| Una modifica in un browser compare nell'altro senza ricaricare | **Sì**: circa 100 ms dal clic di B alla comparsa in A |
+| Riconnessione automatica dopo la perdita di connessione | **Sì**: A passa a "riconnessione" e, tornata la rete, riapre il flusso da solo (`retry` di 1 s) |
+| Al ritorno si recuperano gli eventi mancanti | **Sì**: A riceve gli id 2 e 3, persi durante l'interruzione, grazie a `Last-Event-ID`; nessun duplicato |
+| Il reverse proxy non memorizza in blocco le risposte | **Sì con una condizione**, sotto |
+
+### Reverse proxy
+
+Prove con nginx davanti all'app:
+
+| Configurazione | Esito |
+| --- | --- |
+| nginx predefinito, `proxy_http_version 1.1` e `Connection ""` | Gli eventi arrivano subito |
+| come sopra, ignorando `X-Accel-Buffering` e con `proxy_buffering on` | Gli eventi arrivano comunque subito (messaggi piccoli) |
+| `gzip on` con `gzip_types text/event-stream` e client che accetta gzip | **Nessun byte in 4 secondi**: la compressione trattiene il flusso |
+| come sopra, ma `gzip off` sulla `location /api/stream` | Gli eventi arrivano subito |
+
+Il punto da ricordare nella guida di installazione: **la compressione del proxy deve essere spenta per il flusso degli eventi**. L'app manda già `x-accel-buffering: no` e `no-transform`, che sono sufficienti per nginx senza compressione; il registro del proxy non basta se qualcuno accende `gzip` per tutti i tipi.
+
+### Limiti della prova
+
+- Il registro degli eventi era in memoria: nell'app vera, per ripristinare dopo un riavvio del server, serve il registro nel database ([ADR 0002](../adr/0002-rete-instabile.md): recupero degli eventi).
+- Il segnale ogni 15 s e la dichiarazione di "persa dopo 40 s" sono scritti nel server ma non misurati qui: il test usa la chiusura del flusso, non un silenzio di 40 s.
+- Provato solo nginx; Caddy e Traefik non sono stati provati.
+- Con N giocatori (non solo 2) e con la scadenza dei lock non è stata fatta nessuna prova di carico.
+
+### Decisioni prese
+
+- Flusso SSE nativo di SvelteKit (`ReadableStream` in un endpoint), senza libreria.
+- `id` e `Last-Event-ID` per il recupero, `retry` di 1 s, commento di segnale ogni 15 s.
+- Intestazioni `cache-control: no-cache, no-transform` e `x-accel-buffering: no` sempre presenti.
+- La guida di installazione (P3-02) dirà di non comprimere `/api/stream` nel proxy.
+
+### Domande aperte
+
+Nessuna.
