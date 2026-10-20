@@ -39,7 +39,7 @@ Gli artefatti di governo esistono già; quelli tecnici nascono con il PBI indica
 | [Domande aperte](12-Domande-aperte.md) | Documento | Le domande di P1-19 con proposta e risposta del product owner: rete instabile e quanto emerso dai PBI di fase 1 | P1-19 | Storico: non si aggiorna più (le nuove domande vanno in ADR "Proposta") | Esiste |
 | [Prove di fattibilità dello stack](14-Prove-di-fattibilita.md) | Documento | Esiti e misure delle prove tecniche | P1-11–P1-17 | Durante la fase 1 | Esiste (P1-11…P1-17 fatti) |
 | [Architettura e API](16-Architettura-e-API.md) | Documento | Permessi, catalogo API, eventi SSE e lock | P2-08–P2-10 | Ogni modifica a un endpoint o evento | In corso (P2-08, P2-09 e P2-10 fatti) |
-| [Flussi e schermate](17-Flussi-e-schermate.md) | Documento | Percorsi utente e bozze delle schermate | P2-11–P2-13 | Ogni modifica a un flusso | In corso (P2-11 e P2-12 fatti) |
+| [Flussi e schermate](17-Flussi-e-schermate.md) | Documento | Percorsi utente e bozze delle schermate | P2-11–P2-13 | Ogni modifica a un flusso | Esiste (P2-11, P2-12 e P2-13 fatti) |
 | Piano di test | Documento | Casi di test di sistema ed end-to-end | P7-01 | Ogni nuova regola o bug corretto | Da creare |
 | Guida di installazione | Documento | Docker, HTTP e reverse proxy, variabili d'ambiente, volume, backup, Turso | P3-02, P3-08, P3-13, P7-05, P7-06 | Ogni nuova variabile o rilascio | Da creare |
 | Repository GitHub (privato) | Codice | Codice, test, dati di gioco, hook, README, CHANGELOG.md | P3-12, P3-01 | A ogni pull request | Esiste (vuoto fino a P3-01) |

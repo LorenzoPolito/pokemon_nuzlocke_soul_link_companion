@@ -16,7 +16,7 @@
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Completato |
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Completato |
 | P2-12 | Bozze schermate: tracker | P2-11 | M | In verifica |
-| P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | Da iniziare |
+| P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | In verifica |
 | P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | Da iniziare |
 
 ## P2-01 Modello dati: utenti, sessioni, ruoli globali
@@ -139,10 +139,12 @@ Nota, 20 ottobre 2026: le bozze sono i mockup già esistenti (390 px; una sola v
 
 ## P2-13 Bozze schermate: lotte, calcolatore, Pokédex
 
-Output: Flussi e schermate.
+Output: [Flussi e schermate](../progetto/17-Flussi-e-schermate.md#p2-13-bozze-schermate-lotte-calcolatore-pokédex).
 
-- [ ] Bozze per helper delle lotte, calcolatore, lista e scheda del Pokédex.
-- [ ] Verificato che l'helper non ordini né evidenzi una mossa migliore.
+- [x] Bozze per helper delle lotte, calcolatore, lista e scheda del Pokédex.
+- [x] Verificato che l'helper non ordini né evidenzi una mossa migliore.
+
+Nota, 20 ottobre 2026: criterio di neutralità verificato per le mosse e per il calcolatore; due scelte di presentazione (colore dei moltiplicatori, ordine dei tipi che l'avversario riceve) restano al product owner. Aperti anche: descrizioni di mosse e abilità, dove gira il calcolo.
 
 ## P2-14 Revisione e approvazione (gate 2)
 

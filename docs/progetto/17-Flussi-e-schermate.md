@@ -148,3 +148,67 @@ Data: 20 ottobre 2026. Taglia M. Le bozze sono i mockup della pagina «Run e tra
 
 - Definizione di «sessione» (3 ore) nella schermata Run finita.
 - Etichetta «più basso» del level cap per chi non gioca.
+
+## P2-13 Bozze schermate: lotte, calcolatore, Pokédex
+
+Data: 20 ottobre 2026. Taglia M. Mockup delle pagine «Lotte» (6), «Override e randomizer» (5) e «Pokédex» (6). Nelle versioni: helper e override sono del rilascio 0.3, calcolatore e Pokédex completo della 0.4 ([MVP e rilasci](03-MVP-e-rilasci.md)); nell'MVP c'è soltanto la lista delle specie della quinta generazione necessaria a registrare gli incontri.
+
+### Principio di neutralità dell'helper
+
+L'helper **informa e non consiglia**: nessuna mossa è indicata come migliore o preferibile, né dall'ordine né dalla grafica ([specifica](01-Specifica-dei-requisiti.md#helper-per-le-lotte)). Come regole di progetto:
+
+1. L'elenco delle mosse del giocatore ha un **ordine fisso** (l'ordine delle mosse dell'esemplare), che non dipende dal risultato.
+2. Nessuna etichetta, icona, dimensione, grassetto o posizione speciale per una mossa «migliore»; nessun «consigliata», «ottima», stelle.
+3. Il calcolatore mostra **numeri per una mossa alla volta**: non confronta più mosse e non ordina i risultati.
+4. L'helper non propone mai squadre avversarie del gioco: l'avversario si sceglie dal Pokédex o dalle squadre salvate dai giocatori.
+
+### Verifica sul mockup (criterio di P2-13)
+
+Verificato leggendo i sorgenti di `Lotta` e `Calcolatore`:
+
+| Controllo | Esito |
+| --- | --- |
+| Ordine delle mosse nell'elenco «Le tue mosse su Onix» | Azione (×½), Ricciolo (—), Sassata (×½), Magnitudo (×2): l'ordine è quello dell'esemplare, non per efficacia. **Conforme** |
+| Evidenziazione di una mossa | Nessuna mossa ha etichette «migliore» o sfondo diverso; l'unica etichetta è **STAB**, che è un'informazione sul tipo, uguale per ogni mossa dello stesso tipo del Pokémon. **Conforme** |
+| Calcolatore | Il testo dice «mostra solo numeri: non confronta le mosse e non ne consiglia una»; un solo risultato per volta. **Conforme** |
+| Colore del moltiplicatore | Ogni valore ha un colore proprio (×½ blu, ×2 arancione, ×4 arancione scuro, ×0 grigio). Non è un'evidenziazione di una singola mossa, ma il colore rende i ×2 più vistosi dei ×½: **da decidere** se mantenerlo o usare un solo stile neutro (proposta: mantenere il colore, che è un'informazione standard del gioco, e non usarlo mai per ordinare o per selezionare) |
+| Elenco «Onix riceve» (difese dell'avversario) | L'elenco dei tipi è **ordinato per moltiplicatore** (×4, ×2, ×½, ×¼, ×0). Non sono mosse del giocatore, ma l'ordine mette in testa i tipi più forti: **da decidere** (proposta: ordine fisso dei tipi del gioco, con il moltiplicatore accanto) |
+
+In sintesi: il criterio è verificato per le mosse e per il calcolatore; due scelte di presentazione restano al product owner.
+
+### Schermate, dati, azioni ed eventi
+
+| Schermata (mockup) | Dati | Azioni | Note |
+| --- | --- | --- | --- |
+| **Aiuto per la lotta** (`Lotta`) | Esemplare scelto (dal team del giocatore), avversario (specie e livello), tabella dei tipi dell'epoca del gioco, dati **effettivi** con gli override del giocatore; per ogni mossa tipo, categoria, potenza, STAB e moltiplicatore; tipi che l'avversario riceve; mosse viste dell'avversario; moltiplicatori delle mosse viste sul proprio team | Scegliere avversario e livello; aggiungere una mossa vista | I moltiplicatori includono le abilità che cambiano l'efficacia ([P1-09](13-Meccaniche-per-generazione.md)) quando l'avversario ne ha una nota; nelle generazioni 1–3 la categoria viene dal tipo |
+| **Scelta dell'avversario** (`SceltaAvversario`) | Ricerca nel Pokédex del gioco della run; «Squadre già incontrate in questa run» | Scegliere una specie e un livello, oppure una squadra salvata | Avviso: le squadre salvate sono dei giocatori, non dati del gioco |
+| **Mossa osservata** (`MossaOsservata`) | Ricerca mosse del Pokédex | Salvare la mossa per l'avversario (specie e livello) | Si salva su `seen_pokemon` (rilascio 0.3) |
+| **Squadre incontrate** (`SquadreIncontrate`) | Allenatori salvati (nome, area, giocatore, data), specie, livello e mosse viste | Aprire, rimuovere una voce | Solo ciò che i giocatori hanno visto: nessuna squadra proposta |
+| **Calcolatore danni** (`Calcolatore`) | Attaccante, mossa, modificatori, difensore; risultato `min–max` PS e percentuale della salute | Cambiare i campi; nessun confronto fra mosse | Meccaniche della generazione del gioco (es. «Gen 4»); i valori individuali sono sconosciuti: si assumono IV 31 ed EV 0, dichiarati sulla schermata. Visibile solo con `damageCalculator` acceso |
+| **Lotta Gen 9** (`LottaGen9`) | Come `Lotta`, con Teracristallizzazione (tipo Tera per te e per l'avversario) e abilità | Scegliere il tipo Tera | Solo giochi di nona generazione (1.0). Tipo Astrale: [conflitto di fonti aperto](13-Meccaniche-per-generazione.md#teracristallizzazione-nona-generazione) |
+| **Pokédex: lista e ricerca** (`PokedexLista`) | `GET /api/pokedex/species` con filtri di generazione, tipo e gioco | Cercare, aprire una scheda | Nell'MVP: solo la quinta generazione |
+| **Scheda del Pokémon** (`Pokedex`, schede Info / Mosse / Incontri / Evoluzioni) | Specie e varietà, tipi, statistiche base, abilità, learnset del gioco, incontri del gioco, catena evolutiva ([schema](15-Schema-del-Pokedex.md)); in una run i **dati effettivi**, marcati «Modificato in questa run» con «Ripristina» | Cambiare gioco (fuori da una run), aprire un override | Per alcuni giochi gli incontri sono incompleti: lo si dice, non si mostra un elenco vuoto ([P1-04](10-Analisi-delle-fonti-dati.md)) |
+| **Scheda mossa** e **scheda abilità** (`Mossa`, `Abilita`) | Tipo, categoria, potenza, precisione, PP del gruppo di versioni del gioco; sezione «Cambi tra generazioni»; specie che la imparano | | La descrizione da dati di gioco **non è nel Pokédex SQLite** (flavor text escluso): il segnaposto va tolto o si include il testo (decisione sotto) |
+| **Override: lista** (`OverrideLista`) | Specie modificate dal giocatore, con i campi modificati | Aprire, copiare tutto a un altro giocatore (`override.copy`) | Messaggio: valgono solo per quel giocatore in quella run |
+| **Override: modifica specie** (`OverrideEditor`) | Tipi, statistiche base, abilità possibili, mosse imparabili: valore del Pokédex e valore modificato | Salvare un campo alla volta (`override.set`), ripristinare un campo o tutto | Un campo = una riga; «Ripristina tutto» elimina le righe della specie |
+| **Override: copia** (`OverrideCopia`) | Da e a quale giocatore; avviso se il destinatario ha già modifiche sulla stessa specie | Copiare «Solo questa specie» o «Tutte le specie» (`override.copy`) | Le righe del destinatario sullo stesso campo vengono sostituite, con conferma |
+| **Registra incontro con randomizer** (`RegistraRandomizer`) | Specie dall'intero Pokédex; specie già possedute per la dupes clause | Come `RegistraIncontro` | Nessun suggerimento di specie |
+
+### Dove si calcola
+
+Proposta: **sul server**, nel modulo `battle`. Il client invia avversario (specie, varietà, livello, tipo Tera, abilità nota), esemplare e mossa; il server usa la funzione dei dati effettivi ([P2-05](06-Modello-dati-bozza.md#p2-05-override-per-specie-per-giocatore)), la tabella dei tipi dell'epoca e `@smogon/calc` ([P1-11](14-Prove-di-fattibilita.md#p1-11-prova-smogoncalc-con-override)) e risponde. Vantaggi: un solo posto con gli override giusti e nessuno scarico di 117 KB (gzip) nel browser. Costo: una richiesta per ogni calcolo, con rete assente non si calcola (coerente con «senza rete non si modifica»). Endpoint da aggiungere al catalogo prima del rilascio 0.3: `POST /api/runs/{id}/battle/matchup` e `POST /api/runs/{id}/battle/damage`, oltre a `seen_trainer` e `seen_pokemon` (elenco, aggiunta, rimozione).
+
+### Differenze tra mockup e decisioni
+
+| Schermata | Differenza |
+| --- | --- |
+| `Mossa`, `Abilita` | Descrizione «[descrizione dai dati di gioco]»: il Pokédex SQLite non include testi descrittivi. Proposta: nell'MVP e nella 0.4 non si mostrano; si aggiungono se il product owner li vuole (richiede flavor text nello schema) |
+| `Lotta` | Colore dei moltiplicatori e ordine di «Onix riceve» (vedi neutralità) |
+| `Calcolatore` | Dichiarare IV/EV assunti e la possibilità di impostarli |
+| `Pokedex` | «Tipo modificato in questa run» deve valere anche per statistiche, abilità e mosse |
+
+### Domande aperte
+
+- Colore dei moltiplicatori e ordine dell'elenco «Onix riceve» (neutralità).
+- Descrizioni di mosse e abilità: sì o no.
+- Dove gira il calcolo: server (proposta) o browser.
