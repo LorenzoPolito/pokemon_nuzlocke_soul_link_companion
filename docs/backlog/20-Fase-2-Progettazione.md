@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | P2-01 | Modello dati: utenti, sessioni, ruoli globali | P1-13 | S | Completato |
 | P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Completato |
-| P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | Da iniziare |
+| P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | In verifica |
 | P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | Da iniziare |
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Da iniziare |
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Da iniziare |
@@ -42,12 +42,14 @@ Nota di chiusura, 20 ottobre 2026: i valori predefiniti delle regole opzionali e
 
 ## P2-03 Modello dati: aree, incontri, link Soul Link
 
-Output: Modello dati.
+Output: [Modello dati](../progetto/06-Modello-dati-bozza.md#p2-03-aree-incontri-e-link-soul-link).
 
-- [ ] Un incontro per area per giocatore, con esito (catturato, fallito, fuggito, saltato per dupe, regalo, precedente non tracciato).
-- [ ] Il link Soul Link unisce gli incontri della stessa area tra tutti i giocatori.
-- [ ] Aree personalizzate aggiunte dall'admin supportate.
-- [ ] Le stanze interne portano la chiave dell'area principale e, con la regola spenta, contano in quella; le grotte nascoste sono incontri speciali con la specie dal Pokédex ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [x] Un incontro per area per giocatore, con esito (catturato, fallito, fuggito, saltato per dupe, regalo, precedente non tracciato).
+- [x] Il link Soul Link unisce gli incontri della stessa area tra tutti i giocatori.
+- [x] Aree personalizzate aggiunte dall'admin supportate.
+- [x] Le stanze interne portano la chiave dell'area principale e, con la regola spenta, contano in quella; le grotte nascoste sono incontri speciali con la specie dal Pokédex ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+
+Nota, 20 ottobre 2026: l'esito `defeated` della bozza diventa `failed`; «regalo» è una provenienza (`special_key`), non un esito; nuovo stato di gruppo `untracked`. Due punti da confermare (vedi domande aperte del modello).
 
 ## P2-04 Modello dati: esemplari, stato, eventi
 
