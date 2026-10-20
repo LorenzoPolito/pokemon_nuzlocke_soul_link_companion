@@ -5,12 +5,12 @@
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
 | P1-01 | Inventario dei giochi supportati | — | S | Completato |
-| P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | In verifica |
-| P1-06 | Ordine di progressione delle aree | P1-04 | M | In verifica |
-| P1-07 | Medaglie e level cap per gioco | P1-01 | M | In verifica |
+| P1-04 | Copertura PokéAPI: incontri per area | P1-01 | M | Completato |
+| P1-06 | Ordine di progressione delle aree | P1-04 | M | Completato |
+| P1-07 | Medaglie e level cap per gioco | P1-01 | M | Completato |
 | P1-19 | Sessione di chiarimento dei requisiti | — | S | Completato |
-| P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | In verifica |
-| P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | In verifica |
+| P1-02 | Copertura PokéAPI: specie, forme, statistiche, tipi | P1-01 | M | Completato |
+| P1-03 | Copertura PokéAPI: mosse, learnset, abilità | P1-01 | M | Completato |
 | P1-05 | Nomi localizzati italiano e inglese | — | S | Completato |
 | P1-08 | Tabelle dei tipi per generazione | — | S | Completato |
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Completato |
@@ -19,10 +19,10 @@
 | P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | Completato |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Completato |
 | P1-14 | Prova: Paraglide con cambio lingua | — | XS | Completato |
-| P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | In verifica |
+| P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | Completato |
 | P1-16 | Prova: sync SSE tra due browser | — | S | Completato |
 | P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Completato |
-| P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | In corso |
+| P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | Completato |
 
 ## P1-01 Inventario dei giochi supportati
 
@@ -194,11 +194,11 @@ Nota di chiusura, 20 ottobre 2026: 300 MB, avvio 0,8–0,9 s. Attenzione ai perm
 
 Output: Piano di progetto.
 
-- [ ] Tutti i PBI di fase 1 completati.
+- [x] Tutti i PBI di fase 1 completati. (il product owner ha verificato i sei PBI "In verifica" il 20 ottobre 2026)
 - [x] Durata stimata per le fasi 2–7. ([Piano di progetto](../progetto/02-Piano-di-progetto.md#stime-delle-fasi-27-gate-1); ipotesi non calibrate)
 - [x] PBI delle fasi successive rivisti alla luce dei risultati. (criteri aggiunti a P2-07 e P3-01, P3-02, P3-03, P3-05, P3-07, P3-08, P3-10, P3-13)
 
-Nota, 20 ottobre 2026: resta il primo criterio. Mancano la verifica del product owner sui sei PBI "In verifica" (P1-02, P1-03, P1-04, P1-06, P1-07, P1-15) e l'approvazione del gate 1.
+Nota di chiusura, 20 ottobre 2026: il product owner ha verificato P1-02, P1-03, P1-04, P1-06, P1-07 e P1-15 e ha approvato il gate 1. La fase 2 può partire, ma l'agente aspetta il via libera esplicito prima di iniziarla.
 
 ## P1-19 Sessione di chiarimento dei requisiti
 
