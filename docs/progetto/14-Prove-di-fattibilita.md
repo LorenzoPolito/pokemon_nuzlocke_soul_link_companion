@@ -152,7 +152,7 @@ Progetto SvelteKit 3 con adapter Node (stesso della P1-14), Node 22.
 
 ### Reverse proxy
 
-Prove con nginx davanti all'app (in tutti i casi la porta dell'app era raggiungibile solo dal proxy):
+Prove con nginx davanti all'app:
 
 | Configurazione | Esito |
 | --- | --- |
