@@ -551,6 +551,34 @@ Ogni impostazione, modifica o ripristino scrive `override.set` o `override.clear
 
 La varietà nella chiave (proposta di questa sezione) e il valore completo per `base_stats` da confermare con il product owner. Chi può modificare gli override di un altro giocatore si decide in P2-08.
 
+## P2-06 Tappe, medaglie e level cap
+
+Data: 20 ottobre 2026. Taglia XS. Precisa `run_milestone` e il calcolo del level cap.
+
+### Tappe superate
+
+`run_milestone` (vedi tabella principale) registra una tappa superata da un giocatore: chiave della tappa nei dati di gioco (`badge-1`, `elite-four-marshal`, …), `obtained_at` e `version`. Chiave primaria (`member_id`, `milestone_key`); `run_id` presente per i filtri. La medaglia è un attributo della tappa (`badge` nei dati di gioco), non una riga a parte ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)). La chiave deve esistere nel file di gioco della run (validazione all'ingresso).
+
+Le tappe si registrano in qualunque ordine e si possono togliere (riga eliminata, evento `milestone.revoked`), perché un errore di registrazione si corregge. `obtained_at` è la data della registrazione, modificabile dal giocatore.
+
+### Level cap calcolato
+
+Per ogni giocatore, il level cap è il campo `levelCap` della **prima tappa, nell'ordine del file di gioco, che il giocatore non ha ancora superato**. Il valore si sceglie in base alla difficoltà della run (`settings.difficulty`: `easy`, `normal`, `challenge`); nei giochi senza difficoltà e dove il valore della difficoltà scelta manca si usa `normal`.
+
+| Situazione | Level cap mostrato |
+| --- | --- |
+| C'è una tappa non superata | `levelCap[difficoltà]`, altrimenti `levelCap.normal` |
+| Tutte le tappe superate | Nessun limite (il campo è NULL e l'interfaccia lo dice) |
+| `run.level_cap_override` valorizzato | L'override, per **tutti** i giocatori della run, al posto del valore calcolato |
+
+Le tappe a cui manca il valore della difficoltà scelta (i livelli facili di Superquattro e Ghetsis in Nero 2 e Bianco 2, [P1-07](11-Dati-di-gioco.md)) usano il valore `normal` e l'interfaccia lo segnala come «valore della modalità normale». Il calcolo è una funzione pura del dominio, `levelCap(game, difficulty, doneMilestones, override)`, e non si salva: cambia con le tappe del giocatore e con l'eventuale aggiornamento dei dati di gioco.
+
+L'override è **uno solo per la run** (`run.level_cap_override`, 1–100). Si imposta e si toglie con l'evento `levelcap.override_set`. Un override per giocatore, o per tappa, non è previsto.
+
+### Domande aperte
+
+Chi può registrare le tappe di un altro giocatore si decide in P2-08.
+
 ## Invarianti
 
 Ogni regola del Soul Link ha un posto preciso dove viene garantita: prima la struttura, poi il database, infine il dominio con i test.
