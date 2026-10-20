@@ -54,7 +54,7 @@ Nessuna. Dove gira il calcolo (server o browser) si decide in fase 2 con l'archi
 
 ## P1-12 Prova: Drizzle e libSQL, locale e Turso
 
-Data: 20 ottobre 2026. Taglia S. Esito: **fattibile in locale; la parte Turso non è verificata** (rete bloccata).
+Data: 20 ottobre 2026. Taglia S. Esito: **fattibile in locale; la parte Turso non è verificata** (rete bloccata) e, per decisione del product owner ([ADR 0008](../adr/0008-esiti-della-fase-1.md)), si verifica in P3-03.
 
 ### Metodo
 
@@ -92,11 +92,11 @@ Da questo ambiente `turso.tech` risponde 403 dal proxy e un URL `libsql://…` f
 
 ### Domande aperte
 
-Un database Turso di prova e l'accesso di rete, per chiudere il criterio rimasto.
+Nessuna per la fase 1. In P3-03: un database Turso di prova e l'accesso di rete. Le variabili d'ambiente del progetto sono `TURSO_URL` e `TURSO_TOKEN` (P3-03); la prova usava `DATABASE_URL` e `DATABASE_AUTH_TOKEN`.
 
 ## P1-14 Prova: Paraglide con cambio lingua
 
-Data: 20 ottobre 2026. Taglia XS. Esito: **cambio lingua e memoria fattibili; "solo la lingua in uso nel browser" non è ottenuto**.
+Data: 20 ottobre 2026. Taglia XS. Esito: **cambio lingua e memoria fattibili; nel browser arrivano entrambe le lingue, accettato** ([ADR 0008](../adr/0008-esiti-della-fase-1.md)).
 
 ### Metodo
 
@@ -125,7 +125,7 @@ Progetto SvelteKit 3 minimo con adapter Node, `@inlang/paraglide-js` 2.29.1, Vit
 
 ### Domande aperte
 
-Accettare che il client riceva entrambe le lingue? Il costo è dell'ordine delle decine di KB e la via alternativa (due build o caricamento dei messaggi a richiesta) aggiunge complessità. Proposta: accettare.
+Nessuna: il product owner ha accettato che il client riceva entrambe le lingue ([ADR 0008](../adr/0008-esiti-della-fase-1.md)).
 
 ## P1-16 Prova: sync SSE tra due browser
 
@@ -202,7 +202,7 @@ Data: 20 ottobre 2026. Taglia S. Esito: **fattibile**, con tre punti da progetta
 1. **Il cancello del cambio password è codice dell'app, non una funzione di Better Auth.** Nella prova è una funzione che guarda il flag della sessione; nell'app vera va in `hooks.server.ts` e in ogni endpoint, con un'eccezione per la pagina e l'endpoint di cambio password. Va coperto da un test di sistema (P3).
 2. **L'avvio non è atomico.** Registrazione e promozione ad admin sono due passi: se il processo cade in mezzo, resta un utente senza ruolo e il riavvio tenterebbe di registrare di nuovo la stessa email. Nell'app vera: cercare l'utente per email, non per ruolo, e completare il passo mancante.
 3. **Il flag si spegne con un aggiornamento diretto del database** dopo il cambio password. Meglio un hook di Better Auth sul cambio password, così non si può dimenticare.
-4. **La registrazione è aperta per impostazione predefinita**: chiunque raggiunga l'app può creare un utente. La specifica prevede l'accesso per invito o con l'admin: da decidere in fase 2 (permessi).
+4. **La registrazione è aperta per impostazione predefinita**: chiunque raggiunga l'app può creare un utente. La modalità (aperta, su invito, chiusa) è già richiesta da P3-07: il blocco va messo nell'app, sopra Better Auth.
 5. **Il generatore di schema (`@better-auth/cli`) non si installa** insieme a `better-auth` 1.7.12 (versione 1.4.21 del CLI, conflitto di dipendenze di npm). Lo schema delle quattro tabelle (`user`, `session`, `account`, `verification`, più i campi del plugin admin) l'ho scritto a mano per Drizzle; l'adapter ha funzionato. Va ricontrollato a ogni aggiornamento di Better Auth.
 6. Better Auth registra un avviso sul log a ogni password errata (`Invalid password`): utile, da non spegnere.
 
@@ -214,7 +214,7 @@ Data: 20 ottobre 2026. Taglia S. Esito: **fattibile**, con tre punti da progetta
 
 ### Domande aperte
 
-Registrazione: aperta, su invito o solo da admin? (fase 2, permessi).
+Nessuna: la modalità di registrazione è già nei criteri di P3-07.
 
 ## P1-17 Prova: immagine Docker multi-stage
 

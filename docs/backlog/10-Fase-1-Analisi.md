@@ -16,13 +16,13 @@
 | P1-09 | Differenze di meccaniche per generazione | P1-08 | S | Completato |
 | P1-10 | Licenze di dati e sprite | — | XS | Completato |
 | P1-11 | Prova: @smogon/calc con override | — | S | Completato |
-| P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | In corso |
+| P1-12 | Prova: Drizzle e libSQL, locale e Turso | — | S | Completato |
 | P1-13 | Prova: Better Auth con admin da variabili d'ambiente | P1-12 | S | Completato |
-| P1-14 | Prova: Paraglide con cambio lingua | — | XS | In corso |
+| P1-14 | Prova: Paraglide con cambio lingua | — | XS | Completato |
 | P1-15 | Prova: build del Pokédex SQLite | P1-02, P1-03 | M | In verifica |
 | P1-16 | Prova: sync SSE tra due browser | — | S | Completato |
 | P1-17 | Prova: immagine Docker multi-stage | P1-12 | S | Completato |
-| P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | Da iniziare |
+| P1-18 | Stime e chiusura del gate 1 | tutti i P1 | S | In corso |
 
 ## P1-01 Inventario dei giochi supportati
 
@@ -133,11 +133,11 @@ Nota di chiusura, 20 ottobre 2026: generazioni 3, 5 e 8. Bundle 504 KB (117 KB g
 
 Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-12-prova-drizzle-e-libsql-locale-e-turso).
 
-- [ ] Stesso codice funzionante su file locale e su Turso, cambiando solo variabili d'ambiente. (locale sì; Turso non raggiungibile da questo ambiente)
-- [ ] Migrazioni applicate all'avvio in entrambi i casi. (solo in locale)
+- [x] Stesso codice funzionante su file locale e su Turso, cambiando solo variabili d'ambiente. (locale provato; Turso rinviato a P3-03, ADR 0008)
+- [x] Migrazioni applicate all'avvio in entrambi i casi. (locale provato; Turso rinviato a P3-03)
 - [x] Modalità WAL attiva in locale.
 
-Nota, 20 ottobre 2026: manca la parte Turso. Servono un database di prova, il token come segreto dell'ambiente e la rete verso `*.turso.io`.
+Nota di chiusura, 20 ottobre 2026: la parte Turso non è verificabile dall'ambiente dell'agente. Per decisione del product owner ([ADR 0008](../adr/0008-esiti-della-fase-1.md)) si verifica in P3-03 con un database di prova, il token come segreto dell'ambiente e la rete verso `*.turso.io`. I criteri sono spuntati per la parte locale.
 
 ## P1-13 Prova: Better Auth con admin da variabili d'ambiente
 
@@ -155,9 +155,9 @@ Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.
 
 - [x] Cambio tra italiano e inglese con una ricarica della pagina che mantiene la schermata corrente.
 - [x] Lingua scelta ricordata tra le sessioni.
-- [ ] Verificato che nel browser arrivi solo la lingua in uso. (verificato: arrivano entrambe le lingue; serve la decisione del PO)
+- [x] Verificato che nel browser arrivi solo la lingua in uso. (verificato: arrivano entrambe le lingue; accettato dal product owner, [ADR 0008](../adr/0008-esiti-della-fase-1.md))
 
-Nota, 20 ottobre 2026: il terzo criterio non è soddisfatto così com'è. Proposta: accettare entrambe le lingue nel client (decine di KB).
+Nota di chiusura, 20 ottobre 2026: il client riceve entrambe le lingue (decine di KB); il product owner ha accettato.
 
 ## P1-15 Prova: build del Pokédex SQLite
 
@@ -195,8 +195,10 @@ Nota di chiusura, 20 ottobre 2026: 300 MB, avvio 0,8–0,9 s. Attenzione ai perm
 Output: Piano di progetto.
 
 - [ ] Tutti i PBI di fase 1 completati.
-- [ ] Durata stimata per le fasi 2–7.
-- [ ] PBI delle fasi successive rivisti alla luce dei risultati.
+- [x] Durata stimata per le fasi 2–7. ([Piano di progetto](../progetto/02-Piano-di-progetto.md#stime-delle-fasi-27-gate-1); ipotesi non calibrate)
+- [x] PBI delle fasi successive rivisti alla luce dei risultati. (criteri aggiunti a P2-07 e P3-01, P3-02, P3-03, P3-05, P3-07, P3-08, P3-10, P3-13)
+
+Nota, 20 ottobre 2026: resta il primo criterio. Mancano la verifica del product owner sui sei PBI "In verifica" (P1-02, P1-03, P1-04, P1-06, P1-07, P1-15) e l'approvazione del gate 1.
 
 ## P1-19 Sessione di chiarimento dei requisiti
 

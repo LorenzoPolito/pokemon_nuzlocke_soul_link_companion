@@ -24,6 +24,6 @@ Alcune specie hanno più varietà con tipi, statistiche o abilità diversi: Worm
 
 - **Modello dati**: la tabella `specimen` riceve una colonna `variety_id` (INTEGER, NULL).
 - **Dupes clause e Soul Link**: restano sulla specie e sulla linea evolutiva, non sulla varietà.
-- **Forme cosmetiche** (stagione di Deerling, mantello di Burmy, forme di Unown): non sono varietà e **non si tracciano**. Questa è la mia proposta e resta in attesa di una tua conferma esplicita; per ora nessun dato la richiede.
+- **Forme cosmetiche** (stagione di Deerling, mantello di Burmy, forme di Unown): non sono varietà e **non si tracciano**. Questa è la mia proposta e il product owner l'ha confermata il 20 ottobre 2026 ([ADR 0008](0008-esiti-della-fase-1.md)).
 - Il Pokédex SQLite (P2-07) espone le varietà di ogni specie con i dati per generazione e per version group.
 - Da recepire in P2-04 (esemplare con varietà) e P5-04 (servizio dei dati effettivi).

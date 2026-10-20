@@ -74,6 +74,8 @@ Output: Modello dati.
 - [ ] Tabelle e indici per specie, forme, tipi, mosse, abilità, learnset, evoluzioni, incontri.
 - [ ] Nomi in più lingue con fallback all'inglese.
 - [ ] Dati per version group, così ogni run legge i dati del proprio gioco.
+- [ ] Parte dallo script di prova `tools/prove/build_pokedex.py` (tabelle, storico con `until_generation`, learnset per version group).
+
 
 ## P2-08 Modello dei permessi
 
