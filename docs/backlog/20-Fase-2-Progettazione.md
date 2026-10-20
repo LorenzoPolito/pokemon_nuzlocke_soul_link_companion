@@ -9,7 +9,7 @@
 | P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | In verifica |
 | P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | In verifica |
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Completato |
-| P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Da iniziare |
+| P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Completato |
 | P2-07 | Schema del Pokédex SQLite | P1-15 | M | Da iniziare |
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Da iniziare |
 | P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | Da iniziare |
@@ -72,10 +72,12 @@ Nota di chiusura, 20 ottobre 2026: la chiave si estende con la varietà (propost
 
 ## P2-06 Modello dati: medaglie e level cap
 
-Output: Modello dati.
+Output: [Modello dati](../progetto/06-Modello-dati-bozza.md#p2-06-tappe-medaglie-e-level-cap).
 
-- [ ] Tappe superate per giocatore (`run_milestone`, che sostituisce `run_badge`), con data: la medaglia è un attributo della tappa ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
-- [ ] Level cap calcolato per giocatore dai dati di gioco e dalla difficoltà della run; un solo override manuale per la run.
+- [x] Tappe superate per giocatore (`run_milestone`, che sostituisce `run_badge`), con data: la medaglia è un attributo della tappa ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [x] Level cap calcolato per giocatore dai dati di gioco e dalla difficoltà della run; un solo override manuale per la run.
+
+Nota di chiusura, 20 ottobre 2026: dove manca il livello della difficoltà scelta (Superquattro e Ghetsis in modalità facile) si usa il valore normale e l'interfaccia lo segnala.
 
 ## P2-07 Schema del Pokédex SQLite
 
