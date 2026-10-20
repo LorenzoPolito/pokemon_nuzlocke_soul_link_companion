@@ -624,7 +624,7 @@ Evoluzione dello schema:
 
 I dati di riferimento sono file in sola lettura dentro l'immagine: si aggiornano con un nuovo rilascio, mai a mano sul server.
 
-- **Pokédex SQLite** (schema in P2-07): specie e forme, tipi per generazione, statistiche, abilità, mosse con i valori per generazione, learnset per version group, aree e incontri, nomi localizzati in una tabella unica (entità, id, lingua, nome). Generato da PokeAPI/api-data.
+- **Pokédex SQLite** (schema in [Schema del Pokédex](15-Schema-del-Pokedex.md), P2-07): specie e forme, tipi per generazione, statistiche, abilità, mosse con i valori per generazione, learnset per version group, aree e incontri, nomi localizzati in una tabella unica (entità, id, lingua, nome). Generato da PokeAPI/api-data.
 - **File dei dati di gioco**, uno per gioco: game\_id, generazione, version group, colore della run, aree in ordine con area\_key stabile e nomi per lingua, medaglie con capopalestra e level cap, numero di versione. Nei file, le stanze interne portano `parentAreaKey`: con la regola `separateRooms` spenta l'area effettiva di un incontro in una stanza è quella della grotta principale. Le tappe (`milestones`) sostituiscono l'elenco delle sole medaglie. Generati da nuzlocke.data e PokéAPI, validati con Zod all'avvio: un file non valido blocca l'avvio con un messaggio chiaro.
 - Il database dell'app li richiama solo per chiave (`species_id`, `game_id`, `area_key`), così aggiornare i dati non richiede migrazioni.
 
