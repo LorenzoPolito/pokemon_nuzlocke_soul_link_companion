@@ -7,7 +7,7 @@
 | P3-12 | Configurazione di GitHub | — | S | In corso |
 | P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | In verifica |
 | P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | In verifica |
-| P3-03 | Configurazione database e migrazioni | P3-01 | S | Da iniziare |
+| P3-03 | Configurazione database e migrazioni | P3-01 | S | In verifica |
 | P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | Da iniziare |
 | P3-05 | Lingue e selettore di lingua | P3-01 | S | Da iniziare |
 | P3-06 | Layout base e navigazione | P3-05 | M | Da iniziare |
@@ -45,13 +45,14 @@ Nota, 22 ottobre 2026: provato con Docker 29.8: immagine 241 MB, prima risposta 
 
 Output: repository dell'app.
 
-- [ ] Senza variabili di Turso l'app usa il file locale su `/data`.
-- [ ] Con `TURSO_URL` e `TURSO_TOKEN` l'app usa Turso senza altre modifiche.
-- [ ] Migrazioni applicate all'avvio; un errore di migrazione blocca l'avvio con un messaggio chiaro.
-- [ ] Il database non si apre durante `npm run build` (usare `building` di `$app/environment`).
+- [x] Senza variabili di Turso l'app usa il file locale su `/data`.
+- [x] Con `TURSO_URL` e `TURSO_TOKEN` l'app usa Turso senza altre modifiche. (nel codice e nella configurazione, provato con i test; vedi il criterio sulla verifica)
+- [x] Migrazioni applicate all'avvio; un errore di migrazione blocca l'avvio con un messaggio chiaro.
+- [x] Il database non si apre durante `npm run build` (`building` di `$app/env`, il nome in SvelteKit 3).
 - [ ] Verifica su Turso con un database di prova creato dal product owner ([ADR 0008](../adr/0008-esiti-della-fase-1.md)).
-- [ ] Tabella `request_key` e middleware di idempotenza (chiave del client, risposta salvata, 24 ore) con job di pulizia ([catalogo API](../progetto/16-Architettura-e-API.md#convenzioni)).
+- [x] Tabella `request_key` e middleware di idempotenza (chiave del client, risposta salvata, 24 ore) con job di pulizia ([catalogo API](../progetto/16-Architettura-e-API.md#convenzioni)).
 
+Nota, 22 ottobre 2026: **resta aperto il criterio «Verifica su Turso»**, che richiede un database di prova creato dal product owner, il token come segreto dell'ambiente e la rete verso `*.turso.io` ([ADR 0008](../adr/0008-esiti-della-fase-1.md)). Il codice è lo stesso per i due casi, ma su Turso non l'ho visto funzionare. Provato: 19 test (configurazione, WAL, migrazioni nuove e ripetute, copia prima delle migrazioni, errore di migrazione che blocca l'avvio, chiavi di idempotenza: replay, conflitto, scadenza a 24 ore, corsa tra due richieste, errori 5xx non memorizzati); immagine Docker: avvio, riavvio con dati nel volume, configurazione errata che ferma il container con il messaggio. Il middleware di idempotenza è una funzione (`runIdempotent`) che gli endpoint di scrittura useranno con l'utente della sessione (P3-07).
 
 ## P3-04 Pokédex SQLite generato nella build
 
