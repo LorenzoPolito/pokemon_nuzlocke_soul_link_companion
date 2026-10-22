@@ -10,6 +10,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"start": "node serve.mjs",
 		"prepare": "svelte-kit sync && paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"lint": "prettier --check . && eslint . && node scripts/check-messages.ts",
@@ -49,6 +50,7 @@
 	},
 	"dependencies": {
 		"@libsql/client": "^0.18.0",
+		"better-auth": "^1.7.12",
 		"drizzle-orm": "^0.45.4",
 		"zod": "^4.6.7"
 	}

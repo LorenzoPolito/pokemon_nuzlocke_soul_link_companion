@@ -11,7 +11,7 @@
 | P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | In verifica |
 | P3-05 | Lingue e selettore di lingua | P3-01 | S | In verifica |
 | P3-06 | Layout base e navigazione | P3-05 | M | In verifica |
-| P3-07 | Registrazione, login, logout | P3-03 | M | Da iniziare |
+| P3-07 | Registrazione, login, logout | P3-03 | M | In verifica |
 | P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | Da iniziare |
 | P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | Da iniziare |
 | P3-10 | Hub degli eventi SSE | P3-01 | M | Da iniziare |
@@ -89,13 +89,14 @@ Nota, 22 ottobre 2026: token del design system trasformati in variabili CSS da `
 
 Output: repository dell'app.
 
-- [ ] Registrazione rispetta la modalità impostata (aperta, su invito, chiusa).
-- [ ] Password salvate solo come hash; sessioni con scadenza.
-- [ ] Tentativi di login ripetuti limitati.
-- [ ] La registrazione aperta di Better Auth è disattivata a livello di app quando la modalità non è "aperta".
-- [ ] Una sola funzione `authorize` decide ogni permesso; un test percorre tutta la matrice azioni × ruoli (non membro compreso, utente disattivato, cambio password pendente, run non attiva) ([permessi](../progetto/16-Architettura-e-API.md#p2-08-modello-dei-permessi)).
-- [ ] Profilo: l'utente cambia nome, lingua, tema e password ([mockup `Profilo`](../mockup/Profilo.dc.html)).
+- [x] Registrazione rispetta la modalità impostata (aperta, su invito, chiusa).
+- [x] Password salvate solo come hash; sessioni con scadenza.
+- [x] Tentativi di login ripetuti limitati.
+- [x] La registrazione aperta di Better Auth è disattivata a livello di app quando la modalità non è "aperta".
+- [x] Una sola funzione `authorize` decide ogni permesso; un test percorre tutta la matrice azioni × ruoli (non membro compreso, utente disattivato, cambio password pendente, run non attiva) ([permessi](../progetto/16-Architettura-e-API.md#p2-08-modello-dei-permessi)).
+- [x] Profilo: l'utente cambia nome, lingua, tema e password ([mockup `Profilo`](../mockup/Profilo.dc.html)).
 
+Nota, 22 ottobre 2026: modulo `auth` con Better Auth (scrypt, sessioni di 7 giorni, plugin `admin`), tabelle `user`, `session`, `account`, `verification`, `app_setting` e `invite` (migrazione 0001). Registrazione solo da `registerUser`: modalità aperta, su invito (predefinita, vale anche un invito a una run) o chiusa; l'invito si consuma una volta in modo atomico e si restituisce se la creazione fallisce; `/api/auth/sign-up/email` è disattivato (404). Limite di 5 tentativi al minuto per indirizzo sul modulo di accesso. `authorize` con 31 test che percorrono la matrice scritta a mano da P2-08, non membro, utente disattivato, cambio password pendente e run non attiva compresi. Profilo (nome, lingua, tema, password) e `GET`/`PATCH /api/me`; la lingua scelta è salvata sull'account (chiude il rinvio di P3-05). 155 test; flusso provato con Chromium sulla build (accesso richiesto, registrazione, profilo, uscita, limite dei tentativi). **Scoperto**: l'adapter Node di SvelteKit 3 assume `https` senza un'intestazione di protocollo e rifiuta tutti i moduli in HTTP (403 «Cross-site POST»), e `ORIGIN` non è letta a runtime; per questo il container parte da `serve.mjs`, che compensa (parte di P3-13). L'amministratore creato all'avvio e il cambio password obbligatorio sono P3-08; l'interfaccia per creare inviti, P3-09.
 
 ## P3-08 Admin creato all'avvio e cambio password
 

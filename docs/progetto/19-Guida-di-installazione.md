@@ -30,6 +30,9 @@ L'app controlla le variabili all'avvio: se una è sbagliata si ferma e dice qual
 | --- | --- | --- | --- |
 | `DATA_DIR` | no | `/data` nell'immagine, `./data` in sviluppo | Cartella del database locale |
 | `TURSO_URL`, `TURSO_TOKEN` | no, ma insieme | `libsql://…` e il token | Usa un database Turso online al posto del file locale |
+| `AUTH_SECRET` | no | almeno 32 caratteri | Segreto che firma le sessioni. Se manca l'app ne genera uno e lo conserva in `DATA_DIR/auth-secret` (leggibile solo dal proprietario): non cancellare quel file, o tutti dovranno accedere di nuovo |
+| `ORIGIN` | no | per esempio `https://nuzlocke.example.org` | Indirizzo pubblico; se è `https`, l'app sa di stare dietro un proxy con HTTPS |
+| `TRUST_PROXY` | no | `true` dietro un reverse proxy | Usa `X-Forwarded-Proto` e `X-Forwarded-For` del proxy. Senza, l'app ignora quelle intestazioni |
 | `POKEDEX_PATH` | no | `/app/pokedex/pokedex.sqlite` nell'immagine | File del Pokédex, in sola lettura; in produzione deve esistere |
 | `MIGRATIONS_DIR` | no | `/app/drizzle` nell'immagine | Cartella delle migrazioni |
 
@@ -42,6 +45,13 @@ Le variabili dell'amministratore e dell'indirizzo pubblico si aggiungono con P3-
 3. Per provare un database prima di usarlo: `TURSO_URL=… TURSO_TOKEN=… npm run turso:check` (usa un database di prova: ci crea le tabelle dell'app).
 
 Il token è un segreto: tienilo nelle variabili dell'ambiente, mai nel repository né in una chat.
+
+## Account e registrazione
+
+- Gli utenti accedono con email e password; le password si salvano solo come hash e le sessioni durano 7 giorni.
+- I tentativi di accesso sono limitati a 5 al minuto per indirizzo.
+- Di base la registrazione è **su invito**: chi non ha un invito non può creare un account. L'amministratore (creato all'avvio, vedi P3-08) può aprirla a tutti o chiuderla.
+- Il container usa `serve.mjs` come punto di avvio: serve a far funzionare i moduli (login, registrazione) anche in semplice HTTP. Dietro un proxy con HTTPS imposta `TRUST_PROXY=true`.
 
 ## Il Pokédex
 
