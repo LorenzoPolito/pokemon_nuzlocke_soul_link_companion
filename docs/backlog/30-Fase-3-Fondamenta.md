@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | P3-12 | Configurazione di GitHub | — | S | In corso |
 | P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | In verifica |
-| P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | Da iniziare |
+| P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | In verifica |
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | Da iniziare |
 | P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | Da iniziare |
 | P3-05 | Lingue e selettore di lingua | P3-01 | S | Da iniziare |
@@ -31,14 +31,15 @@ Nota, 22 ottobre 2026: in SvelteKit 3 `Handle` si importa da `@sveltejs/kit/hook
 
 ## P3-02 Dockerfile multi-stage e volume dati
 
-Output: repository dell'app, Guida di installazione.
+Output: repository dell'app, [Guida di installazione](../progetto/19-Guida-di-installazione.md).
 
-- [ ] Immagine finale su Node Alpine senza strumenti di build.
-- [ ] Database su `/data`, dichiarato come volume.
-- [ ] Healthcheck che risponde quando l'app è pronta.
-- [ ] Il container gira con un utente non root.
-- [ ] `/data` creata con il proprietario dell'utente non root prima di `VOLUME`; la guida di installazione spiega i permessi di una cartella montata dall'host ([prove](../progetto/14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).
+- [x] Immagine finale su Node Alpine senza strumenti di build.
+- [x] Database su `/data`, dichiarato come volume.
+- [x] Healthcheck che risponde quando l'app è pronta.
+- [x] Il container gira con un utente non root.
+- [x] `/data` creata con il proprietario dell'utente non root prima di `VOLUME`; la guida di installazione spiega i permessi di una cartella montata dall'host ([prove](../progetto/14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).
 
+Nota, 22 ottobre 2026: provato con Docker 29.8: immagine 241 MB, prima risposta in 0,26 s, utente `node`, `/data` scrivibile, nessun compilatore né git nell'immagine, healthcheck `healthy` (e non sano con l'app ferma). Il controllo di salute è oggi `GET /api/health` → `{ ok: true }`; con P3-03 controllerà anche il database. La build nel sandbox richiede `--network host` e il certificato del proxy; il `Dockerfile` del repository non ne ha bisogno.
 
 ## P3-03 Configurazione database e migrazioni
 
