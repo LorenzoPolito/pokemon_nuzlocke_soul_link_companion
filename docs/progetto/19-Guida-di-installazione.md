@@ -30,6 +30,7 @@ L'app controlla le variabili all'avvio: se una è sbagliata si ferma e dice qual
 | --- | --- | --- | --- |
 | `DATA_DIR` | no | `/data` nell'immagine, `./data` in sviluppo | Cartella del database locale |
 | `TURSO_URL`, `TURSO_TOKEN` | no, ma insieme | `libsql://…` e il token | Usa un database Turso online al posto del file locale |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | sì al primo avvio | email e password iniziale (almeno 8 caratteri) | Creano l'amministratore se l'app non ne ha ancora uno. Dopo il primo avvio non servono più e si possono togliere |
 | `AUTH_SECRET` | no | almeno 32 caratteri | Segreto che firma le sessioni. Se manca l'app ne genera uno e lo conserva in `DATA_DIR/auth-secret` (leggibile solo dal proprietario): non cancellare quel file, o tutti dovranno accedere di nuovo |
 | `ORIGIN` | no | per esempio `https://nuzlocke.example.org` | Indirizzo pubblico; se è `https`, l'app sa di stare dietro un proxy con HTTPS |
 | `TRUST_PROXY` | no | `true` dietro un reverse proxy | Usa `X-Forwarded-Proto` e `X-Forwarded-For` del proxy. Senza, l'app ignora quelle intestazioni |
@@ -50,6 +51,7 @@ Il token è un segreto: tienilo nelle variabili dell'ambiente, mai nel repositor
 
 - Gli utenti accedono con email e password; le password si salvano solo come hash e le sessioni durano 7 giorni.
 - I tentativi di accesso sono limitati a 5 al minuto per indirizzo.
+- **Primo avvio.** Se l'app non ha ancora un amministratore, `ADMIN_EMAIL` e `ADMIN_PASSWORD` sono obbligatorie: senza, l'app non parte e il log lo dice. L'amministratore creato deve scegliere una nuova password al primo accesso e fino ad allora non può fare altro. Ai riavvii non viene creato un secondo amministratore; se un avvio si interrompe a metà, il successivo lo completa. Esempio: `docker run … -e ADMIN_EMAIL=tu@esempio.it -e ADMIN_PASSWORD='una-password-lunga' …`
 - Di base la registrazione è **su invito**: chi non ha un invito non può creare un account. L'amministratore (creato all'avvio, vedi P3-08) può aprirla a tutti o chiuderla.
 - Il container usa `serve.mjs` come punto di avvio: serve a far funzionare i moduli (login, registrazione) anche in semplice HTTP. Dietro un proxy con HTTPS imposta `TRUST_PROXY=true`.
 

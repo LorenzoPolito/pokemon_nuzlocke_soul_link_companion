@@ -2,6 +2,7 @@ import { building } from '$app/env';
 import { redirect } from '@sveltejs/kit';
 import { sequence, type Handle } from '@sveltejs/kit/hooks';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
+import { passwordGate } from '#lib/modules/auth/domain/password-gate.js';
 import { getAuth, startAuth } from '#lib/modules/auth/runtime.js';
 import { initDatabase } from '#lib/server/database/index.js';
 import { startPokedex } from '#lib/server/pokedex/runtime.js';
@@ -77,4 +78,20 @@ const guard: Handle = ({ event, resolve }) => {
 	redirect(303, '/login');
 };
 
-export const handle = sequence(language, session, guard);
+/** A user who must change the password can do nothing else until they have. */
+const passwordChange: Handle = ({ event, resolve }) => {
+	const pending = event.locals.user?.mustChangePassword === true;
+	const decision = passwordGate(pending, event.request.method, event.url.pathname);
+	if (decision === 'redirect') redirect(303, '/change-password');
+	if (decision === 'refuse') {
+		return new Response(
+			JSON.stringify({
+				error: { code: 'password_change_required', message: 'Change your password first' }
+			}),
+			{ status: 403, headers: { 'content-type': 'application/json' } }
+		);
+	}
+	return resolve(event);
+};
+
+export const handle = sequence(language, session, guard, passwordChange);

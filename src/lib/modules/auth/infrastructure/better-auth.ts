@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { createAuthMiddleware } from 'better-auth/api';
 import { admin } from 'better-auth/plugins';
 import type { BetterAuthPlugin } from 'better-auth';
 import type { Database } from '../../../server/database/client';
@@ -41,6 +42,18 @@ export function createAuth({ db, secret, extraPlugins = [] }: AuthOptions) {
 				theme: { type: 'string', required: false },
 				deletedAt: { type: 'date', required: false, input: false }
 			}
+		},
+		hooks: {
+			// A successful password change ends the "must change password" state, whichever way it
+			// was called (form, API or HTTP endpoint).
+			after: createAuthMiddleware(async (ctx) => {
+				if (ctx.path !== '/change-password') return;
+				// The hook also runs after a failed call: only a success may clear the flag.
+				if (ctx.context.returned instanceof Error) return;
+				const userId = ctx.context.session?.user.id ?? ctx.context.newSession?.user.id;
+				if (!userId) return;
+				await ctx.context.internalAdapter.updateUser(userId, { mustChangePassword: false });
+			})
 		},
 		plugins: [admin(), ...extraPlugins]
 	});
