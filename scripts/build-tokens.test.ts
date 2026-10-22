@@ -69,7 +69,12 @@ describe('design tokens', () => {
 		}
 	}
 
-	// `outline` is a decorative separator (about 1.7:1 in the light theme, 2.0:1 in the dark one),
-	// below the 3:1 that WCAG asks for the border of a control: controls draw their border with
-	// `ink-muted`, which the text pairs above already cover.
+	// `outline` draws the borders of controls: WCAG asks 3:1 for them against every surface.
+	for (const theme of ['light', 'dark'] as const) {
+		for (const bg of ['surface', 'surface-container', 'surface-raised']) {
+			it(`outline on ${bg} reaches 3:1 (${theme})`, () => {
+				expect(contrast(color('outline', theme), color(bg, theme))).toBeGreaterThanOrEqual(3);
+			});
+		}
+	}
 });
