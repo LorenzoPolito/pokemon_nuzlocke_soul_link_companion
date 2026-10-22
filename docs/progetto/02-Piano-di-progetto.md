@@ -35,7 +35,7 @@ Stack tecnico (piccole prove di fattibilità):
 
 Gate di uscita: ogni dato ha una fonte o una decisione di inserimento manuale, ogni prova di fattibilità ha un esito, e le durate delle fasi successive sono stimate.
 
-**Gate 1 approvato dal product owner il 20 ottobre 2026.**
+**Gate 1 approvato dal product owner il 20 ottobre 2026. Gate 2 approvato il 22 ottobre 2026.**
 
 ## Stime delle fasi 2–7 (gate 1)
 
