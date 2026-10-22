@@ -13,7 +13,7 @@
 | P2-07 | Schema del Pokédex SQLite | P1-15 | M | In verifica |
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Completato |
 | P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | In verifica |
-| P2-10 | Catalogo degli eventi SSE | P2-09 | S | Da iniziare |
+| P2-10 | Catalogo degli eventi SSE | P2-09 | S | Completato |
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Da iniziare |
 | P2-12 | Bozze schermate: tracker | P2-11 | M | Da iniziare |
 | P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | Da iniziare |
@@ -111,11 +111,13 @@ Nota, 20 ottobre 2026: la sezione degli eventi SSE è in P2-10.
 
 ## P2-10 Catalogo degli eventi SSE
 
-Output: Architettura e API.
+Output: [Architettura e API](../progetto/16-Architettura-e-API.md#p2-10-catalogo-degli-eventi-sse).
 
-- [ ] Ogni evento con nome, contenuto e destinatari.
-- [ ] Strategia di riallineamento dopo una riconnessione definita, insieme agli eventi di presa e rilascio dei lock.
-- [ ] Segnale ogni 15 secondi, avviso dopo 40 secondi senza eventi, recupero degli eventi dall'identificativo dell'ultimo ricevuto, lock ripresi alla riconnessione ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [x] Ogni evento con nome, contenuto e destinatari.
+- [x] Strategia di riallineamento dopo una riconnessione definita, insieme agli eventi di presa e rilascio dei lock.
+- [x] Segnale ogni 15 secondi, avviso dopo 40 secondi senza eventi, recupero degli eventi dall'identificativo dell'ultimo ricevuto, lock ripresi alla riconnessione ([ADR 0002](../adr/0002-rete-instabile.md)).
+
+Nota di chiusura, 20 ottobre 2026: il segnale è un evento con nome (`ping`) e non un commento SSE, perché `EventSource` non mostra i commenti e il client deve poter misurare i 40 secondi. Soglie proposte: 500 eventi di recupero, 5 connessioni per utente e run, coda di 200.
 
 ## P2-11 Flussi: creazione run, inviti, run già iniziata
 

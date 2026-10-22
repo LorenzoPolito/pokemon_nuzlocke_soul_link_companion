@@ -112,7 +112,7 @@ Output: repository dell'app.
 - [ ] Un client si iscrive agli eventi di una run solo se ha accesso a quella run.
 - [ ] Riconnessione automatica con riallineamento dello stato.
 - [ ] Connessioni chiuse rilasciate senza perdite di memoria.
-- [ ] Eventi con `id` crescente, ripresa da `Last-Event-ID`, segnale ogni 15 secondi e registro nel database per sopravvivere a un riavvio ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [ ] Eventi con `id` crescente, ripresa da `Last-Event-ID`, segnale `ping` (evento con nome) ogni 15 secondi e registro nel database per sopravvivere a un riavvio ([ADR 0002](../adr/0002-rete-instabile.md)).
 
 
 ## P3-11 Verifica locale e hook pre-push
