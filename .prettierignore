@@ -1,0 +1,12 @@
+# Only code is formatted: documentation, data and tooling have their own rules.
+docs/
+data/
+tools/
+.claude/
+.githooks/
+.github/
+.svelte-kit/
+build/
+node_modules/
+package-lock.json
+*.md
