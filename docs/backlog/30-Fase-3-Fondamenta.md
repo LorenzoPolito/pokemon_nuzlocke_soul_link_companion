@@ -4,7 +4,7 @@
 
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
-| P3-12 | Configurazione di GitHub | — | S | In corso |
+| P3-12 | Configurazione di GitHub | — | S | In verifica |
 | P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | In verifica |
 | P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | In verifica |
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | In verifica |
@@ -147,13 +147,15 @@ Nota, 22 ottobre 2026: `npm run verify` (`scripts/verify.ts`) esegue in ordine l
 
 Output: repository su GitHub, Configurazione di GitHub.
 
-- [ ] Repository privato creato con nome e impostazioni del documento Configurazione di GitHub.
-- [ ] App Claude per GitHub installata sul repository, provata aprendo la pull request di preparazione del repository.
+- [x] Repository privato creato con nome e impostazioni del documento Configurazione di GitHub.
+- [x] App Claude per GitHub installata sul repository, provata aprendo la pull request di preparazione del repository.
 
 Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituito da quello sull'app Claude per GitHub ([decisione 14](../adr/0001-decisioni-di-progetto.md#14-agente-app-claude-per-github)); il nome effettivo del repository è `pokemon_nuzlocke_soul_link_companion`, diverso dalla proposta del documento Configurazione di GitHub, che è stato aggiornato. Aggiunto il criterio su git flow (decisioni 22 e 23), su richiesta del product owner.
 - [x] ~~Dependabot attivo.~~ Non attivato, per scelta del product owner (19 ottobre 2026, [decisione 26](../adr/0001-decisioni-di-progetto.md#26-impostazioni-di-github-lasciate-come-sono)).
-- [ ] Git flow configurato: ramo `develop` creato, hook che blocca `main` e `develop`, controllo `branch-policy` su GitHub Actions entro i minuti gratuiti, hook di Claude Code e di git al posto delle protezioni di GitHub (decisione 25).
-- [ ] Licenza aggiunta appena decisa dopo P1-10.
+- [x] Git flow configurato: ramo `develop` creato, hook che blocca `main` e `develop`, controllo `branch-policy` su GitHub Actions entro i minuti gratuiti, hook di Claude Code e di git al posto delle protezioni di GitHub (decisione 25).
+- [x] ~~Licenza aggiunta appena decisa dopo P1-10.~~ Non necessaria finché il repository resta privato (decisione del product owner, 22 ottobre 2026); si decide se il repository diventa pubblico.
+
+Nota, 22 ottobre 2026: repository privato, app Claude per GitHub, ramo `develop`, hook di git e di Claude Code e controllo `branch-policy` sono in uso da tutte le PR della fase 3 (#37–#52, tutte unite dal product owner). Il criterio della licenza è chiuso come sopra.
 
 ## P3-13 Solo HTTP, compatibile con reverse proxy
 
