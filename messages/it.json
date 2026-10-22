@@ -1,8 +1,15 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"app_title": "Nuzlocke SoulLink Companion",
-	"app_tagline": "Segui insieme le vostre run Soul Link",
 	"i18n_selector_label": "Lingua",
 	"i18n_locale_en": "English",
-	"i18n_locale_it": "Italiano"
+	"i18n_locale_it": "Italiano",
+	"nav_label": "Navigazione principale",
+	"nav_runs": "Run",
+	"nav_pokedex": "Pokédex",
+	"nav_profile": "Profilo",
+	"runs_title": "Le mie run",
+	"runs_empty": "Non hai ancora nessuna run. La creazione di una run arriva con le prossime versioni.",
+	"pokedex_soon": "Il Pokédex arriva con una versione successiva.",
+	"profile_soon": "Il tuo profilo arriva con l'accesso."
 }

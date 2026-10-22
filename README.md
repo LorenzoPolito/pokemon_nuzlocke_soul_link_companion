@@ -37,6 +37,7 @@ npm run lint       # Prettier (solo controllo), ESLint e controllo delle traduzi
 npm run format     # riformatta il codice
 npm test           # test di unità (Vitest)
 npm run i18n:check # controlla che italiano e inglese abbiano gli stessi messaggi
+npm run tokens:build # rigenera src/lib/styles/tokens.css da docs/design-system/tokens.json
 npm run build      # build di produzione in build/ (adapter Node)
 npm run preview    # prova la build
 npm run pokedex:fetch  # scarica i dati di PokeAPI/api-data (commit fissato in data/pokedex-source.json)
