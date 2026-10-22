@@ -19,6 +19,7 @@
 		"turso:check": "vitest run scripts/turso-check.test.ts",
 		"format": "prettier --write .",
 		"test": "vitest run",
+		"verify": "node --no-warnings scripts/verify.ts",
 		"test:watch": "vitest",
 		"pokedex:fetch": "sh scripts/fetch-api-data.sh .cache/api-data",
 		"pokedex:build": "node scripts/build-pokedex.ts --source .cache/api-data/data/api/v2 --out data/pokedex/pokedex.sqlite --commit $(git -C .cache/api-data rev-parse HEAD)"

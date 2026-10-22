@@ -5,8 +5,8 @@
 # Nelle sessioni di Claude Code lo attiva l'hook SessionStart.
 #
 # Rifiuta i push verso main e develop (ci si arriva solo con una pull
-# request) e i push forzati. La verifica completa (npm run verify) si
-# aggiunge con il PBI P3-11.
+# request) e i push forzati. Poi esegue la verifica completa (npm run
+# verify).
 
 zero=0000000000000000000000000000000000000000
 status=0
@@ -29,5 +29,10 @@ while read -r local_ref local_sha remote_ref remote_sha; do
     fi
   fi
 done
+
+if [ "$status" -eq 0 ] && [ -f package.json ] && command -v npm >/dev/null 2>&1; then
+  echo "pre-push: eseguo npm run verify" >&2
+  npm run verify >&2 || status=1
+fi
 
 exit $status

@@ -19,7 +19,7 @@ Gli hook di `.githooks/` applicano le regole che GitHub non può imporre su ques
 
 - `pre-commit`: niente commit su `main` e `develop`, niente `.env` o file di database;
 - `commit-msg`: messaggi in Conventional Commits con l'ID (sotto);
-- `pre-push`: niente push su `main` e `develop`, niente push forzati; dal PBI P3-11 esegue anche `npm run verify`.
+- `pre-push`: niente push su `main` e `develop`, niente push forzati; esegue anche `npm run verify` e rifiuta il push se fallisce.
 
 L'agente ha in più gli hook di Claude Code (`.claude/`), che gli vietano anche di unire pull request e creare tag.
 
@@ -52,7 +52,7 @@ Un commit per passo logico; ogni commit compila e passa i test.
 
 ## Verifica locale
 
-Non c'è CI. Prima di ogni push `npm run verify` esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine (da P3-11). Dopo ogni unione su `develop` l'agente esegue la verifica e i test end-to-end all'inizio della sessione successiva. GitHub Actions esegue solo il controllo dei branch, nei minuti gratuiti.
+Non c'è CI. Prima di ogni push `npm run verify` esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine. Dopo ogni unione su `develop` l'agente esegue la verifica e i test end-to-end all'inizio della sessione successiva. GitHub Actions esegue solo il controllo dei branch, nei minuti gratuiti.
 
 ## Backlog, bug e sessioni
 
