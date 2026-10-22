@@ -5,6 +5,7 @@ import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { passwordGate } from '#lib/modules/auth/domain/password-gate.js';
 import { getAuth, startAuth } from '#lib/modules/auth/runtime.js';
 import { initDatabase } from '#lib/server/database/index.js';
+import { startHub } from '#lib/modules/realtime/runtime.js';
 import { startPokedex } from '#lib/server/pokedex/runtime.js';
 import { paraglideMiddleware } from '#lib/paraglide/server.js';
 
@@ -13,6 +14,7 @@ if (!building) {
 	try {
 		await initDatabase();
 		await startAuth();
+		await startHub();
 		await startPokedex();
 	} catch (error) {
 		console.error(error instanceof Error ? error.message : error);

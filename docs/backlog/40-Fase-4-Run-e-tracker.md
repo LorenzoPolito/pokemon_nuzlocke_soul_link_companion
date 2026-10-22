@@ -41,6 +41,7 @@
 - [ ] Quando un account viene eliminato (anonimizzato dal pannello admin, P3-09), la proprietà delle sue run passa al giocatore con il posto successivo; le run restano.
 - [ ] Il proprietario può rimuovere un partecipante o trasformarlo in spettatore in qualsiasi momento; i suoi dati restano ([ADR 0009](../adr/0009-decisioni-della-fase-2.md)).
 - [ ] Posti in attesa: il proprietario riserva un posto con nome e invito; chi accetta lo occupa con i dati già inseriti; chi rifiuta lascia il posto in attesa ([modello](../progetto/06-Modello-dati-bozza.md#p2-11-posti-in-attesa)).
+- [ ] La politica di accesso del flusso di eventi legge `run_member` (oggi `noRunsYet` nega tutto) e un membro rimosso viene scollegato con `disconnectUser` ([hub](../progetto/16-Architettura-e-API.md#p2-10-catalogo-degli-eventi-sse)).
 
 
 ## P4-03 Gioco unico della run
@@ -133,6 +134,9 @@
 - [ ] Dopo una riconnessione la pagina mostra lo stato aggiornato.
 - [ ] Con la connessione persa compare un avviso e i pulsanti di salvataggio sono disattivati, senza coda ([ADR 0002](../adr/0002-rete-instabile.md)).
 - [ ] Le modifiche semplici si vedono subito, con "in invio"; le azioni Soul Link attendono la risposta del server.
+- [ ] `run_event` ha la chiave esterna verso `run` e i trigger che rifiutano `UPDATE` e `DELETE` mentre la run esiste (la tabella è creata da P3-10) ([modello](../progetto/06-Modello-dati-bozza.md#p2-04-esemplari-morte-ed-eventi)).
+- [ ] L'interfaccia usa `connectStream` e mostra l'avviso dopo 40 secondi di silenzio.
+
 
 ## P4-19 Creazione di una run già iniziata
 
@@ -158,3 +162,5 @@
 
 * [ ] Ogni dato modificabile ha un numero di versione; il valore sovrascritto resta nel diario della run.
 * [ ] I lock vivono nella memoria del server e un riavvio li azzera senza errori.
+- [ ] `locks.snapshot` dell'hub riporta i lock attivi, e presa, rinnovo e rilascio arrivano come `lock.*`.
+
