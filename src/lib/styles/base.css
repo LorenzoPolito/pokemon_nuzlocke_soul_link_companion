@@ -1,0 +1,60 @@
+/* Base styles: only design tokens, no literal colors, sizes or spaces (see docs/design-system). */
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--color-surface);
+	color: var(--color-ink);
+	font-family: var(--font-sans);
+	font-size: var(--text-body-size);
+	line-height: var(--text-body-line);
+	font-weight: var(--text-body-weight);
+}
+
+h1 {
+	margin: 0 0 var(--space-2);
+	font-size: var(--text-display-size);
+	line-height: var(--text-display-line);
+	font-weight: var(--text-display-weight);
+}
+
+h2 {
+	margin: 0 0 var(--space-2);
+	font-size: var(--text-title-l-size);
+	line-height: var(--text-title-l-line);
+	font-weight: var(--text-title-l-weight);
+}
+
+p {
+	margin: 0 0 var(--space-3);
+}
+
+a {
+	color: var(--color-primary);
+}
+
+button {
+	font: inherit;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}

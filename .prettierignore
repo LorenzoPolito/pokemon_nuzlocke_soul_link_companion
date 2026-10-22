@@ -11,3 +11,4 @@ node_modules/
 package-lock.json
 *.md
 project.inlang/cache/
+src/lib/styles/tokens.css

@@ -10,7 +10,7 @@
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | In verifica |
 | P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | In verifica |
 | P3-05 | Lingue e selettore di lingua | P3-01 | S | In verifica |
-| P3-06 | Layout base e navigazione | P3-05 | M | Da iniziare |
+| P3-06 | Layout base e navigazione | P3-05 | M | In verifica |
 | P3-07 | Registrazione, login, logout | P3-03 | M | Da iniziare |
 | P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | Da iniziare |
 | P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | Da iniziare |
@@ -79,9 +79,11 @@ Nota, 22 ottobre 2026: Paraglide 2 con lingua base inglese e strategia cookie �
 
 Output: repository dell'app.
 
-- [ ] Navigazione utilizzabile a 360 px di larghezza.
-- [ ] Tema chiaro e scuro secondo le preferenze del dispositivo.
-- [ ] Contrasto dei testi conforme a WCAG AA.
+- [x] Navigazione utilizzabile a 360 px di larghezza.
+- [x] Tema chiaro e scuro secondo le preferenze del dispositivo.
+- [x] Contrasto dei testi conforme a WCAG AA.
+
+Nota, 22 ottobre 2026: token del design system trasformati in variabili CSS da `scripts/build-tokens.ts` (`src/lib/styles/tokens.css`, un test controlla che sia aggiornato). Layout `AppShell`: barra in basso a tre voci sotto i 600 px, rail a sinistra sopra; selettore di lingua nell'intestazione; pagine segnaposto Run, Pokédex, Profilo. Provato con Chromium sulla build: a 360 px nessuno scorrimento orizzontale, tema chiaro e scuro dalle preferenze del dispositivo, bersagli tattili di almeno 48 px, schermata scura controllata a vista. Contrasto: un test calcola il rapporto WCAG per 16 coppie di testo e per i 18 chip di tipo (testo bianco) in entrambi i temi: tutti ≥ 4,5:1. **Trovato**: il token `outline` ha 1,7:1 (chiaro) e 2,0:1 (scuro) su `surface`, sotto il 3:1 che il design system dichiara per i bordi dei controlli; i controlli usano `ink-muted` per il bordo; il token resta per i separatori. Da decidere se scurirlo.
 
 ## P3-07 Registrazione, login, logout
 
