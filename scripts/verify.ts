@@ -75,7 +75,15 @@ export const STEPS: Step[] = [
 	{
 		name: 'container image',
 		command: 'docker',
-		args: ['build', '-t', 'nuzlocke-soullink-companion:verify', '.'],
+		// Environments behind a proxy can add options: VERIFY_DOCKERFILE and VERIFY_IMAGE_ARGS.
+		args: [
+			'build',
+			...(process.env.VERIFY_DOCKERFILE ? ['-f', process.env.VERIFY_DOCKERFILE] : []),
+			...(process.env.VERIFY_IMAGE_ARGS?.split(' ').filter(Boolean) ?? []),
+			'-t',
+			'nuzlocke-soullink-companion:verify',
+			'.'
+		],
 		required: true,
 		skip: () =>
 			process.env.VERIFY_SKIP_IMAGE === '1'
