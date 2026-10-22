@@ -14,7 +14,7 @@
 | P3-07 | Registrazione, login, logout | P3-03 | M | In verifica |
 | P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | In verifica |
 | P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | In verifica |
-| P3-10 | Hub degli eventi SSE | P3-01 | M | Da iniziare |
+| P3-10 | Hub degli eventi SSE | P3-01 | M | In verifica |
 | P3-11 | Verifica locale e hook pre-push | P3-02, P3-12 | S | Da iniziare |
 | P3-13 | Solo HTTP, compatibile con reverse proxy | P3-02 | S | Da iniziare |
 
@@ -124,11 +124,12 @@ Nota, 22 ottobre 2026: pagina `/admin` solo per l'amministratore (ogni caricamen
 
 Output: repository dell'app.
 
-- [ ] Un client si iscrive agli eventi di una run solo se ha accesso a quella run.
-- [ ] Riconnessione automatica con riallineamento dello stato.
-- [ ] Connessioni chiuse rilasciate senza perdite di memoria.
-- [ ] Eventi con `id` crescente, ripresa da `Last-Event-ID`, segnale `ping` (evento con nome) ogni 15 secondi e registro nel database per sopravvivere a un riavvio ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [x] Un client si iscrive agli eventi di una run solo se ha accesso a quella run.
+- [x] Riconnessione automatica con riallineamento dello stato.
+- [x] Connessioni chiuse rilasciate senza perdite di memoria.
+- [x] Eventi con `id` crescente, ripresa da `Last-Event-ID`, segnale `ping` (evento con nome) ogni 15 secondi e registro nel database per sopravvivere a un riavvio ([ADR 0002](../adr/0002-rete-instabile.md)).
 
+Nota, 22 ottobre 2026: modulo `realtime`. Server: `createHub` (diario nel database in `run_event`, ids UUIDv7 crescenti anche nello stesso millisecondo, recupero da `Last-Event-ID` o `?lastEventId=` con soglia di 500 e `reset` per id sconosciuto o troppi eventi, nessuna perdita né doppione se un evento arriva durante il recupero, `ping` con nome ogni 15 s, `bootId`, al massimo 5 connessioni per utente e run, coda limitata che chiude i client che non leggono, timer fermato quando non resta nessuno) e `GET /api/runs/{id}/stream`. Client: `connectStream` (attese 1, 2, 4, 8… fino a 30 s, avviso dopo 40 s di silenzio, riconoscimento del riavvio del server, ripresa dopo un reset). 37 test nuovi, compresi: una nuova istanza dell'hub sullo stesso database rigioca gli eventi dell'altra (riavvio), 300 connessioni aperte e chiuse senza lasciare né connessioni né timer. **Limite dichiarato**: finché non esistono le run (fase 4) la politica di accesso nega tutto, quindi la rotta risponde 404 a chiunque; il collegamento a `run_member`, i trigger di sola aggiunta su `run_event` e i lock arrivano con P4-02, P4-18 e P4-21. Le impostazioni di coda: il margine per il recupero (500) si somma ai 200 messaggi in coda.
 
 ## P3-11 Verifica locale e hook pre-push
 

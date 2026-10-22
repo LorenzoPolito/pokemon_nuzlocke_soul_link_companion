@@ -15,6 +15,13 @@
       "when": 1792662979728,
       "tag": "0001_serious_slayback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792664312632,
+      "tag": "0002_deep_black_bird",
+      "breakpoints": true
     }
   ]
 }
