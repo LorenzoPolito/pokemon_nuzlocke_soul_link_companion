@@ -20,7 +20,25 @@ docker run -d --name nuzlocke \
   nuzlocke-soullink-companion
 ```
 
-L'app risponde in HTTP su `http://<server>:3000`. Le variabili d'ambiente (admin, database remoto, indirizzo pubblico) si aggiungono con i PBI successivi e saranno elencate qui.
+L'app risponde in HTTP su `http://<server>:3000`. Le migrazioni del database si applicano da sole a ogni avvio.
+
+## Variabili d'ambiente
+
+L'app controlla le variabili all'avvio: se una è sbagliata si ferma e dice quale. Il file `.env.example` del repository le elenca.
+
+| Variabile | Obbligatoria | Valore | Uso |
+| --- | --- | --- | --- |
+| `DATA_DIR` | no | `/data` nell'immagine, `./data` in sviluppo | Cartella del database locale |
+| `TURSO_URL`, `TURSO_TOKEN` | no, ma insieme | `libsql://…` e il token | Usa un database Turso online al posto del file locale |
+| `MIGRATIONS_DIR` | no | `/app/drizzle` nell'immagine | Cartella delle migrazioni |
+
+Le variabili dell'amministratore e dell'indirizzo pubblico si aggiungono con P3-08 e P3-13.
+
+## Database e migrazioni
+
+- Senza variabili di Turso il database è il file `app.db` in `DATA_DIR`, con modalità WAL (compaiono anche `app.db-wal` e `app.db-shm`: fanno parte del database).
+- Le migrazioni vanno solo avanti. Prima di applicarne di nuove su un database che ha già dati, l'app copia il file in `app.db.before-migration`: per tornare indietro si ferma l'app, si rimette la copia e si installa la versione precedente.
+- Se una migrazione fallisce l'app non parte e il log dice perché; il database resta com'era prima del passo che ha fallito.
 
 ## Il volume dei dati
 
@@ -39,10 +57,10 @@ L'immagine ha un controllo di salute: ogni 30 secondi chiede `/api/health` all'a
 docker inspect --format '{{.State.Health.Status}}' nuzlocke
 ```
 
-Il controllo parte 10 secondi dopo l'avvio e dopo tre fallimenti consecutivi il container risulta `unhealthy`.
+Il controllo risponde `ok` solo se anche il database risponde. Parte 10 secondi dopo l'avvio e dopo tre fallimenti consecutivi il container risulta `unhealthy`.
 
 ## Cosa contiene l'immagine
 
 - Basata su `node:22-alpine`, costruita in due stadi: lo stadio finale ha solo il risultato della build e le dipendenze di produzione, senza strumenti di build.
 - Gira con l'utente `node` (non root).
-- Dimensione misurata il 22 ottobre 2026: 241 MB con il solo scheletro dell'app; crescerà con il Pokédex e le dipendenze ([prove](14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).
+- Dimensione misurata il 22 ottobre 2026: 304 MB con il database e le migrazioni (241 MB con il solo scheletro); crescerà con il Pokédex e le dipendenze ([prove](14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).
