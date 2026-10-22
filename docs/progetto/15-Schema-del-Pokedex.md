@@ -1,6 +1,6 @@
 # Nuzlocke SoulLink Companion – Schema del Pokédex SQLite
 
-Documento di output di P2-07. Descrive il file SQLite del Pokédex, generato in build da [PokeAPI/api-data](https://github.com/PokeAPI/api-data) e letto in sola lettura dall'app. Lo schema è stato scritto e provato con lo script di prova [`tools/prove/build_pokedex.py`](../../tools/prove/build_pokedex.py) (schema versione 2, 20 ottobre 2026); lo script di produzione nasce in P3-04. Le convenzioni dei dati storici sono quelle verificate in [P1-02 e P1-03](10-Analisi-delle-fonti-dati.md).
+Documento di output di P2-07. Descrive il file SQLite del Pokédex, generato in build da [PokeAPI/api-data](https://github.com/PokeAPI/api-data) e letto in sola lettura dall'app. Lo schema è stato scritto e provato con lo script di prova `tools/prove/build_pokedex.py` (eliminato in P3-04, nella storia di git) (schema versione 2, 20 ottobre 2026); lo script di produzione nasce in P3-04. Le convenzioni dei dati storici sono quelle verificate in [P1-02 e P1-03](10-Analisi-delle-fonti-dati.md).
 
 ## Principi
 
@@ -115,7 +115,7 @@ Le interrogazioni sopra sono state eseguite sul file della prova: 137 aree di lu
 
 ## Come si genera e si aggiorna
 
-Il generatore di produzione è `scripts/build-pokedex.ts` ([P3-04](../backlog/30-Fase-3-Fondamenta.md)); lo script Python di prova resta in `tools/prove/` finché il product owner non conferma l'eliminazione.
+Il generatore di produzione è `scripts/build-pokedex.ts` ([P3-04](../backlog/30-Fase-3-Fondamenta.md)); lo script Python di prova di P1-15 è stato eliminato con il consenso del product owner (resta nella storia di git).
 
 - Clone parziale di api-data (`--filter=blob:none --sparse`) sulle cartelle usate; il commit usato si scrive in `meta` e in un file del repository.
 - Un controllo di coerenza dopo la generazione: conteggi attesi (specie, varietà, mosse, learnset) e che ogni `identifier` usato dai file di gioco esista. Un controllo fallito blocca la build.
