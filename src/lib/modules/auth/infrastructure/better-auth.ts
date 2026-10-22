@@ -34,6 +34,10 @@ export function createAuth({ db, secret, extraPlugins = [] }: AuthOptions) {
 			max: 100,
 			customRules: { '/sign-in/email': { window: 60, max: 5 } }
 		},
+		// The `Secure` attribute is added per request in hooks.server.ts (it depends on whether the
+		// request came in over HTTPS); Better Auth must not decide it from NODE_ENV, or sign-in
+		// would break over plain HTTP.
+		advanced: { useSecureCookies: false },
 		disabledPaths: ['/sign-up/email'],
 		user: {
 			additionalFields: {
