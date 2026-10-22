@@ -92,3 +92,59 @@ I mockup sono stati disegnati il 3 ottobre 2026, prima delle decisioni di P1-19.
 ### Domande aperte
 
 Nessuna bloccante. Il proprietario che non gioca resta una proposta di P2-02.
+
+## P2-12 Bozze schermate: tracker
+
+Data: 20 ottobre 2026. Taglia M. Le bozze sono i mockup della pagina «Run e tracker» (16 schermate) più quelle di creazione e account già descritte in P2-11. Qui si collega ogni schermata ai dati, alle azioni e agli eventi, e si dichiara cosa manca o cambia.
+
+### Regole comuni a tutte le schermate della run
+
+- **Telefono prima.** Tutte le bozze sono a 390 × 844 px; esiste una sola versione tablet (1024 px, `Tablet`) che affianca elenco e dettaglio. Il tablet non cambia le funzioni.
+- **Navigazione.** Barra in basso: Run · Pokédex · Profilo. Dentro una run, schede in alto: Aree · Team · Lotta · Cimitero · Diario. Intestazione: nome della run, gioco e giocatori, level cap.
+- **Level cap in intestazione.** Con i level cap per giocatore ([P2-06](06-Modello-dati-bozza.md#p2-06-tappe-medaglie-e-level-cap)) l'intestazione mostra quello del **giocatore che guarda**; per il proprietario che non gioca o per uno spettatore mostra il più basso tra i giocatori, con l'etichetta «più basso». La schermata Medaglie mostra tutti.
+- **Dati dal server e in tempo reale.** Ogni schermata parte dall'istantanea (`GET /api/runs/{id}`) e si aggiorna con gli eventi SSE ([P2-10](16-Architettura-e-API.md#p2-10-catalogo-degli-eventi-sse)): non fa ricariche.
+- **Lock.** Aprire un modulo di modifica prende il lock del dato; gli altri vedono «In modifica da …» sul dato e una conferma prima di modificare comunque. Se si salva sopra una modifica altrui compare la schermata di conflitto.
+- **Senza rete.** Pulsanti di salvataggio disattivati, avviso dopo 40 secondi, bozze conservate nel browser ([ADR 0002](../adr/0002-rete-instabile.md)).
+- **Azioni Soul Link non ottimistiche.** Registrazione con collegamento, spostamento, morte, area saltata: la schermata attende la risposta del server e mostra «in invio». Le altre modifiche semplici (soprannome, livello, mosse) si vedono subito e si annullano con un messaggio se il server le rifiuta.
+- **Errori di regola.** Il server risponde con un codice ([P2-09](16-Architettura-e-API.md#codici-di-errore)); l'interfaccia mostra la frase della schermata `Errore` (per esempio `team_full` → «Il team ha già 6 Pokémon», `type_clause_violation` → «Marco ha già un Coleottero come tipo primario»).
+- **Spettatore.** Stesse schermate, senza pulsanti di modifica; banner «Sei spettatore: puoi guardare tutto, ma non modificare».
+- **Run finita.** Sola lettura con banner e riepilogo; tutte le azioni di scrittura sono nascoste.
+- **Stato vuoto.** `Vuota`: elenco di run senza elementi, e inviti a creare la prima.
+- **Tema scuro.** `ScuroAree`; tutte le schermate usano i token del design system.
+
+### Schermate, dati, azioni ed eventi
+
+| Schermata (mockup) | Dati | Azioni (permesso) | Eventi che la aggiornano | Stati particolari |
+| --- | --- | --- | --- | --- |
+| **Le mie run** (`Main`) | `GET /api/runs`: nome, gioco e generazione, giocatori, stato, ruolo, riepilogo (medaglie, vivi, morti), etichetta Randomizer | Aprire; «Nuova run» (`run.create`); filtri In corso / Finite / Tutte | `run.*` per le run aperte | Vuoto; run persa con motivo («wipe a …») |
+| **Aree** (`RunAree`, `AreeTre`) | Aree del gioco in ordine unite ai gruppi (`GET /api/runs/{id}/areas`): per area e giocatore l'esito, la specie e il soprannome; filtri Tutte / Da registrare / Catturate / Saltate; riga «Area saltata per tutti» con il motivo | «Registra incontro» (`encounter.create`, sui propri dati; il proprietario per tutti) | `encounter.*`, `group.*`, `lock.*`, `conflict.overwritten` | Aree con stanze interne figlie sotto la grotta se `separateRooms`; area personalizzata marcata; lock «In modifica da Luca»; gruppi `untracked` con l'etichetta «precedente, non tracciata» |
+| **Registra incontro** (`RegistraIncontro`, `RegistraRandomizer`) | Specie incontrabili nell'area per il gioco (da `encounter` del Pokédex), o l'intero Pokédex con il randomizer; specie già possedute per la dupes clause | Salvare (`encounter.create`); con dupes clause il modulo propone «Specie già posseduta: nuovo tentativo» | Idem | Esiti del modulo: **Catturato**, **Fuggito**, **Non catturato**, e tipo di incontro **Selvatico / Regalo / Incontro fisso / Scambio** (vedi differenze); soprannome obbligatorio per «Catturato» |
+| **Team** (`RunTeam`, `TeamTre`) | Gruppi `linked` con posizione `team`, per giocatore, con partner affiancati | Spostare in box (`group.move`); «Segna morto» (`group.die`) | `group.moved`, `group.died` | Messaggio fisso: «Spostare o segnare come morto un Pokémon applica la stessa azione al suo partner»; lock di gruppo se un partner è in modifica |
+| **Box** (`Box`) | Gruppi in box | Mettere in team (`group.move`) con controllo di 6 e del tipo | Idem | Errore `type_clause_violation` mostrato sul gruppo |
+| **Conferma morte** (`ConfermaMorte`) | Gruppo e partner da segnare | Conferma con avversario e mossa facoltativi, area (`group.die`); «L'azione non si può annullare» | `group.died`; eventualmente `run.status_changed` (wipe) | Dopo la conferma, se un giocatore resta senza vivi la schermata passa a Run finita |
+| **Dettaglio esemplare** (`Esemplare`) | Esemplare, partner collegati, mosse con potenza/PP/categoria dei dati effettivi (override compresi), abilità possibili | Modificare livello, natura, abilità, mosse, soprannome (`specimen.update`, propri); evoluzione; «Sposta in box» / «Segna morto» | `specimen.*`, `group.*` | Dati sovrascritti marcati; abilità da elenco possibile o completo |
+| **Cimitero** (`Cimitero`) | Gruppi `dead` con causa (avversario, mossa, area), filtro per giocatore | Correggere la causa (`group.die`) | `group.died`, `group.death_corrected` | «morto con il gruppo» per i partner; vuoto se non ci sono morti |
+| **Diario** (`Diario`) | `GET /api/runs/{id}/events` con filtri Tutti / Catture / Morti / Medaglie; attore e orario | Nessuna (sola lettura) | Tutti i persistenti, in testa | Messaggio fisso «Il diario si scrive da solo e non si modifica: una correzione aggiunge un nuovo evento»; paginazione con `after` |
+| **Medaglie e level cap** (`Medaglie`) | Tappe del gioco per giocatore, tappa successiva, level cap calcolato (valore normale con etichetta se manca), override della run | Segnare o togliere una tappa (`milestone.set`, proprie); override del level cap (proprietario, `run.update`) | `milestone.*`, `levelcap.override_set` | Banner «Modificare il level cap vale per tutti i giocatori» |
+| **Impostazioni della run** (`ImpostazioniRun`) | Nome, gioco, regole, partecipanti con ruolo | Rinominare, cambiare calcolatore e randomizer, ruoli, rimuovere, invitare, segnare completata, eliminare (`run.*`, proprietario) | `run.settings_changed`, `member.*` | Regole bloccate con «Bloccata: la run è iniziata» (vedi P2-02) |
+| **Run finita** (`FineRun`) | Motivo (wipe o dichiarata), riepilogo: durata, medaglie, aree, morti | «Apri il cimitero»; «Crea una nuova run con gli stessi giocatori» (apre il flusso A con i posti precompilati); riapertura (proprietario) | `run.status_changed` | Sola lettura |
+| **Run vista da spettatore** (`Spettatore`) | Come le schermate normali | Nessuna | Idem | Banner; nessun pulsante di modifica |
+| **Conflitto di modifica** (`Conflitto`) | `conflict.overwritten`: chi, cosa, valore nuovo | «Vedi» apre il dato aggiornato | `conflict.overwritten` | Compare come avviso sopra la schermata corrente, non la sostituisce |
+| **Errore di regola e connessione persa** (`Errore`) | Codice di errore del server o stato della connessione | Riprova, annulla | Perdita di `ping` per 40 secondi | Avviso discreto che sparisce al riallineamento |
+
+### Differenze tra mockup e decisioni (da chiudere nei mockup)
+
+| Schermata | Differenza | Cosa cambia |
+| --- | --- | --- |
+| `RegistraIncontro` | Gli esiti sono «Catturato, Fuggito, Sconfitto, Regalo»; il modello ha `caught`, `failed`, `fled`, `dupe`, `untracked` e il regalo è una provenienza | Esiti: Catturato · Fuggito · Non catturato («Sconfitto» diventa «Non catturato»); campo «Tipo di incontro» (Selvatico, Regalo, Incontro fisso, Scambio) per i casi con `special_key`. «Dupe» è un esito proposto dal sistema, non scelto a mano |
+| `ImpostazioniRun` | Mostra il gioco bloccato e dupes clause, regali e tipo bloccati: coerente con P2-02 aggiornato. Mancano stanze interne e difficoltà (entrambe bloccate) | Aggiungere le due righe |
+| `Medaglie` | Il testo «[capopalestra dai dati di gioco]» è un segnaposto; la tappa successiva può non essere una palestra | Mostrare il nome della tappa dai dati di gioco; icona di medaglia solo se la tappa ne ha una |
+| `FineRun` | «12 sessioni» non esiste nel modello | Sessione = gruppo di eventi senza pause oltre 3 ore, calcolata alla lettura sul diario; proposta |
+| `Main` | «2 medaglie · 9 vivi · 3 morti» non dice a chi si riferiscono | Medaglie del proprio giocatore; vivi e morti = gruppi collegati vivi e morti |
+| `RunAree` | Il banner «Area saltata per tutti» non mostra i casi `untracked` | Aggiungere lo stato «precedente, non tracciata» |
+| Intestazioni | «Level cap 13 · Cheren» è unico | Quello del giocatore che guarda (vedi sopra) |
+
+### Domande aperte
+
+- Definizione di «sessione» (3 ore) nella schermata Run finita.
+- Etichetta «più basso» del level cap per chi non gioca.

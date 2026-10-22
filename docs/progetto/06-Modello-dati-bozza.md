@@ -225,7 +225,7 @@ Data: 20 ottobre 2026. Completa le tabelle `run` e `run_member` della sezione "T
 
 `run.game_id` è la chiave di un file di gioco, cioè una **versione** (`black`, `white`, `black-2`, `white-2`): è uguale per tutti i giocatori della run, che non hanno un gioco proprio. Le regole e le impostazioni stanno una volta sola nella riga della run e valgono per tutti; solo `species_override` è per giocatore.
 
-Non cambiano dopo il primo incontro: `game_id`, `game_data_version`, `settings.separateRooms` e `settings.difficulty`. Il «primo incontro» è la prima riga di `encounter` della run, comprese quelle `untracked` create alla nascita di una run già iniziata: per quelle run il blocco vale dalla creazione. Il vincolo è nel dominio (nessun trigger: serve un messaggio d'errore chiaro) con un test dedicato.
+Non cambiano dopo il primo incontro: `game_id`, `game_data_version`, `settings.separateRooms`, `settings.difficulty`, `settings.dupesClause`, `settings.separateGifts` e `settings.typeClause`. Il «primo incontro» è la prima riga di `encounter` della run, comprese quelle `untracked` create alla nascita di una run già iniziata: per quelle run il blocco vale dalla creazione. Il vincolo è nel dominio (nessun trigger: serve un messaggio d'errore chiaro) con un test dedicato.
 
 ### Regole sempre attive
 
@@ -247,7 +247,7 @@ Documento JSON validato con Zod, `settings_schema` = versione dello schema (oggi
 
 I valori predefiniti sono una proposta: la specifica elenca le regole opzionali ma non dice quali partono accese. `typeClause` parte spenta perché cambia molto il modo di giocare; `dupesClause` e `separateGifts` partono accese perché sono le regole comuni del Soul Link e le due già descritte come caso normale nella specifica. Il proprietario le sceglie alla creazione; quali si possono cambiare dopo è nel paragrafo seguente.
 
-Quali impostazioni si possono cambiare in corso di run: `damageCalculator`, `typeClause`, `randomizer`, `dupesClause` e `separateGifts` sì, con un evento nel diario (la regola vale da quel momento, gli incontri passati non si rivalutano); `separateRooms` e `difficulty` no, perché cambiano le aree e il level cap già registrati.
+Quali impostazioni si possono cambiare in corso di run: `damageCalculator` e `randomizer` sì, in qualsiasi momento, con un evento nel diario (cambiano solo ciò che si mostra); `dupesClause`, `separateGifts`, `typeClause`, `separateRooms` e `difficulty` no dopo il primo incontro, perché cambierebbero il significato degli incontri e dei gruppi già registrati. Il mockup delle impostazioni della run ([P2-12](17-Flussi-e-schermate.md#p2-12-bozze-schermate-tracker)) mostra già queste regole come «Bloccata: la run è iniziata»; la bozza precedente di questa sezione le lasciava modificabili.
 
 ### Stato della run
 

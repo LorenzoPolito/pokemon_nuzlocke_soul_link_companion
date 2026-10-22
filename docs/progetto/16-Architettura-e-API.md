@@ -159,10 +159,10 @@ Pokédex e dati di gioco non dipendono da una run. Gli ultimi tre servono i dati
 
 | Metodo e percorso | Input | Output | Errori | Permesso |
 | --- | --- | --- | --- | --- |
-| `GET /api/runs` | `deleted` (solo proprietario) | Le mie run (id, nome, gioco, stato, ruolo, ultima attività) | | `run.list` |
+| `GET /api/runs` | `deleted` (solo proprietario), `status` (`active`, `ended`) | Le mie run: id, nome, gioco, generazione, numero di giocatori, stato, ruolo, ultima attività, `randomizer`, e un riepilogo per chi guarda: medaglie del proprio giocatore, gruppi vivi e gruppi morti | | `run.list` |
 | `POST /api/runs` | `name`, `gameId`, `settings`, `seats` (nome, ruolo, posto dei giocatori invitati: crea i posti in attesa e un invito per ognuno) e, se già iniziata (`startedInProgress`), l'avanzamento: tappe per giocatore, aree già visitate, gruppi con esemplari e posizioni | Run, membro proprietario, posti in attesa con il loro invito (token in chiaro solo qui) | 422, 409 `group_inconsistent` | `run.create` |
 | `GET /api/runs/{id}` | | Istantanea: run, membri, gruppi, incontri, esemplari, tappe, override, `lastEventId` | 404 | `run.read` |
-| `PATCH /api/runs/{id}` | `name`, `settings` (parziale), `baseVersion` | Run | 409 `game_locked` (`separateRooms`, `difficulty`), 409 `run_not_active` | `run.update` |
+| `PATCH /api/runs/{id}` | `name`, `settings` (parziale), `baseVersion` | Run | 409 `game_locked` (impostazioni bloccate dopo il primo incontro), 409 `run_not_active` | `run.update` |
 | `PUT /api/runs/{id}/level-cap-override` | `value` (1–100) o `null` | Run | 422 | `run.update` |
 | `POST /api/runs/{id}/status` | `status`: `lost`, `completed`, `active`; `endInfo` | Run | 409 transizione non ammessa | `run.status` |
 | `POST /api/runs/{id}/transfer-ownership` | `memberId` | Membri | 409 `last_owner` se non è un giocatore | `run.transfer` |
@@ -198,7 +198,7 @@ Le regole del Soul Link sono **applicate dal server** in una sola transazione pe
 | Dopo ogni incontro | Ricalcolo dello stato del gruppo (`open`, `linked`, `skipped`, `untracked`) e di tutti i partner nella stessa transazione ([P2-03](06-Modello-dati-bozza.md#p2-03-aree-incontri-e-link-soul-link)) |
 | Spostare in team | Gruppo `linked`, non morto; al massimo 6 esemplari in team **per ogni giocatore** coinvolto (`team_full`); con `typeClause`, nessun tipo primario ripetuto nel team di ogni giocatore (`type_clause_violation`) |
 | Dichiarare una morte | Gruppo `linked` e non già morto; tutti i partner passano a `dead` insieme; se un giocatore resta senza esemplari vivi, la run diventa `lost` con `endInfo` di tipo `wipe` |
-| Cambiare le impostazioni | `separateRooms` e `difficulty` rifiutati dopo il primo incontro (`game_locked`); le altre registrano un evento |
+| Cambiare le impostazioni | Dopo il primo incontro `separateRooms`, `difficulty`, `dupesClause`, `separateGifts` e `typeClause` sono rifiutate (`game_locked`); `damageCalculator` e `randomizer` registrano un evento |
 | Modificare un esemplare | L'abilità è tra quelle possibili con gli override del giocatore; al massimo 4 mosse senza ripetizioni |
 | Cambiare ruolo o rimuovere un giocatore | Un solo proprietario (`last_owner`); gruppi `open` ricalcolati; nuovi giocatori ricevono incontri `untracked` per i gruppi già terminali |
 

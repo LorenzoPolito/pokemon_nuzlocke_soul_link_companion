@@ -15,7 +15,7 @@
 | P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | In verifica |
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Completato |
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Completato |
-| P2-12 | Bozze schermate: tracker | P2-11 | M | Da iniziare |
+| P2-12 | Bozze schermate: tracker | P2-11 | M | In verifica |
 | P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | Da iniziare |
 | P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | Da iniziare |
 
@@ -130,10 +130,12 @@ Nota di chiusura, 20 ottobre 2026: dal flusso è emersa una modifica al modello,
 
 ## P2-12 Bozze schermate: tracker
 
-Output: Flussi e schermate.
+Output: [Flussi e schermate](../progetto/17-Flussi-e-schermate.md#p2-12-bozze-schermate-tracker).
 
-- [ ] Bozze per lista aree, dettaglio esemplare, team e box, cimitero, timeline.
-- [ ] Ogni bozza progettata prima per telefono.
+- [x] Bozze per lista aree, dettaglio esemplare, team e box, cimitero, timeline.
+- [x] Ogni bozza progettata prima per telefono.
+
+Nota, 20 ottobre 2026: le bozze sono i mockup già esistenti (390 px; una sola versione tablet). Il lavoro è stato collegarli a dati, azioni ed eventi e fissare le differenze con le decisioni (tabella nel documento). P2-02 allineato al mockup delle impostazioni: dupes clause, regali e tipo primario bloccati dopo il primo incontro.
 
 ## P2-13 Bozze schermate: lotte, calcolatore, Pokédex
 
