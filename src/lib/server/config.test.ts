@@ -10,6 +10,19 @@ describe('loadConfig', () => {
 		});
 	});
 
+	it('requires the Pokédex only in production', () => {
+		expect(loadConfig({}).pokedex).toEqual({
+			path: './data/pokedex/pokedex.sqlite',
+			required: false
+		});
+		expect(
+			loadConfig({ NODE_ENV: 'production', POKEDEX_PATH: '/app/pokedex.sqlite' }).pokedex
+		).toEqual({
+			path: '/app/pokedex.sqlite',
+			required: true
+		});
+	});
+
 	it('uses DATA_DIR for the local file', () => {
 		expect(loadConfig({ DATA_DIR: '/data/' }).database).toMatchObject({
 			kind: 'local',

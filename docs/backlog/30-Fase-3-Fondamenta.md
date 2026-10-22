@@ -8,7 +8,7 @@
 | P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | In verifica |
 | P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | In verifica |
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | In verifica |
-| P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | Da iniziare |
+| P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | In verifica |
 | P3-05 | Lingue e selettore di lingua | P3-01 | S | Da iniziare |
 | P3-06 | Layout base e navigazione | P3-05 | M | Da iniziare |
 | P3-07 | Registrazione, login, logout | P3-03 | M | Da iniziare |
@@ -58,9 +58,11 @@ Nota, 22 ottobre 2026: **resta aperto il criterio «Verifica su Turso»**, che r
 
 Output: repository dell'app.
 
-- [ ] Lo stage di build genera il file SQLite con lo schema di P2-07.
-- [ ] Il file è aperto in sola lettura a runtime.
-- [ ] La versione dei dati PokéAPI usata è registrata e visibile all'admin.
+- [x] Lo stage di build genera il file SQLite con lo schema di P2-07.
+- [x] Il file è aperto in sola lettura a runtime.
+- [x] La versione dei dati PokéAPI usata è registrata (commit di api-data e data nel file, riga di log all'avvio) e visibile all'admin. (registrata e letta da `openPokedex`; la sua visualizzazione nel pannello admin arriva con P3-09)
+
+Nota, 22 ottobre 2026: generatore in TypeScript (`scripts/build-pokedex.ts`, `node:sqlite`) che sostituisce lo script di prova Python con gli stessi numeri (1 025 specie, 1 351 varietà, 937 mosse, 638 321 righe di learnset, 117 127 incontri, 677 condizioni di evoluzione; 41,8 MB, 15 s). Il commit di api-data è fissato in `data/pokedex-source.json`; `scripts/fetch-api-data.sh` lo scarica con un clone parziale (9 s). Lo stadio Docker del Pokédex usa `node:22-bookworm` perché l'immagine Alpine non raggiunge il suo registro dal mio ambiente (e ha bisogno di git); non incide sul risultato. Il file è `chmod 444` nell'immagine e la connessione usa `query_only`. 27 test (fixture di api-data: nomi it/en, storico di tipi e mosse con le convenzioni documentate, rifiuto delle scritture, file mancante, versione dello schema diversa). Immagine provata: 356 MB, avvio con la riga di log del Pokédex, errore chiaro se il file manca.
 
 ## P3-05 Lingue e selettore di lingua
 

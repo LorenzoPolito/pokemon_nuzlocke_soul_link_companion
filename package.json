@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"engines": {
-		"node": ">=22"
+		"node": ">=22.18"
 	},
 	"scripts": {
 		"dev": "vite dev",
@@ -15,7 +15,9 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"pokedex:fetch": "sh scripts/fetch-api-data.sh .cache/api-data",
+		"pokedex:build": "node scripts/build-pokedex.ts --source .cache/api-data/data/api/v2 --out data/pokedex/pokedex.sqlite --commit $(git -C .cache/api-data rev-parse HEAD)"
 	},
 	"imports": {
 		"#lib": "./src/lib/index.ts",

@@ -1,0 +1,19 @@
+{
+	"repository": "https://github.com/PokeAPI/api-data",
+	"commit": "447bd5c378bf87da964bfe4dd7487a7bf1d97cbd",
+	"date": "2026-10-20",
+	"directories": [
+		"generation",
+		"version-group",
+		"version",
+		"type",
+		"nature",
+		"ability",
+		"move",
+		"pokemon-species",
+		"evolution-chain",
+		"location",
+		"location-area",
+		"pokemon"
+	]
+}
