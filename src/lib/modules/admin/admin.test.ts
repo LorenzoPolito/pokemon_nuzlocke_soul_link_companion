@@ -1,0 +1,223 @@
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { eq } from 'drizzle-orm';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { DatabaseConfig } from '../../server/config';
+import { openDatabase, type Connection } from '../../server/database/client';
+import { runMigrations } from '../../server/database/migrate';
+import { ensureAdmin } from '../auth/application/ensure-admin';
+import { registerUser } from '../auth/application/register';
+import { createAuth, type Auth } from '../auth/infrastructure/better-auth';
+import { createInvite, setRegistrationMode } from '../auth/infrastructure/invites';
+import { account, session, user } from '../auth/infrastructure/schema';
+import {
+	deleteUser,
+	disableUser,
+	enableUser,
+	listAppInvites,
+	listUsers,
+	resetPassword,
+	revokeInvite,
+	setAdmin
+} from './application/users';
+
+let dir: string;
+let connection: Connection;
+let auth: Auth;
+let adminId: string;
+let adminHeaders: Headers;
+const now = 1_790_000_000_000;
+
+const deps = () => ({ db: connection.db, auth, headers: adminHeaders });
+const find = async (email: string) =>
+	(await connection.db.select().from(user).where(eq(user.email, email)))[0];
+const signIn = (email: string, password: string) =>
+	auth.api.signInEmail({ body: { email, password }, returnHeaders: true });
+
+beforeEach(async () => {
+	dir = mkdtempSync(join(tmpdir(), 'nsl-admin-panel-'));
+	const config: DatabaseConfig = { kind: 'local', url: `file:${dir}/app.db`, dataDir: dir };
+	connection = await openDatabase(config);
+	await runMigrations(connection, config, join(process.cwd(), 'drizzle'));
+	auth = createAuth({ db: connection.db, secret: 'a-test-secret-with-more-than-32-characters' });
+	await ensureAdmin(
+		{ db: connection.db, auth },
+		{ email: 'admin@example.test', password: 'password-iniziale-1' }
+	);
+	adminId = (await find('admin@example.test'))!.id;
+	const login = await signIn('admin@example.test', 'password-iniziale-1');
+	adminHeaders = new Headers({
+		cookie: login.headers
+			.getSetCookie()
+			.map((c) => c.split(';')[0])
+			.join('; ')
+	});
+	await setRegistrationMode(connection.db, 'open', now);
+	await registerUser(
+		{ db: connection.db, auth, now: () => now },
+		{ name: 'Sara', email: 'sara@example.test', password: 'password-lunga-1' }
+	);
+});
+
+afterEach(() => {
+	connection.client.close();
+	rmSync(dir, { recursive: true, force: true });
+});
+
+const sara = async () => (await find('sara@example.test'))!;
+
+describe('listUsers', () => {
+	it('lists every account with its role and state', async () => {
+		const rows = await listUsers(connection.db);
+		expect(rows.map((r) => [r.email, r.isAdmin, r.disabled, r.deleted])).toEqual([
+			['admin@example.test', true, false, false],
+			['sara@example.test', false, false, false]
+		]);
+	});
+});
+
+describe('disable and enable', () => {
+	it('stops the account from signing in, and enabling lets it back', async () => {
+		await disableUser(deps(), adminId, (await sara()).id);
+		await expect(signIn('sara@example.test', 'password-lunga-1')).rejects.toThrow();
+		await enableUser(deps(), (await sara()).id);
+		expect((await signIn('sara@example.test', 'password-lunga-1')).response.user.email).toBe(
+			'sara@example.test'
+		);
+	});
+
+	it('ends the sessions the account already had', async () => {
+		await signIn('sara@example.test', 'password-lunga-1');
+		expect(
+			await connection.db
+				.select()
+				.from(session)
+				.where(eq(session.userId, (await sara()).id))
+		).not.toHaveLength(0);
+		await disableUser(deps(), adminId, (await sara()).id);
+		expect(
+			await connection.db
+				.select()
+				.from(session)
+				.where(eq(session.userId, (await sara()).id))
+		).toHaveLength(0);
+	});
+
+	it('refuses to disable the actor or the last administrator', async () => {
+		expect(await disableUser(deps(), adminId, adminId)).toEqual({ ok: false, error: 'self' });
+		// Only one active administrator: another actor still may not disable it.
+		expect(await disableUser(deps(), 'someone-else', adminId)).toEqual({
+			ok: false,
+			error: 'last_admin'
+		});
+		// With a second active administrator, the other one can be disabled.
+		await setAdmin(deps(), adminId, (await sara()).id, true);
+		expect(await disableUser(deps(), adminId, (await sara()).id)).toEqual({ ok: true });
+		// ...and then the first is the last one again.
+		expect(await disableUser(deps(), 'someone-else', adminId)).toEqual({
+			ok: false,
+			error: 'last_admin'
+		});
+	});
+});
+
+describe('roles', () => {
+	it('promotes and demotes, but never the last administrator', async () => {
+		expect(await setAdmin(deps(), adminId, (await sara()).id, true)).toEqual({ ok: true });
+		expect((await sara()).role).toBe('admin');
+		expect(await setAdmin(deps(), adminId, adminId, false)).toEqual({ ok: true });
+		expect(await setAdmin(deps(), adminId, (await sara()).id, false)).toEqual({
+			ok: false,
+			error: 'last_admin'
+		});
+	});
+});
+
+describe('resetPassword', () => {
+	it('sets a temporary password that must be changed, and ends the old sessions', async () => {
+		await signIn('sara@example.test', 'password-lunga-1');
+		await resetPassword(deps(), (await sara()).id, 'temporanea-12345');
+		await expect(signIn('sara@example.test', 'password-lunga-1')).rejects.toThrow();
+		expect((await signIn('sara@example.test', 'temporanea-12345')).response.user.email).toBe(
+			'sara@example.test'
+		);
+		expect((await sara()).mustChangePassword).toBe(true);
+		expect(
+			await connection.db
+				.select()
+				.from(session)
+				.where(eq(session.userId, (await sara()).id))
+		).toHaveLength(1);
+	});
+});
+
+describe('deleteUser (anonymise)', () => {
+	it('keeps the row, removes name, email and credentials, and ends sessions', async () => {
+		const id = (await sara()).id;
+		await signIn('sara@example.test', 'password-lunga-1');
+		expect(await deleteUser(deps(), adminId, id, now)).toEqual({ ok: true });
+		const [row] = await connection.db.select().from(user).where(eq(user.id, id));
+		expect(row).toMatchObject({
+			name: 'Utente eliminato',
+			email: `deleted-${id}@invalid`,
+			banned: true,
+			role: 'user'
+		});
+		expect(row?.deletedAt?.getTime()).toBe(now);
+		expect(await connection.db.select().from(account).where(eq(account.userId, id))).toHaveLength(
+			0
+		);
+		expect(await connection.db.select().from(session).where(eq(session.userId, id))).toHaveLength(
+			0
+		);
+		await expect(signIn('sara@example.test', 'password-lunga-1')).rejects.toThrow();
+	});
+
+	it('frees the email for a new account', async () => {
+		await deleteUser(deps(), adminId, (await sara()).id, now);
+		const again = await registerUser(
+			{ db: connection.db, auth, now: () => now },
+			{ name: 'Sara', email: 'sara@example.test', password: 'password-lunga-1' }
+		);
+		expect(again.ok).toBe(true);
+	});
+
+	it('refuses the actor, the last administrator and an account already deleted', async () => {
+		expect(await deleteUser(deps(), adminId, adminId, now)).toEqual({ ok: false, error: 'self' });
+		const id = (await sara()).id;
+		await deleteUser(deps(), adminId, id, now);
+		expect(await deleteUser(deps(), adminId, id, now)).toEqual({ ok: false, error: 'deleted' });
+		expect(await deleteUser(deps(), adminId, 'nobody', now)).toEqual({
+			ok: false,
+			error: 'not_found'
+		});
+		expect(await resetPassword(deps(), id, 'temporanea-12345')).toEqual({
+			ok: false,
+			error: 'deleted'
+		});
+		expect(await enableUser(deps(), id)).toEqual({ ok: false, error: 'deleted' });
+	});
+});
+
+describe('invitations', () => {
+	it('lists the latest app invitations and revokes one', async () => {
+		await createInvite(
+			connection.db,
+			{ id: 'i1', createdBy: adminId, kind: 'app', maxUses: 3 },
+			now
+		);
+		await createInvite(
+			connection.db,
+			{ id: 'i2', createdBy: adminId, kind: 'run', runId: 'r', role: 'player' },
+			now + 1
+		);
+		const list = await listAppInvites(connection.db);
+		expect(list).toEqual([
+			{ id: 'i1', uses: 0, maxUses: 3, expiresAt: now + 7 * 24 * 3600 * 1000, revoked: false }
+		]);
+		expect(await revokeInvite(connection.db, 'i1', now)).toBe(true);
+		expect((await listAppInvites(connection.db))[0]?.revoked).toBe(true);
+		expect(await revokeInvite(connection.db, 'i2', now)).toBe(false); // run invitations are not managed here
+	});
+});

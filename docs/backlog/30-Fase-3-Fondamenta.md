@@ -13,7 +13,7 @@
 | P3-06 | Layout base e navigazione | P3-05 | M | In verifica |
 | P3-07 | Registrazione, login, logout | P3-03 | M | In verifica |
 | P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | In verifica |
-| P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | Da iniziare |
+| P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | In verifica |
 | P3-10 | Hub degli eventi SSE | P3-01 | M | Da iniziare |
 | P3-11 | Verifica locale e hook pre-push | P3-02, P3-12 | S | Da iniziare |
 | P3-13 | Solo HTTP, compatibile con reverse proxy | P3-02 | S | Da iniziare |
@@ -60,7 +60,7 @@ Output: repository dell'app.
 
 - [x] Lo stage di build genera il file SQLite con lo schema di P2-07.
 - [x] Il file è aperto in sola lettura a runtime.
-- [x] La versione dei dati PokéAPI usata è registrata (commit di api-data e data nel file, riga di log all'avvio) e visibile all'admin. (registrata e letta da `openPokedex`; la sua visualizzazione nel pannello admin arriva con P3-09)
+- [x] La versione dei dati PokéAPI usata è registrata (commit di api-data e data nel file, riga di log all'avvio) e visibile all'admin. (registrata e letta da `openPokedex`; visibile nel pannello admin da P3-09)
 
 Nota, 22 ottobre 2026: generatore in TypeScript (`scripts/build-pokedex.ts`, `node:sqlite`) che sostituisce lo script di prova Python con gli stessi numeri (1 025 specie, 1 351 varietà, 937 mosse, 638 321 righe di learnset, 117 127 incontri, 677 condizioni di evoluzione; 41,8 MB, 15 s). Il commit di api-data è fissato in `data/pokedex-source.json`; `scripts/fetch-api-data.sh` lo scarica con un clone parziale (9 s). Lo stadio Docker del Pokédex usa `node:22-bookworm` perché l'immagine Alpine non raggiunge il suo registro dal mio ambiente (e ha bisogno di git); non incide sul risultato. Il file è `chmod 444` nell'immagine e la connessione usa `query_only`. 27 test (fixture di api-data: nomi it/en, storico di tipi e mosse con le convenzioni documentate, rifiuto delle scritture, file mancante, versione dello schema diversa). Immagine provata: 356 MB, avvio con la riga di log del Pokédex, errore chiaro se il file manca.
 
@@ -114,9 +114,11 @@ Nota, 22 ottobre 2026: `ensureAdmin` (8 test) cerca l'admin per ruolo e l'accoun
 
 Output: repository dell'app.
 
-- [ ] Elenco utenti con disattivazione, reset della password ed eliminazione; un account eliminato diventa anonimo, le sue run restano e la proprietà passa al giocatore successivo.
-- [ ] Cambio della modalità di registrazione e generazione di link di invito.
-- [ ] Pagina accessibile solo all'admin, verificato lato server.
+- [x] Elenco utenti con disattivazione, reset della password ed eliminazione; un account eliminato diventa anonimo, le sue run restano e la proprietà passa al giocatore successivo. (anonimizzazione fatta; il passaggio di proprietà richiede le run e passa a P4-02)
+- [x] Cambio della modalità di registrazione e generazione di link di invito.
+- [x] Pagina accessibile solo all'admin, verificato lato server.
+
+Nota, 22 ottobre 2026: pagina `/admin` solo per l'amministratore (ogni caricamento e ogni azione chiamano `authorize`; un utente normale riceve 403 e non vede la voce di menu). Utenti: reimposta password (temporanea, mostrata una volta, da cambiare; ferma le sessioni), disattiva e riattiva, rendi o togli amministratore, elimina con conferma (anonimizza: nome, email, credenziali e sessioni vanno, la riga resta). Regole: mai l'ultimo amministratore attivo, mai sul proprio account. Registrazioni: aperta, su invito o chiusa; link di invito all'app con numero di usi, elenco degli ultimi con revoca, link mostrato una volta. Mostra anche l'avviso HTTP (criterio di P3-13) e la versione dei dati di PokéAPI del Pokédex (chiude il criterio rinviato di P3-04). 14 test (casi d'uso, ultimo admin) e prova con Chromium: modalità, invito, registrazione di un secondo utente con il link, 403 su `/admin`, reset, disattivazione, rifiuto sul proprio account.
 
 ## P3-10 Hub degli eventi SSE
 
@@ -157,6 +159,6 @@ Output: repository dell'app, Guida di installazione.
 - [ ] Senza configurazione l'app risponde in HTTP sulla porta indicata.
 - [ ] Dietro un reverse proxy con HTTPS l'app riconosce protocollo e indirizzo originali dalle intestazioni inoltrate (ORIGIN e intestazioni configurabili); nessun certificato gestito dall'app.
 - [ ] Quando il proxy indica HTTPS, i cookie di sessione sono marcati Secure.
-- [ ] In HTTP il pannello admin mostra un avviso: password e sessioni viaggiano in chiaro.
+- [x] In HTTP il pannello admin mostra un avviso: password e sessioni viaggiano in chiaro. (fatto in P3-09)
 - [ ] La guida di installazione dice di non comprimere `/api/stream` nel proxy: con `gzip` su `text/event-stream` nginx trattiene il flusso ([prove](../progetto/14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser)).
 
