@@ -9,7 +9,7 @@ Guida per chi installa l'app su un proprio server. Si completa con i PBI P3-08 (
 
 ## Costruire e avviare
 
-L'immagine si costruisce dal repository; non è ancora pubblicata su un registro.
+L'immagine si costruisce dal repository; non è ancora pubblicata su un registro. **La build ha bisogno di internet**: scarica da GitHub i dati di PokéAPI (circa 400 MB di JSON, a un commit fissato nel repository) e le immagini di base da Docker Hub; ci vuole un paio di minuti la prima volta.
 
 ```sh
 docker build -t nuzlocke-soullink-companion .
@@ -30,9 +30,14 @@ L'app controlla le variabili all'avvio: se una è sbagliata si ferma e dice qual
 | --- | --- | --- | --- |
 | `DATA_DIR` | no | `/data` nell'immagine, `./data` in sviluppo | Cartella del database locale |
 | `TURSO_URL`, `TURSO_TOKEN` | no, ma insieme | `libsql://…` e il token | Usa un database Turso online al posto del file locale |
+| `POKEDEX_PATH` | no | `/app/pokedex/pokedex.sqlite` nell'immagine | File del Pokédex, in sola lettura; in produzione deve esistere |
 | `MIGRATIONS_DIR` | no | `/app/drizzle` nell'immagine | Cartella delle migrazioni |
 
 Le variabili dell'amministratore e dell'indirizzo pubblico si aggiungono con P3-08 e P3-13.
+
+## Il Pokédex
+
+L'immagine contiene il Pokédex (specie, mosse, abilità, evoluzioni, incontri) in un file SQLite di circa 42 MB, generato durante la build dai dati di [PokeAPI/api-data](https://github.com/PokeAPI/api-data) e aperto dall'app solo in lettura. Nessuna ricerca tocca internet. All'avvio il log dice da quale commit di api-data viene (`Pokédex ready (api-data 447bd5c, …)`). Per aggiornare i dati si cambia il commit in `data/pokedex-source.json` e si ricostruisce l'immagine. Se il file manca o ha una versione dello schema diversa, in produzione l'app non parte.
 
 ## Database e migrazioni
 
@@ -61,6 +66,6 @@ Il controllo risponde `ok` solo se anche il database risponde. Parte 10 secondi 
 
 ## Cosa contiene l'immagine
 
-- Basata su `node:22-alpine`, costruita in due stadi: lo stadio finale ha solo il risultato della build e le dipendenze di produzione, senza strumenti di build.
+- Basata su `node:22-alpine`, costruita in più stadi: uno stadio su Debian (con git) genera il Pokédex, uno su Alpine compila l'app; lo stadio finale ha solo il risultato della build, le dipendenze di produzione e il file del Pokédex, senza strumenti di build.
 - Gira con l'utente `node` (non root).
-- Dimensione misurata il 22 ottobre 2026: 304 MB con il database e le migrazioni (241 MB con il solo scheletro); crescerà con il Pokédex e le dipendenze ([prove](14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).
+- Dimensione misurata il 22 ottobre 2026: 356 MB con il Pokédex (304 MB senza, 241 MB con il solo scheletro); crescerà con il Pokédex e le dipendenze ([prove](14-Prove-di-fattibilita.md#p1-17-prova-immagine-docker-multi-stage)).

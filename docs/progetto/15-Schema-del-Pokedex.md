@@ -115,6 +115,8 @@ Le interrogazioni sopra sono state eseguite sul file della prova: 137 aree di lu
 
 ## Come si genera e si aggiorna
 
+Il generatore di produzione è `scripts/build-pokedex.ts` ([P3-04](../backlog/30-Fase-3-Fondamenta.md)); lo script Python di prova resta in `tools/prove/` finché il product owner non conferma l'eliminazione.
+
 - Clone parziale di api-data (`--filter=blob:none --sparse`) sulle cartelle usate; il commit usato si scrive in `meta` e in un file del repository.
 - Un controllo di coerenza dopo la generazione: conteggi attesi (specie, varietà, mosse, learnset) e che ogni `identifier` usato dai file di gioco esista. Un controllo fallito blocca la build.
 - Aggiornare il commit di api-data è una decisione del progetto, non automatica.

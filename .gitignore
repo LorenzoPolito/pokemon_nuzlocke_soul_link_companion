@@ -50,3 +50,7 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 *.swp
+
+# Pokédex generato e dati scaricati per generarlo (P3-04)
+.cache/
+data/pokedex/

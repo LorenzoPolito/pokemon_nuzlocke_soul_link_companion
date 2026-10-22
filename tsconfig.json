@@ -4,7 +4,8 @@
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"noImplicitOverride": true,
-		"verbatimModuleSyntax": true
+		"verbatimModuleSyntax": true,
+		"allowImportingTsExtensions": true
 	},
-	"include": ["src", "vite.config.ts", "eslint.config.js", "drizzle.config.ts"]
+	"include": ["src", "vite.config.ts", "eslint.config.js", "drizzle.config.ts", "scripts"]
 }

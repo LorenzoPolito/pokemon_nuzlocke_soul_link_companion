@@ -38,6 +38,8 @@ npm run format     # riformatta il codice
 npm test           # test di unità (Vitest)
 npm run build      # build di produzione in build/ (adapter Node)
 npm run preview    # prova la build
+npm run pokedex:fetch  # scarica i dati di PokeAPI/api-data (commit fissato in data/pokedex-source.json)
+npm run pokedex:build  # genera data/pokedex/pokedex.sqlite (serve Node 22.18+)
 ```
 
 Il codice sta in `src/`; i moduli seguono le [Linee guida di sviluppo](docs/progetto/05-Linee-guida-di-sviluppo.md). Gli import interni usano l'alias `#lib` (SvelteKit 3 ha rimosso `$lib`). `npm run verify`, che riunisce lint, tipi, test e build dell'immagine, arriva con P3-11.
