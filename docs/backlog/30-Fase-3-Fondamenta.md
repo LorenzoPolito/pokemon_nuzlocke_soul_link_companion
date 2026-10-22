@@ -5,7 +5,7 @@
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
 | P3-12 | Configurazione di GitHub | — | S | In corso |
-| P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | Da iniziare |
+| P3-01 | Scheletro del progetto SvelteKit | P2-14, P3-12 | S | In verifica |
 | P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | Da iniziare |
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | Da iniziare |
 | P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | Da iniziare |
@@ -22,11 +22,12 @@
 
 Output: repository dell'app.
 
-- [ ] SvelteKit con adapter Node e TypeScript in modalità strict.
-- [ ] Lint, formattazione e test runner configurati, con un test di esempio verde.
-- [ ] Comandi di sviluppo documentati nel README.
-- [ ] Alias dei moduli con `#lib` (SvelteKit 3 ha rimosso `$lib`) e adapter passato a `sveltekit({ adapter })` in `vite.config.ts` ([prove](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua)).
+- [x] SvelteKit con adapter Node e TypeScript in modalità strict.
+- [x] Lint, formattazione e test runner configurati, con un test di esempio verde.
+- [x] Comandi di sviluppo documentati nel README.
+- [x] Alias dei moduli con `#lib` (SvelteKit 3 ha rimosso `$lib`) e adapter passato a `sveltekit({ adapter })` in `vite.config.ts` ([prove](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua)).
 
+Nota, 22 ottobre 2026: in SvelteKit 3 `Handle` si importa da `@sveltejs/kit/hooks`, `tsconfig.json` estende `$app/tsconfig` e la configurazione dell'adapter sta in `vite.config.ts`. Verificato: `npm run check`, `lint`, `test` (2 test) e `build` senza errori; la build parte con `node build/index.js` e risponde in HTTP. Testi dell'interfaccia e lingua arrivano con P3-05; eslint-plugin-boundaries con i primi moduli.
 
 ## P3-02 Dockerfile multi-stage e volume dati
 

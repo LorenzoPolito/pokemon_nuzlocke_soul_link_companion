@@ -2,7 +2,7 @@
 
 Web app self-hosted, in un unico container Docker, che accompagna le run Nuzlocke Soul Link di Pokémon: più run, più giocatori collegati per run, tracker di incontri, team, box, morti, medaglie e level cap, aiuto per le lotte e Pokédex completo.
 
-**Stato**: fase 1 (raccolta dati e analisi tecnica). Il codice dell'app non esiste ancora: arriva con P3-01. La prima versione (0.1) supporterà Pokémon Bianco, Nero, Bianco 2 e Nero 2.
+**Stato**: fase 3 (fondamenta). Esiste lo scheletro SvelteKit (P3-01); le funzioni dell'app arrivano con i PBI successivi. La prima versione (0.1) supporterà Pokémon Bianco, Nero, Bianco 2 e Nero 2.
 
 ## Avvio rapido
 
@@ -27,7 +27,20 @@ Per contribuire: [`CONTRIBUTING.md`](CONTRIBUTING.md). Le istruzioni per l'agent
 
 ## Sviluppo
 
-Stack: SvelteKit con adapter Node, TypeScript strict, Drizzle su libSQL (file locale, Turso opzionale), Better Auth, Paraglide, @smogon/calc, Server-Sent Events. Comandi di sviluppo e test: da completare in P3-01.
+Stack: SvelteKit 3 con adapter Node, TypeScript strict, Drizzle su libSQL (file locale, Turso opzionale), Better Auth, Paraglide, @smogon/calc, Server-Sent Events. Servono Node 22 o successivo e npm.
+
+```sh
+npm install        # dipendenze
+npm run dev        # server di sviluppo su http://localhost:5173
+npm run check      # controllo dei tipi (svelte-check)
+npm run lint       # Prettier (solo controllo) ed ESLint
+npm run format     # riformatta il codice
+npm test           # test di unità (Vitest)
+npm run build      # build di produzione in build/ (adapter Node)
+npm run preview    # prova la build
+```
+
+Il codice sta in `src/`; i moduli seguono le [Linee guida di sviluppo](docs/progetto/05-Linee-guida-di-sviluppo.md). Gli import interni usano l'alias `#lib` (SvelteKit 3 ha rimosso `$lib`). `npm run verify`, che riunisce lint, tipi, test e build dell'immagine, arriva con P3-11.
 
 Dopo il clone, attiva l'hook pre-push versionato:
 
