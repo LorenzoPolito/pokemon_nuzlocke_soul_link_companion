@@ -13,7 +13,7 @@ Un solo repository contiene app, test, dati di gioco, documentazione e configura
 | Nome | `pokemon_nuzlocke_soul_link_companion` (la proposta iniziale era `nuzlocke-soullink-companion`) | Creato |
 | Proprietario | Account personale del product owner, `LorenzoPolito` | Creato |
 | Visibilità | Privato | Deciso |
-| Licenza | Necessaria solo se un giorno il repository diventa pubblico | Da decidere dopo P1-10 |
+| Licenza | Necessaria solo se un giorno il repository diventa pubblico | Decisa il 22 ottobre 2026: non necessaria finché il repository resta privato |
 | Rami | Git flow: `main` per i rilasci, `develop` per l'integrazione, `pbi/…`, `bug/…`, `chore/…` per il lavoro ([decisione 22](../adr/0001-decisioni-di-progetto.md#22-git-flow-main-e-develop)) | Deciso |
 | CI | Nessuna: verifica locale con `npm run verify` e hook pre-push ([decisione 13](../adr/0001-decisioni-di-progetto.md#13-repository-privato-senza-ci-verifica-locale)) | Deciso |
 | GitHub Actions | Solo il workflow `branch-policy`, dentro i minuti gratuiti e con budget di spesa a 0 dollari ([decisione 23](../adr/0001-decisioni-di-progetto.md#23-github-actions-solo-per-il-controllo-dei-branch-gratis)) | Deciso |
