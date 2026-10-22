@@ -7,9 +7,10 @@
 
 	let {
 		signedIn,
+		isAdmin = false,
 		saveLocale,
 		children
-	}: { signedIn: boolean; saveLocale: boolean; children: Snippet } = $props();
+	}: { signedIn: boolean; isAdmin?: boolean; saveLocale: boolean; children: Snippet } = $props();
 
 	// A signed-in user keeps the chosen language on the account.
 	const rememberLocale = async (locale: string) => {
@@ -21,7 +22,12 @@
 	};
 
 	// Bottom bar on phones, rail on wider screens (docs/design-system, "Navigazione e layout").
-	const items = $derived([
+	const adminItem = $derived({
+		href: '/admin' as const,
+		label: m.nav_admin(),
+		icon: 'M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm0 4.2 1.5 3 3.3.5-2.4 2.3.6 3.3L12 13.8 9 15.3l.6-3.3-2.4-2.3 3.3-.5L12 6.2z'
+	});
+	const base = $derived([
 		{
 			href: '/' as const,
 			label: m.nav_runs(),
@@ -38,6 +44,8 @@
 			icon: 'M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z'
 		}
 	]);
+
+	const items = $derived([...base, ...(isAdmin ? [adminItem] : [])]);
 
 	const isActive = (href: string) =>
 		href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
@@ -101,7 +109,8 @@
 		position: sticky;
 		bottom: 0;
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
 		background: var(--color-surface-container);
 	}
 

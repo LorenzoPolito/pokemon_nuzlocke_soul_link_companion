@@ -5,6 +5,10 @@
 	let { data, children } = $props();
 </script>
 
-<AppShell signedIn={data.user !== null} saveLocale={data.user !== null}>
+<AppShell
+	signedIn={data.user !== null}
+	isAdmin={data.user?.role === 'admin'}
+	saveLocale={data.user !== null}
+>
 	{@render children()}
 </AppShell>
