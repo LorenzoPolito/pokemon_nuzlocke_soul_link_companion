@@ -14,9 +14,12 @@ FROM node:22-alpine
 WORKDIR /app
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
-    PORT=3000
+    PORT=3000 \
+    DATA_DIR=/data \
+    MIGRATIONS_DIR=/app/drizzle
 COPY --from=build /app/build ./build
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/drizzle ./drizzle
 COPY package.json ./
 
 # The data directory belongs to the unprivileged user *before* it is declared
