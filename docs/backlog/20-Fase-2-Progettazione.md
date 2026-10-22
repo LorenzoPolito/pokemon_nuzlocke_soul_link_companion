@@ -10,7 +10,7 @@
 | P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | In verifica |
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Completato |
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Completato |
-| P2-07 | Schema del Pokédex SQLite | P1-15 | M | Da iniziare |
+| P2-07 | Schema del Pokédex SQLite | P1-15 | M | In verifica |
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Da iniziare |
 | P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | Da iniziare |
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Da iniziare |
@@ -81,13 +81,14 @@ Nota di chiusura, 20 ottobre 2026: dove manca il livello della difficoltà scelt
 
 ## P2-07 Schema del Pokédex SQLite
 
-Output: Modello dati.
+Output: [Schema del Pokédex](../progetto/15-Schema-del-Pokedex.md).
 
-- [ ] Tabelle e indici per specie, forme, tipi, mosse, abilità, learnset, evoluzioni, incontri.
-- [ ] Nomi in più lingue con fallback all'inglese.
-- [ ] Dati per version group, così ogni run legge i dati del proprio gioco.
-- [ ] Parte dallo script di prova `tools/prove/build_pokedex.py` (tabelle, storico con `until_generation`, learnset per version group).
+- [x] Tabelle e indici per specie, forme, tipi, mosse, abilità, learnset, evoluzioni, incontri.
+- [x] Nomi in più lingue con fallback all'inglese.
+- [x] Dati per version group, così ogni run legge i dati del proprio gioco.
+- [x] Parte dallo script di prova `tools/prove/build_pokedex.py` (tabelle, storico con `until_generation`, learnset per version group).
 
+Nota, 20 ottobre 2026: lo schema è provato con lo script di prova esteso (41,9 MB, 117 127 incontri, 677 condizioni di evoluzione, 638 321 righe di learnset). Per le mosse la regola dei valori per gruppo di versioni tratta i campi nulli come «non cambiato», verificata su Colpo.
 
 ## P2-08 Modello dei permessi
 
