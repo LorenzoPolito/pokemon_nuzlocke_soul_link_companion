@@ -44,7 +44,7 @@ npm run pokedex:fetch  # scarica i dati di PokeAPI/api-data (commit fissato in d
 npm run pokedex:build  # genera data/pokedex/pokedex.sqlite (serve Node 22.18+)
 ```
 
-Il codice sta in `src/`; i moduli seguono le [Linee guida di sviluppo](docs/progetto/05-Linee-guida-di-sviluppo.md). Gli import interni usano l'alias `#lib` (SvelteKit 3 ha rimosso `$lib`). `npm run verify`, che riunisce lint, tipi, test e build dell'immagine, arriva con P3-11.
+Il codice sta in `src/`; i moduli seguono le [Linee guida di sviluppo](docs/progetto/05-Linee-guida-di-sviluppo.md). Gli import interni usano l'alias `#lib` (SvelteKit 3 ha rimosso `$lib`). `npm run verify` riunisce lint, tipi, test, build dell'app e dell'immagine (lo esegue anche l'hook pre-push).
 
 Dopo il clone, attiva l'hook pre-push versionato:
 

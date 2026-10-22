@@ -80,14 +80,14 @@ Chiusura:
 
 Stack (decisioni 1–8): SvelteKit con adapter Node, TypeScript strict, un solo container Docker; Drizzle con libSQL su file locale in `/data` (Turso opzionale, stesso codice); migrazioni solo in avanti all'avvio; Better Auth con admin da `ADMIN_EMAIL` e `ADMIN_PASSWORD`; Paraglide (italiano e inglese); Pokédex SQLite in sola lettura generato in build da PokeAPI/api-data; @smogon/calc; SSE; solo HTTP.
 
-Comandi (`npm run verify` arriva con P3-11):
+Comandi:
 
 | Comando | Cosa fa |
 | --- | --- |
 | `git config core.hooksPath .githooks` | Attiva gli hook di git (lo fa da sé l'hook SessionStart di Claude Code) |
 | `npm run dev`, `build`, `preview` | Sviluppo, build di produzione (adapter Node), prova della build |
 | `npm run check`, `lint`, `format`, `test` | Tipi, Prettier+ESLint, formattazione, test di unità (Vitest) |
-| `npm run verify` | Lint, tipi, test di unità e di sistema, build dell'immagine (da P3-11) |
+| `npm run verify` | Lint, tipi, test di unità e di sistema, build dell'immagine; lo esegue anche l'hook pre-push |
 
 Architettura, moduli e convenzioni di codice: `docs/progetto/05-Linee-guida-di-sviluppo.md`.
 

@@ -15,7 +15,7 @@
 | P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | In verifica |
 | P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | In verifica |
 | P3-10 | Hub degli eventi SSE | P3-01 | M | In verifica |
-| P3-11 | Verifica locale e hook pre-push | P3-02, P3-12 | S | Da iniziare |
+| P3-11 | Verifica locale e hook pre-push | P3-02, P3-12 | S | In verifica |
 | P3-13 | Solo HTTP, compatibile con reverse proxy | P3-02 | S | Da iniziare |
 
 ## P3-01 Scheletro del progetto SvelteKit
@@ -135,11 +135,13 @@ Nota, 22 ottobre 2026: modulo `realtime`. Server: `createHub` (diario nel databa
 
 Output: repository dell'app.
 
-- [ ] Il comando npm run verify esegue lint, controllo dei tipi, test di unità e di sistema e build dell'immagine.
-- [ ] Un hook pre-push blocca il push se la verifica fallisce o se il ramo è main o develop; la pull request riporta l'esito della verifica.
-- [ ] `npm audit --audit-level=high` eseguito come avviso che non blocca il push e non fallisce a rete assente ([ADR 0005](../adr/0005-adr-e-scelte-di-processo.md)).
+- [x] Il comando npm run verify esegue lint, controllo dei tipi, test di unità e di sistema e build dell'immagine.
+- [x] Un hook pre-push blocca il push se la verifica fallisce o se il ramo è main o develop; la pull request riporta l'esito della verifica.
+- [x] `npm audit --audit-level=high` eseguito come avviso che non blocca il push e non fallisce a rete assente ([ADR 0005](../adr/0005-adr-e-scelte-di-processo.md)).
 
 Modifica dei criteri, 19 ottobre 2026: aggiunto `develop` al criterio dell'hook (git flow, [decisione 22](../adr/0001-decisioni-di-progetto.md#22-git-flow-main-e-develop)); il blocco su `main` e `develop` esiste già dalla preparazione del repository (P3-12).
+
+Nota, 22 ottobre 2026: `npm run verify` (`scripts/verify.ts`) esegue in ordine lint, tipi, test di unità e integrazione, build dell'app, test di sistema (saltati finché non esiste `tests/system`, arrivano con P7-02), build dell'immagine e `npm audit --audit-level=high`; si ferma al primo passo obbligatorio fallito e stampa un riepilogo. L'immagine è saltata con un avviso se Docker non c'è (o con `VERIFY_SKIP_IMAGE=1`); l'audit è solo un avviso e non fallisce senza rete. L'hook `.githooks/pre-push`, dopo i blocchi su `main`/`develop` e sui push forzati, esegue `npm run verify` e rifiuta il push se fallisce. 6 test sull'orchestrazione. Esito su questo ramo: lint, tipi, test e build verdi; immagine non rieseguita da `verify` in questa sessione (Docker nel sandbox richiede opzioni speciali, provata a mano nei PBI precedenti). Nessun passo di sistema ancora da eseguire.
 
 ## P3-12 Configurazione di GitHub
 
