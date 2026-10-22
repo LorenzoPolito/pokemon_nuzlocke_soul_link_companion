@@ -14,6 +14,7 @@ Le decisioni di progetto sono registrate qui, una ADR per ogni scelta difficile 
 | [0006](0006-varieta-dell-esemplare.md) | Varietà dell'esemplare | Accettata | 19 ottobre 2026 |
 | [0007](0007-pr-impilate-e-merge-commit.md) | PR impilate e merge commit | Accettata | 19 ottobre 2026 |
 | [0008](0008-esiti-della-fase-1.md) | Esiti della fase 1: Turso, lingue nel client, forme cosmetiche | Accettata | 20 ottobre 2026 |
+| [0009](0009-decisioni-della-fase-2.md) | Decisioni della fase 2: registrazione, regole, permessi, helper | Accettata | 22 ottobre 2026 |
 
 ## Regole
 

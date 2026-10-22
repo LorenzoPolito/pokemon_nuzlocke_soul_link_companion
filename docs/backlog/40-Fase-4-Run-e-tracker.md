@@ -38,7 +38,7 @@
 
 - [ ] Il proprietario invita utenti come giocatori o spettatori.
 - [ ] Lo spettatore vede tutto ma non modifica nulla, verificato lato server.
-- [ ] Il proprietario può rimuovere un partecipante finché la run non ha incontri registrati.
+- [ ] Il proprietario può rimuovere un partecipante o trasformarlo in spettatore in qualsiasi momento; i suoi dati restano ([ADR 0009](../adr/0009-decisioni-della-fase-2.md)).
 - [ ] Posti in attesa: il proprietario riserva un posto con nome e invito; chi accetta lo occupa con i dati già inseriti; chi rifiuta lascia il posto in attesa ([modello](../progetto/06-Modello-dati-bozza.md#p2-11-posti-in-attesa)).
 
 

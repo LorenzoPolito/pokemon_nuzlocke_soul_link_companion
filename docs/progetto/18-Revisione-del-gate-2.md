@@ -15,7 +15,7 @@ Documenti confrontati: [modello dati](06-Modello-dati-bozza.md), [schema del Pok
 | 5 | La specifica dice che Paraglide «carica solo la lingua in uso» e stima l'immagine in 150–200 MB; le prove danno entrambe le lingue e 300 MB | Specifica corretta con riferimento alle prove e all'[ADR 0008](../adr/0008-esiti-della-fase-1.md) |
 | 6 | Il diagramma entità-relazioni era un segnaposto con un'immagine fuori dal repository | Sostituito con un diagramma Mermaid nel modello dati |
 | 7 | Nessun PBI copriva: elenco «Le mie run», profilo dell'utente, tabella e middleware di idempotenza, funzione `authorize` con test della matrice, posti in attesa, riepilogo e nuova run dalla fine di una run, job di eliminazione delle run dopo 30 giorni, endpoint di `seen_trainer` e calcolo sul server | Criteri aggiunti a P3-03, P3-07, P4-01, P4-02, P4-14, P4-19, P5-10, P5-12 |
-| 8 | Il criterio di P4-02 permette di rimuovere un partecipante solo fino al primo incontro; P2-02 lo permette sempre | **Decisione** (sezione 3, punto 5) |
+| 8 | Il criterio di P4-02 permette di rimuovere un partecipante solo fino al primo incontro; P2-02 lo permette sempre | Deciso: sempre ammessa; P4-02 corretto ([ADR 0009](../adr/0009-decisioni-della-fase-2.md)) |
 | 9 | Nessun PBI prevede i dati di gioco dei giochi del rilascio 0.5 e 1.0 ([ADR 0004](../adr/0004-fonti-dei-dati-nomi-e-giochi-per-rilascio.md)) | **Da pianificare** (sezione 4) |
 | 10 | Le tabelle dei tipi, le meccaniche e il Pokédex sono già in tre posti (file dati, schema, documento): rischio di divergenza | Regola: `data/mechanics/type-chart.json` è l'unica fonte delle tabelle dei tipi; il Pokédex SQLite non le duplica |
 
@@ -87,7 +87,7 @@ Tutti i requisiti hanno un PBI tranne R-53 (sezione 4).
 
 ## 3. Decisioni che servono al product owner
 
-Tutte sono proposte contenute nei documenti di fase 2; ognuna ha un valore predefinito che l'agente userà se non c'è risposta.
+**Tutte accettate dal product owner il 22 ottobre 2026 («Come proposto»), registrate nell'[ADR 0009](../adr/0009-decisioni-della-fase-2.md).**
 
 | # | Decisione | Proposta | Dove |
 | --- | --- | --- | --- |
