@@ -4,7 +4,7 @@
 
 | ID | PBI | Dipende da | Taglia | Stato |
 | --- | --- | --- | --- | --- |
-| P4-01 | Creazione di una run con regole | P3-07 | M | Da iniziare |
+| P4-01 | Creazione di una run con regole | P3-07 | M | In verifica |
 | P4-02 | Inviti e ruoli nella run | P4-01 | M | Da iniziare |
 | P4-03 | Gioco unico della run | P4-01 | XS | Da iniziare |
 | P4-04 | Lista delle aree in ordine di progressione | P4-01 | M | Da iniziare |
@@ -28,10 +28,13 @@
 
 ## P4-01 Creazione di una run con regole
 
-- [ ] Si scelgono nome, gioco e regole opzionali (dupes clause, tipo primario, regali separati, randomizer, calcolatore, stanze interne come aree separate, accesa di base); per Nero 2 e Bianco 2 anche la difficoltà, normale di default ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
-- [ ] Le regole base e Soul Link sono sempre attive e non disattivabili.
-- [ ] Chi crea la run ne diventa proprietario.
-- [ ] Elenco «Le mie run» con filtri In corso / Finite / Tutte e riepilogo (medaglie del proprio giocatore, gruppi vivi e morti) ([flussi](../progetto/17-Flussi-e-schermate.md#p2-12-bozze-schermate-tracker)).
+- [x] Si scelgono nome, gioco e regole opzionali (dupes clause, tipo primario, regali separati, randomizer, calcolatore, stanze interne come aree separate, accesa di base); per Nero 2 e Bianco 2 anche la difficoltà, normale di default ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [x] Le regole base e Soul Link sono sempre attive e non disattivabili.
+- [x] Chi crea la run ne diventa proprietario.
+- [x] Elenco «Le mie run» con filtri In corso / Finite / Tutte e riepilogo (medaglie del proprio giocatore, gruppi vivi e morti) ([flussi](../progetto/17-Flussi-e-schermate.md#p2-12-bozze-schermate-tracker)).
+
+Nota, 22 ottobre 2026: modulo `games` (catalogo dei quattro giochi letto da `data/games/*.json`, incluso nella build) e modulo `runs`. Tabelle `run` e `run_member` (migrazione 0003) con tutte le colonne del modello dati, i vincoli (nome 1–60, stato, ruolo, level cap 1–100, un solo proprietario per run, un posto per giocatore) e gli indici; un test li prova. Regole in `domain/settings.ts` (Zod): predefiniti come in P2-02, ogni chiave sconosciuta rifiutata, quindi le regole base e Soul Link non si possono né inviare né spegnere; la difficoltà esiste solo per Nero 2 e Bianco 2 (normale di base) ed è un errore per gli altri. `createRun` salva run e proprietario (posto 1, giocatore) in una transazione e scrive `run.created` nel diario tramite l'hub; `createRunOnce` la rende idempotente per chiave. API: `GET /api/runs` (filtro `status`, `deleted`), `POST /api/runs` (richiede `Idempotency-Key`: 400, 201, risposta ripetuta con `Idempotent-Replay`, 422 con codice), `GET /api/runs/{id}` (404 per i non membri; per ora solo run e membri, il resto dell'istantanea arriva con il tracker). Pagine: «Le mie run» con filtri Tutte / In corso / Finite, «Nuova run» (bozza nel browser per 24 ore, chiave unica per apertura: il doppio invio crea una sola run) e un dettaglio minimo della run. 29 test e prova con Chromium a 360 px: creazione per Bianco 2 con difficoltà, bozza ripristinata dopo il ricaricamento, doppio clic = una run, elenco e filtri, API.
+**Limiti dichiarati**: il riepilogo di ogni run (medaglie, vivi, morti) c'è nel formato ma resta a zero finché non esistono i gruppi e le tappe: lo riempiono P4-06 e P4-15 (criteri aggiunti lì). Il passo «giocatori e ruoli» della creazione (posti in attesa e inviti) è P4-02: per ora il creatore è l'unico giocatore. Il diario si scrive dopo la transazione e non dentro: se la scrittura fallisce la run esiste lo stesso senza la sua riga; la scrittura nella stessa transazione si fa con il diario (P4-16/P4-18).
 
 
 ## P4-02 Inviti e ruoli nella run
@@ -67,6 +70,7 @@
 
 - [ ] Quando tutti i giocatori hanno catturato nella stessa area, gli esemplari risultano collegati.
 - [ ] Il link è visibile da ognuno degli esemplari collegati.
+- [ ] Il riepilogo di «Le mie run» conta i gruppi vivi e morti del proprio giocatore (oggi a zero, P4-01).
 
 ## P4-07 Area saltata per tutti
 
@@ -117,6 +121,7 @@
 ## P4-15 Medaglie e level cap
 
 - [ ] Tappe del gioco (medaglie, Superquattro, boss della storia) selezionabili per ogni giocatore.
+- [ ] Il riepilogo di «Le mie run» conta le medaglie del proprio giocatore (oggi a zero, P4-01).
 - [ ] Level cap per giocatore, dalla prima tappa non superata e con la difficoltà della run; un solo override manuale per la run ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
 
 ## P4-16 Timeline degli eventi

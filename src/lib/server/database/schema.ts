@@ -1,6 +1,7 @@
 // Tables of the modules are registered here so that one Drizzle schema covers the database.
 export * from '../../modules/auth/infrastructure/schema';
 export * from '../../modules/realtime/infrastructure/schema';
+export * from '../../modules/runs/infrastructure/schema';
 
 import { index, integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core';
 
