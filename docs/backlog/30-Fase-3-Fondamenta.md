@@ -12,7 +12,7 @@
 | P3-05 | Lingue e selettore di lingua | P3-01 | S | In verifica |
 | P3-06 | Layout base e navigazione | P3-05 | M | In verifica |
 | P3-07 | Registrazione, login, logout | P3-03 | M | In verifica |
-| P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | Da iniziare |
+| P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | In verifica |
 | P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | Da iniziare |
 | P3-10 | Hub degli eventi SSE | P3-01 | M | Da iniziare |
 | P3-11 | Verifica locale e hook pre-push | P3-02, P3-12 | S | Da iniziare |
@@ -100,14 +100,15 @@ Nota, 22 ottobre 2026: modulo `auth` con Better Auth (scrypt, sessioni di 7 gior
 
 ## P3-08 Admin creato all'avvio e cambio password
 
-Output: repository dell'app, Guida di installazione.
+Output: repository dell'app, [Guida di installazione](../progetto/19-Guida-di-installazione.md).
 
-- [ ] Admin creato da `ADMIN_EMAIL` e `ADMIN_PASSWORD` solo se non esiste già.
-- [ ] Al primo accesso l'admin non può fare altro prima di cambiare la password.
-- [ ] Se le variabili mancano e non esiste un admin, l'avvio si ferma con un messaggio chiaro.
-- [ ] L'avvio cerca l'admin per email e completa i passi mancanti (registrazione e ruolo non sono atomici).
-- [ ] Il blocco del cambio password è nel server dell'app (hook e endpoint), con test di sistema; il flag si spegne con un hook sul cambio password.
+- [x] Admin creato da `ADMIN_EMAIL` e `ADMIN_PASSWORD` solo se non esiste già.
+- [x] Al primo accesso l'admin non può fare altro prima di cambiare la password.
+- [x] Se le variabili mancano e non esiste un admin, l'avvio si ferma con un messaggio chiaro.
+- [x] L'avvio cerca l'admin per email e completa i passi mancanti (registrazione e ruolo non sono atomici).
+- [x] Il blocco del cambio password è nel server dell'app (hook e endpoint), con test di sistema; il flag si spegne con un hook sul cambio password.
 
+Nota, 22 ottobre 2026: `ensureAdmin` (8 test) cerca l'admin per ruolo e l'account per email: crea, non ripete e completa un avvio interrotto. Il blocco è in `passwordGate` (pagine verso `/change-password`, API e scritture rifiutate con `password_change_required`, `authorize` coerente) e il flag si spegne con un hook di Better Auth **solo se il cambio riesce**: un test ha trovato che l'hook scattava anche dopo un cambio fallito e l'ho corretto. Provato con Chromium sulla build: primo accesso → modulo di cambio, profilo e API bloccati, stessa password rifiutata, dopo il cambio si entra, al riavvio nessun secondo admin; senza variabili il processo esce con codice 1 e un messaggio chiaro. 167 test. I test di sistema committati con Playwright arrivano con P7-02; la prova con Chromium qui sopra è manuale. L'admin si crea con un'istanza di Better Auth senza il plugin dei cookie (serve una richiesta).
 
 ## P3-09 Pannello admin: utenti e registrazioni
 

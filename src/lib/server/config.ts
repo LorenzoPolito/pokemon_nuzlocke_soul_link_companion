@@ -13,6 +13,9 @@ const envSchema = z
 		TURSO_TOKEN: z.string().min(1).optional(),
 		/** Read-only Pokédex file, generated at build time. */
 		POKEDEX_PATH: z.string().min(1).default('./data/pokedex/pokedex.sqlite'),
+		/** First administrator, created at startup when the app has none. */
+		ADMIN_EMAIL: z.string().email().optional(),
+		ADMIN_PASSWORD: z.string().optional(),
 		/** Secret that signs sessions. When missing, one is generated and kept in DATA_DIR. */
 		AUTH_SECRET: z.string().min(32).optional(),
 		/** In production a missing or outdated Pokédex stops the app; elsewhere it only warns. */
@@ -45,6 +48,7 @@ export type AppConfig = {
 	database: DatabaseConfig;
 	pokedex: PokedexConfig;
 	auth: { secret?: string; dataDir: string };
+	admin: { email?: string; password?: string };
 };
 
 /** Thrown when the environment is invalid. `message` lists every problem, one per line. */
@@ -67,12 +71,32 @@ export function loadConfig(env: Record<string, string | undefined>): AppConfig {
 		);
 		throw new ConfigError(`Invalid configuration:\n${lines.join('\n')}`);
 	}
-	const { DATA_DIR, TURSO_URL, TURSO_TOKEN, POKEDEX_PATH, NODE_ENV, AUTH_SECRET } = parsed.data;
+	const {
+		DATA_DIR,
+		TURSO_URL,
+		TURSO_TOKEN,
+		POKEDEX_PATH,
+		NODE_ENV,
+		AUTH_SECRET,
+		ADMIN_EMAIL,
+		ADMIN_PASSWORD
+	} = parsed.data;
+	const admin = { email: ADMIN_EMAIL, password: ADMIN_PASSWORD };
 	const pokedex = { path: POKEDEX_PATH, required: NODE_ENV === 'production' };
 	const dir = DATA_DIR.replace(/\/+$/, '') || '/';
 	const auth = { secret: AUTH_SECRET, dataDir: dir };
 	if (TURSO_URL && TURSO_TOKEN) {
-		return { database: { kind: 'turso', url: TURSO_URL, authToken: TURSO_TOKEN }, pokedex, auth };
+		return {
+			database: { kind: 'turso', url: TURSO_URL, authToken: TURSO_TOKEN },
+			pokedex,
+			auth,
+			admin
+		};
 	}
-	return { database: { kind: 'local', url: `file:${dir}/app.db`, dataDir: dir }, pokedex, auth };
+	return {
+		database: { kind: 'local', url: `file:${dir}/app.db`, dataDir: dir },
+		pokedex,
+		auth,
+		admin
+	};
 }

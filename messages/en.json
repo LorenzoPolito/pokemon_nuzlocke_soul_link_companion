@@ -43,5 +43,8 @@
 	"profile_new_password": "New password",
 	"profile_change_password": "Change password",
 	"profile_password_saved": "Password changed. Your other devices were signed out.",
-	"profile_error_wrong_password": "The current password is wrong."
+	"profile_error_wrong_password": "The current password is wrong.",
+	"change_password_title": "Choose a new password",
+	"change_password_intro": "This account was created with a password set by the administrator. Choose your own before you continue.",
+	"change_password_error_same": "The new password must be different from the current one."
 }

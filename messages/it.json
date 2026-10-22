@@ -43,5 +43,8 @@
 	"profile_new_password": "Nuova password",
 	"profile_change_password": "Cambia password",
 	"profile_password_saved": "Password cambiata. Gli altri dispositivi sono stati disconnessi.",
-	"profile_error_wrong_password": "La password attuale è sbagliata."
+	"profile_error_wrong_password": "La password attuale è sbagliata.",
+	"change_password_title": "Scegli una nuova password",
+	"change_password_intro": "Questo account è stato creato con una password scelta dall'amministratore. Scegline una tua prima di continuare.",
+	"change_password_error_same": "La nuova password deve essere diversa da quella attuale."
 }
