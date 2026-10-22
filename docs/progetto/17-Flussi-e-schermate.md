@@ -1,6 +1,6 @@
 # Nuzlocke SoulLink Companion – Flussi e schermate
 
-Documento di output di P2-11, P2-12 e P2-13: percorsi dell'utente e bozze delle schermate. Le schermate sono i 49 mockup in [`docs/mockup/`](../mockup/) (canvas su claude.ai; sorgenti `.dc.html`), disegnati prima per telefono. I flussi qui sono la fonte per la logica; i mockup sono la fonte per l'aspetto. Dove i due divergono, lo dice la sezione «Differenze tra mockup e decisioni».
+Documento di output di P2-11, P2-12 e P2-13: percorsi dell'utente e bozze delle schermate. Le schermate sono i 49 mockup in [`docs/mockup/`](../mockup/) (canvas su claude.ai; sorgenti `.dc.html`), disegnati prima per telefono. I flussi qui sono la fonte per la logica; i mockup sono la fonte per l'aspetto. Dove i due divergono, lo dice le sezioni «Differenze tra mockup e decisioni».
 
 ## P2-11 Flussi: creazione run, inviti, run già iniziata
 
@@ -77,7 +77,7 @@ Chi apre un invito all'app (creato dall'admin) arriva a una pagina di registrazi
 
 Ammesso ([P2-02](06-Modello-dati-bozza.md#giocatori-e-ruoli-nella-run)): nel passo 2 il proprietario può togliere la spunta «Gioco anch'io»; allora ha un posto senza numero e partecipa come proprietario-spettatore con i diritti di gestione. Il flusso B, per un proprietario che non gioca, non gli chiede esemplari.
 
-### Differenze tra mockup e decisioni
+### Differenze tra mockup e decisioni (creazione e inviti)
 
 I mockup sono stati disegnati il 3 ottobre 2026, prima delle decisioni di P1-19. Da aggiornare in P2-12:
 
@@ -132,7 +132,7 @@ Data: 20 ottobre 2026. Taglia M. Le bozze sono i mockup della pagina «Run e tra
 | **Conflitto di modifica** (`Conflitto`) | `conflict.overwritten`: chi, cosa, valore nuovo | «Vedi» apre il dato aggiornato | `conflict.overwritten` | Compare come avviso sopra la schermata corrente, non la sostituisce |
 | **Errore di regola e connessione persa** (`Errore`) | Codice di errore del server o stato della connessione | Riprova, annulla | Perdita di `ping` per 40 secondi | Avviso discreto che sparisce al riallineamento |
 
-### Differenze tra mockup e decisioni (da chiudere nei mockup)
+### Differenze tra mockup e decisioni (tracker)
 
 | Schermata | Differenza | Cosa cambia |
 | --- | --- | --- |
@@ -198,7 +198,7 @@ In sintesi: il criterio è verificato per le mosse e per il calcolatore; due sce
 
 Proposta: **sul server**, nel modulo `battle`. Il client invia avversario (specie, varietà, livello, tipo Tera, abilità nota), esemplare e mossa; il server usa la funzione dei dati effettivi ([P2-05](06-Modello-dati-bozza.md#p2-05-override-per-specie-per-giocatore)), la tabella dei tipi dell'epoca e `@smogon/calc` ([P1-11](14-Prove-di-fattibilita.md#p1-11-prova-smogoncalc-con-override)) e risponde. Vantaggi: un solo posto con gli override giusti e nessuno scarico di 117 KB (gzip) nel browser. Costo: una richiesta per ogni calcolo, con rete assente non si calcola (coerente con «senza rete non si modifica»). Endpoint da aggiungere al catalogo prima del rilascio 0.3: `POST /api/runs/{id}/battle/matchup` e `POST /api/runs/{id}/battle/damage`, oltre a `seen_trainer` e `seen_pokemon` (elenco, aggiunta, rimozione).
 
-### Differenze tra mockup e decisioni
+### Differenze tra mockup e decisioni (lotte e Pokédex)
 
 | Schermata | Differenza |
 | --- | --- |
