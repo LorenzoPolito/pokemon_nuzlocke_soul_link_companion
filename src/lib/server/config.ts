@@ -13,6 +13,8 @@ const envSchema = z
 		TURSO_TOKEN: z.string().min(1).optional(),
 		/** Read-only Pokédex file, generated at build time. */
 		POKEDEX_PATH: z.string().min(1).default('./data/pokedex/pokedex.sqlite'),
+		/** Secret that signs sessions. When missing, one is generated and kept in DATA_DIR. */
+		AUTH_SECRET: z.string().min(32).optional(),
 		/** In production a missing or outdated Pokédex stops the app; elsewhere it only warns. */
 		NODE_ENV: z.string().optional()
 	})
@@ -39,7 +41,11 @@ export type DatabaseConfig =
 
 export type PokedexConfig = { path: string; required: boolean };
 
-export type AppConfig = { database: DatabaseConfig; pokedex: PokedexConfig };
+export type AppConfig = {
+	database: DatabaseConfig;
+	pokedex: PokedexConfig;
+	auth: { secret?: string; dataDir: string };
+};
 
 /** Thrown when the environment is invalid. `message` lists every problem, one per line. */
 export class ConfigError extends Error {
@@ -61,11 +67,12 @@ export function loadConfig(env: Record<string, string | undefined>): AppConfig {
 		);
 		throw new ConfigError(`Invalid configuration:\n${lines.join('\n')}`);
 	}
-	const { DATA_DIR, TURSO_URL, TURSO_TOKEN, POKEDEX_PATH, NODE_ENV } = parsed.data;
+	const { DATA_DIR, TURSO_URL, TURSO_TOKEN, POKEDEX_PATH, NODE_ENV, AUTH_SECRET } = parsed.data;
 	const pokedex = { path: POKEDEX_PATH, required: NODE_ENV === 'production' };
-	if (TURSO_URL && TURSO_TOKEN) {
-		return { database: { kind: 'turso', url: TURSO_URL, authToken: TURSO_TOKEN }, pokedex };
-	}
 	const dir = DATA_DIR.replace(/\/+$/, '') || '/';
-	return { database: { kind: 'local', url: `file:${dir}/app.db`, dataDir: dir }, pokedex };
+	const auth = { secret: AUTH_SECRET, dataDir: dir };
+	if (TURSO_URL && TURSO_TOKEN) {
+		return { database: { kind: 'turso', url: TURSO_URL, authToken: TURSO_TOKEN }, pokedex, auth };
+	}
+	return { database: { kind: 'local', url: `file:${dir}/app.db`, dataDir: dir }, pokedex, auth };
 }

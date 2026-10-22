@@ -2,6 +2,16 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import { getLocale, locales, setLocale, type Locale } from '#lib/paraglide/runtime.js';
 
+	let { onSelect }: { onSelect?: (locale: Locale) => Promise<void> } = $props();
+
+	const choose = async (locale: Locale) => {
+		try {
+			await onSelect?.(locale);
+		} finally {
+			setLocale(locale);
+		}
+	};
+
 	const label = (locale: Locale) => (locale === 'it' ? m.i18n_locale_it() : m.i18n_locale_en());
 </script>
 
@@ -11,7 +21,7 @@
 			type="button"
 			lang={locale}
 			aria-pressed={locale === getLocale()}
-			onclick={() => setLocale(locale)}
+			onclick={() => choose(locale)}
 		>
 			{label(locale)}
 		</button>

@@ -5,7 +5,20 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import { LanguageSelector } from '#lib/modules/i18n/index.js';
 
-	let { children }: { children: Snippet } = $props();
+	let {
+		signedIn,
+		saveLocale,
+		children
+	}: { signedIn: boolean; saveLocale: boolean; children: Snippet } = $props();
+
+	// A signed-in user keeps the chosen language on the account.
+	const rememberLocale = async (locale: string) => {
+		await fetch('/api/me', {
+			method: 'PATCH',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify({ locale })
+		});
+	};
 
 	// Bottom bar on phones, rail on wider screens (docs/design-system, "Navigazione e layout").
 	const items = $derived([
@@ -33,17 +46,19 @@
 <div class="shell">
 	<header class="top">
 		<span class="brand">{m.app_title()}</span>
-		<LanguageSelector />
+		<LanguageSelector onSelect={saveLocale ? rememberLocale : undefined} />
 	</header>
 
-	<nav class="nav" aria-label={m.nav_label()}>
-		{#each items as item (item.href)}
-			<a href={resolve(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
-				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={item.icon} /></svg>
-				<span>{item.label}</span>
-			</a>
-		{/each}
-	</nav>
+	{#if signedIn}
+		<nav class="nav" aria-label={m.nav_label()}>
+			{#each items as item (item.href)}
+				<a href={resolve(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
+					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={item.icon} /></svg>
+					<span>{item.label}</span>
+				</a>
+			{/each}
+		</nav>
+	{/if}
 
 	<main class="content">
 		{@render children()}

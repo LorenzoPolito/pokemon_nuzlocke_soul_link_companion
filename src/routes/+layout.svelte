@@ -2,7 +2,9 @@
 	import '#lib/styles/base.css';
 	import AppShell from '#lib/ui/AppShell.svelte';
 
-	let { children } = $props();
+	let { data, children } = $props();
 </script>
 
-<AppShell>{@render children()}</AppShell>
+<AppShell signedIn={data.user !== null} saveLocale={data.user !== null}>
+	{@render children()}
+</AppShell>
