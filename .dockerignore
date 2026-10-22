@@ -1,0 +1,17 @@
+# Keep the build context small and free of local state and secrets.
+node_modules
+build
+.svelte-kit
+.git
+.github
+.claude
+.githooks
+docs
+data/**/*.db
+tools
+.env
+.env.*
+!.env.example
+*.log
+coverage
+test-results
