@@ -11,7 +11,7 @@
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Completato |
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Completato |
 | P2-07 | Schema del Pokédex SQLite | P1-15 | M | In verifica |
-| P2-08 | Modello dei permessi | P2-01, P2-02 | S | Da iniziare |
+| P2-08 | Modello dei permessi | P2-01, P2-02 | S | Completato |
 | P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | Da iniziare |
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Da iniziare |
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Da iniziare |
@@ -92,10 +92,12 @@ Nota, 20 ottobre 2026: lo schema è provato con lo script di prova esteso (41,9 
 
 ## P2-08 Modello dei permessi
 
-Output: Architettura e API.
+Output: [Architettura e API](../progetto/16-Architettura-e-API.md#p2-08-modello-dei-permessi).
 
-- [ ] Matrice azioni × ruoli (admin, proprietario, giocatore, spettatore) completa.
-- [ ] Definito chi può modificare i dati di un altro giocatore della stessa run.
+- [x] Matrice azioni × ruoli (admin, proprietario, giocatore, spettatore) completa.
+- [x] Definito chi può modificare i dati di un altro giocatore della stessa run.
+
+Nota di chiusura, 20 ottobre 2026: la regola sui dati di un altro giocatore (propri; proprietario tutto; azioni di gruppo per tutti i giocatori) e l'esclusione dell'admin dai dati delle run sono proposte da confermare.
 
 ## P2-09 Catalogo delle API
 
