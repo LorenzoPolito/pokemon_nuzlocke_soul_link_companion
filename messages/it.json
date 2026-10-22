@@ -1,0 +1,8 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"app_title": "Nuzlocke SoulLink Companion",
+	"app_tagline": "Segui insieme le vostre run Soul Link",
+	"i18n_selector_label": "Lingua",
+	"i18n_locale_en": "English",
+	"i18n_locale_it": "Italiano"
+}

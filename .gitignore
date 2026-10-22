@@ -54,3 +54,6 @@ Thumbs.db
 # Pokédex generato e dati scaricati per generarlo (P3-04)
 .cache/
 data/pokedex/
+
+# Cache locale di Paraglide/inlang
+project.inlang/cache/

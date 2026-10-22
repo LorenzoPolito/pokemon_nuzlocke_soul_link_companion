@@ -9,7 +9,7 @@
 | P3-02 | Dockerfile multi-stage e volume dati | P3-01 | S | In verifica |
 | P3-03 | Configurazione database e migrazioni | P3-01 | S | In verifica |
 | P3-04 | Pokédex SQLite generato nella build | P3-02, P2-07 | M | In verifica |
-| P3-05 | Lingue e selettore di lingua | P3-01 | S | Da iniziare |
+| P3-05 | Lingue e selettore di lingua | P3-01 | S | In verifica |
 | P3-06 | Layout base e navigazione | P3-05 | M | Da iniziare |
 | P3-07 | Registrazione, login, logout | P3-03 | M | Da iniziare |
 | P3-08 | Admin creato all'avvio e cambio password | P3-07 | S | Da iniziare |
@@ -68,11 +68,12 @@ Nota, 22 ottobre 2026: generatore in TypeScript (`scripts/build-pokedex.ts`, `no
 
 Output: repository dell'app.
 
-- [ ] Italiano e inglese completi; lingua iniziale dal browser, con inglese come riserva.
-- [ ] Selettore sempre visibile, scelta salvata per l'utente.
-- [ ] Un controllo automatico segnala chiavi di traduzione mancanti.
-- [ ] Plugin dei messaggi di Paraglide installato da npm, senza CDN in build ([prove](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua)).
+- [x] Italiano e inglese completi; lingua iniziale dal browser, con inglese come riserva. (i messaggi sono quelli dello scheletro; ogni PBI aggiunge i suoi in entrambe le lingue)
+- [x] Selettore sempre visibile, scelta salvata per l'utente. (per ora salvata in un cookie del browser; sull'account dell'utente con P3-07)
+- [x] Un controllo automatico segnala chiavi di traduzione mancanti.
+- [x] Plugin dei messaggi di Paraglide installato da npm, senza CDN in build ([prove](../progetto/14-Prove-di-fattibilita.md#p1-14-prova-paraglide-con-cambio-lingua)).
 
+Nota, 22 ottobre 2026: Paraglide 2 con lingua base inglese e strategia cookie → lingua del browser → inglese; provato su build di produzione (`Accept-Language: it` → italiano, `fr` → inglese, cookie `it` con browser inglese → italiano; `<html lang>` coerente). `npm run i18n:check` (anche in `npm run lint`) fallisce per chiavi mancanti, in più, vuote o con parametri diversi. Il codice generato (`src/lib/paraglide/`) non è nel repository ed è creato da `npm install`/`prepare` e dalla build. Modulo `src/lib/modules/i18n` con README.
 
 ## P3-06 Layout base e navigazione
 
