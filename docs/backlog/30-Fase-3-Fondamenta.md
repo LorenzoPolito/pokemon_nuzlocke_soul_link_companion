@@ -16,7 +16,7 @@
 | P3-09 | Pannello admin: utenti e registrazioni | P3-08, P3-06 | M | In verifica |
 | P3-10 | Hub degli eventi SSE | P3-01 | M | In verifica |
 | P3-11 | Verifica locale e hook pre-push | P3-02, P3-12 | S | In verifica |
-| P3-13 | Solo HTTP, compatibile con reverse proxy | P3-02 | S | Da iniziare |
+| P3-13 | Solo HTTP, compatibile con reverse proxy | P3-02 | S | In verifica |
 
 ## P3-01 Scheletro del progetto SvelteKit
 
@@ -159,9 +159,11 @@ Modifica dei criteri, 19 ottobre 2026: il criterio sull'account bot è sostituit
 
 Output: repository dell'app, Guida di installazione.
 
-- [ ] Senza configurazione l'app risponde in HTTP sulla porta indicata.
-- [ ] Dietro un reverse proxy con HTTPS l'app riconosce protocollo e indirizzo originali dalle intestazioni inoltrate (ORIGIN e intestazioni configurabili); nessun certificato gestito dall'app.
-- [ ] Quando il proxy indica HTTPS, i cookie di sessione sono marcati Secure.
+- [x] Senza configurazione l'app risponde in HTTP sulla porta indicata.
+- [x] Dietro un reverse proxy con HTTPS l'app riconosce protocollo e indirizzo originali dalle intestazioni inoltrate (ORIGIN e intestazioni configurabili); nessun certificato gestito dall'app.
+- [x] Quando il proxy indica HTTPS, i cookie di sessione sono marcati Secure.
 - [x] In HTTP il pannello admin mostra un avviso: password e sessioni viaggiano in chiaro. (fatto in P3-09)
-- [ ] La guida di installazione dice di non comprimere `/api/stream` nel proxy: con `gzip` su `text/event-stream` nginx trattiene il flusso ([prove](../progetto/14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser)).
+- [x] La guida di installazione dice di non comprimere `/api/stream` nel proxy: con `gzip` su `text/event-stream` nginx trattiene il flusso ([prove](../progetto/14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser)).
+
+Nota, 22 ottobre 2026: `serve.mjs` (già dalla P3-07) fissa protocollo e indirizzo del client; `TRUST_PROXY=true` si fida di `X-Forwarded-*`, altrimenti le ignora. Nuovo: l'attributo `Secure` sui cookie viene aggiunto per richiesta quando il protocollo è HTTPS (`withSecureCookies`, in `hooks.server.ts`), e `useSecureCookies` di Better Auth è spento perché in produzione lo avrebbe attivato anche in HTTP, impedendo l'accesso. Provato sull'immagine: in HTTP il login risponde 200 con cookie senza `Secure`; con `TRUST_PROXY`, `Host` e `X-Forwarded-Proto: https` il cookie ha `Secure`; senza `TRUST_PROXY` un `X-Forwarded-Proto: https` inviato dal client non ha effetto. 3 test sulla funzione. Guida: sezione "HTTP e reverse proxy" con l'esempio nginx (`gzip off`, `proxy_buffering off`). Non provato con un vero nginx.
 

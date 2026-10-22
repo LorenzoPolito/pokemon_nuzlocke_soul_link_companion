@@ -2,6 +2,7 @@ import { building } from '$app/env';
 import { redirect } from '@sveltejs/kit';
 import { sequence, type Handle } from '@sveltejs/kit/hooks';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
+import { withSecureCookies } from '#lib/modules/auth/domain/secure-cookies.js';
 import { passwordGate } from '#lib/modules/auth/domain/password-gate.js';
 import { getAuth, startAuth } from '#lib/modules/auth/runtime.js';
 import { initDatabase } from '#lib/server/database/index.js';
@@ -96,4 +97,8 @@ const passwordChange: Handle = ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle = sequence(language, session, guard, passwordChange);
+/** Cookies get `Secure` when the request came in over HTTPS (also behind a proxy). */
+const secureCookies: Handle = async ({ event, resolve }) =>
+	withSecureCookies(await resolve(event), event.url.protocol === 'https:');
+
+export const handle = sequence(secureCookies, language, session, guard, passwordChange);

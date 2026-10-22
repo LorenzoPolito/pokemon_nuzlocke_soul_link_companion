@@ -37,7 +37,27 @@ L'app controlla le variabili all'avvio: se una è sbagliata si ferma e dice qual
 | `POKEDEX_PATH` | no | `/app/pokedex/pokedex.sqlite` nell'immagine | File del Pokédex, in sola lettura; in produzione deve esistere |
 | `MIGRATIONS_DIR` | no | `/app/drizzle` nell'immagine | Cartella delle migrazioni |
 
-Le variabili dell'amministratore e dell'indirizzo pubblico si aggiungono con P3-08 e P3-13.
+## HTTP e reverse proxy
+
+- **Senza configurazione** l'app risponde in semplice HTTP sulla porta indicata da `PORT` (3000 nell'immagine). Non gestisce certificati: password e sessioni viaggiano in chiaro, e il pannello admin lo ricorda. In HTTP i cookie di sessione non sono `Secure`, altrimenti il browser non li rimanderebbe e nessuno potrebbe accedere.
+- **Dietro un reverse proxy con HTTPS** (nginx, Caddy, Traefik…) imposta `TRUST_PROXY=true` e, se vuoi, `ORIGIN=https://il-tuo-indirizzo`. Il proxy deve inoltrare `Host`, `X-Forwarded-Proto` e `X-Forwarded-For`: l'app ne ricava protocollo e indirizzo del client (usato dal limite dei tentativi di accesso). Quando la richiesta arriva in HTTPS i cookie di sessione ricevono `Secure`. Senza `TRUST_PROXY` le intestazioni inoltrate sono ignorate, così nessun client può falsificarle; con `ORIGIN` in `https` e senza `TRUST_PROXY` l'app considera HTTPS ogni richiesta.
+- **Non comprimere `/api/runs/*/stream`.** Con `gzip` attivo su `text/event-stream` nginx trattiene il flusso e gli eventi non arrivano ([prove](14-Prove-di-fattibilita.md#p1-16-prova-sync-sse-tra-due-browser)). Esempio per nginx:
+
+```nginx
+location ~ ^/api/runs/[^/]+/stream$ {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header Connection "";
+    proxy_buffering off;
+    proxy_read_timeout 1h;
+    gzip off;
+}
+```
+
+Per le altre rotte bastano `proxy_pass` e le tre intestazioni. Caddy e Traefik non comprimono né trattengono i flussi per impostazione predefinita (con la compressione attiva escludi `text/event-stream`).
 
 ## Usare Turso al posto del file locale
 
