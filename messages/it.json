@@ -83,5 +83,6 @@
 	"admin_data": "Dati",
 	"admin_pokedex": "Pokédex: dati di PokéAPI dal commit {commit}, generati il {date}.",
 	"admin_pokedex_missing": "Il file del Pokédex non è stato generato.",
-	"nav_admin": "Admin"
+	"nav_admin": "Admin",
+	"admin_confirm_delete": "Eliminare questo account? Nome, email e password della persona vengono rimossi; le sue run restano. Non si può annullare."
 }

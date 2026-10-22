@@ -122,8 +122,13 @@
 							value={account.isAdmin ? 'demote' : 'promote'}
 							>{account.isAdmin ? m.admin_action_demote() : m.admin_action_promote()}</button
 						>
-						<button class="button secondary" name="op" value="delete"
-							>{m.admin_action_delete()}</button
+						<button
+							class="button secondary"
+							name="op"
+							value="delete"
+							onclick={(e) => {
+								if (!confirm(m.admin_confirm_delete())) e.preventDefault();
+							}}>{m.admin_action_delete()}</button
 						>
 					</form>
 				{/if}
