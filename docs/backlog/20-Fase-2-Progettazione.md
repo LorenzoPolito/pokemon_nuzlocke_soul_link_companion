@@ -6,18 +6,18 @@
 | --- | --- | --- | --- | --- |
 | P2-01 | Modello dati: utenti, sessioni, ruoli globali | P1-13 | S | Completato |
 | P2-02 | Modello dati: run, giocatori, regole | P1-01 | S | Completato |
-| P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | In verifica |
-| P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | In verifica |
+| P2-03 | Modello dati: aree, incontri, link Soul Link | P2-02, P1-06 | M | Completato |
+| P2-04 | Modello dati: esemplari, stato, eventi | P2-03 | M | Completato |
 | P2-05 | Modello dati: override per specie per giocatore | P2-02 | S | Completato |
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Completato |
-| P2-07 | Schema del Pokédex SQLite | P1-15 | M | In verifica |
+| P2-07 | Schema del Pokédex SQLite | P1-15 | M | Completato |
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Completato |
-| P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | In verifica |
+| P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | Completato |
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Completato |
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Completato |
-| P2-12 | Bozze schermate: tracker | P2-11 | M | In verifica |
-| P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | In verifica |
-| P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | In corso |
+| P2-12 | Bozze schermate: tracker | P2-11 | M | Completato |
+| P2-13 | Bozze schermate: lotte, calcolatore, Pokédex | P1-09 | M | Completato |
+| P2-14 | Revisione e approvazione (gate 2) | tutti i P2 | S | Completato |
 
 ## P2-01 Modello dati: utenti, sessioni, ruoli globali
 
@@ -151,7 +151,7 @@ Nota, 20 ottobre 2026: criterio di neutralità verificato per le mosse e per il 
 Output: [Revisione del gate 2](../progetto/18-Revisione-del-gate-2.md).
 
 - [x] Modello dati, API e schermate rivisti insieme. (revisione incrociata fatta)
-- [ ] Modello dati, API e schermate approvati. (in attesa del product owner)
+- [x] Modello dati, API e schermate approvati. (product owner, 22 ottobre 2026)
 - [x] Ogni requisito della specifica collegato ad almeno un PBI delle fasi 3–7.
 
-Nota, 20 ottobre 2026: tracciabilità fatta per 55 requisiti; manca un PBI per i giochi dei rilasci 0.5 e 1.0 (R-53), segnalato. Le decisioni da confermare sono 13, elencate nella revisione. Il PBI resta «In corso» fino all'approvazione del gate.
+Nota, 20 ottobre 2026: tracciabilità fatta per 55 requisiti; manca un PBI per i giochi dei rilasci 0.5 e 1.0 (R-53), segnalato. Le decisioni da confermare sono 13, elencate nella revisione. Il 22 ottobre 2026 il product owner ha verificato i sei PBI «In verifica», accettato le 13 decisioni ([ADR 0009](../adr/0009-decisioni-della-fase-2.md)) e approvato il gate 2.
