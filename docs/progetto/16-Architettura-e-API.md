@@ -67,7 +67,8 @@ Alternativa scartata: ogni giocatore modifica tutto. È più comodo tra amici, m
 ### Inviti e ingresso
 
 - Un invito alla run porta il ruolo (`player` o `spectator`, mai `owner`) e scade; chi lo accetta, già autenticato, diventa membro con quel ruolo ([P2-01](06-Modello-dati-bozza.md#app_setting-e-invite)). Un utente è membro una volta sola per run.
-- Con registrazione su invito, un invito all'app crea l'account; un invito alla run richiede un account esistente o ne crea uno se anche la registrazione lo consente.
+- Con registrazione su invito, vale come invito sia quello all'app sia quello a una run: chi arriva da un link di invito può registrarsi. Con registrazione chiusa nessun invito crea un account; un invito alla run si può accettare solo con un account esistente.
+- Un invito a una run può riservare un **posto in attesa** ([P2-11](06-Modello-dati-bozza.md#p2-11-posti-in-attesa)): chi accetta occupa quel posto e vede i dati già inseriti dal proprietario.
 - Un invito è usabile `max_uses` volte; revocato o scaduto non funziona. Il token in chiaro si mostra una volta sola.
 
 ### Come si applica
@@ -108,7 +109,7 @@ Data: 20 ottobre 2026. Taglia M. Elenco degli endpoint dell'app. Le azioni nella
 | 401 | `unauthenticated` | Nessuna sessione |
 | 403 | `forbidden`, `password_change_required`, `account_disabled`, `registration_closed` | Permesso negato (il ruolo c'è ma l'azione no), stato dell'account, registrazione non consentita |
 | 404 | `not_found` | Risorsa inesistente o non visibile |
-| 409 | `idempotency_mismatch`, `run_not_active`, `game_locked`, `area_taken`, `dupe_clause_required`, `dupe_clause_not_applicable`, `team_full`, `type_clause_violation`, `group_not_linked`, `group_dead`, `already_member`, `last_admin`, `last_owner`, `invite_invalid` | Violazione di una regola o dello stato; `details` dice quale |
+| 409 | `idempotency_mismatch`, `group_inconsistent`, `run_not_active`, `game_locked`, `area_taken`, `dupe_clause_required`, `dupe_clause_not_applicable`, `team_full`, `type_clause_violation`, `group_not_linked`, `group_dead`, `already_member`, `last_admin`, `last_owner`, `invite_invalid` | Violazione di una regola o dello stato; `details` dice quale |
 | 422 | `validation` | Il corpo non rispetta lo schema (`details.fields`) |
 | 429 | `rate_limited` | Troppi tentativi (login, inviti) |
 | 500 | `internal` | Errore inatteso; non rivela dettagli |
@@ -121,6 +122,7 @@ Data: 20 ottobre 2026. Taglia M. Elenco degli endpoint dell'app. Le azioni nella
 | `PATCH /api/me` | `name`, `locale`, `theme` (almeno uno) | Utente | 422 | `me.update` |
 | `GET /api/invites/{token}` | | Tipo, run e ruolo offerti, validità (senza rivelare altro) | 404 `invite_invalid` | pubblico |
 | `POST /api/invites/{token}/accept` | | Run o conferma di registrazione | 409 `invite_invalid`, `already_member` | `invite.accept` |
+| `POST /api/invites/{token}/decline` | | 204; l'invito è revocato, il posto resta in attesa | 409 `invite_invalid` | `invite.accept` |
 | `GET /api/health` | | `{ ok: true }` | | pubblico |
 
 ### Amministrazione
@@ -158,7 +160,7 @@ Pokédex e dati di gioco non dipendono da una run. Gli ultimi tre servono i dati
 | Metodo e percorso | Input | Output | Errori | Permesso |
 | --- | --- | --- | --- | --- |
 | `GET /api/runs` | `deleted` (solo proprietario) | Le mie run (id, nome, gioco, stato, ruolo, ultima attività) | | `run.list` |
-| `POST /api/runs` | `name`, `gameId`, `settings`, `startedInProgress`, `members` (inviti) e, se già iniziata, l'avanzamento per giocatore | Run, membro proprietario | 422 | `run.create` |
+| `POST /api/runs` | `name`, `gameId`, `settings`, `seats` (nome, ruolo, posto dei giocatori invitati: crea i posti in attesa e un invito per ognuno) e, se già iniziata (`startedInProgress`), l'avanzamento: tappe per giocatore, aree già visitate, gruppi con esemplari e posizioni | Run, membro proprietario, posti in attesa con il loro invito (token in chiaro solo qui) | 422, 409 `group_inconsistent` | `run.create` |
 | `GET /api/runs/{id}` | | Istantanea: run, membri, gruppi, incontri, esemplari, tappe, override, `lastEventId` | 404 | `run.read` |
 | `PATCH /api/runs/{id}` | `name`, `settings` (parziale), `baseVersion` | Run | 409 `game_locked` (`separateRooms`, `difficulty`), 409 `run_not_active` | `run.update` |
 | `PUT /api/runs/{id}/level-cap-override` | `value` (1–100) o `null` | Run | 422 | `run.update` |
@@ -266,7 +268,7 @@ Destinatari: **tutti i membri** della run (proprietario, giocatori, spettatori),
 | `run.created`, `run.deleted`, `run.restored` | Vita della run | `run` |
 | `run.settings_changed`, `run.status_changed`, `run.owner_changed` | Impostazioni, stato, proprietario | `run`, `run_member` |
 | `levelcap.override_set` | Override del level cap | `run` |
-| `member.joined`, `member.role_changed`, `member.removed` | Giocatori; con `member.removed` il server chiude il flusso del membro rimosso | `run_member`, gruppi ricalcolati |
+| `member.joined`, `member.declined`, `member.role_changed`, `member.removed` | Giocatori (`member.declined` quando un invitato rifiuta: il posto resta in attesa); con `member.removed` il server chiude il flusso del membro rimosso | `run_member`, gruppi ricalcolati |
 | `group.created`, `group.linked`, `group.skipped`, `group.moved`, `group.died`, `group.death_corrected` | Gruppi | `link_group`, `specimen` dei partner |
 | `encounter.recorded`, `encounter.corrected`, `encounter.deleted` | Incontri | `encounter`, `link_group`, `specimen` |
 | `specimen.created`, `specimen.updated`, `specimen.evolved`, `specimen.corrected` | Esemplari | `specimen` |

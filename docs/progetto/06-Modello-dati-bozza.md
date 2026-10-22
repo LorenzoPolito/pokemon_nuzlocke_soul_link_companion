@@ -49,7 +49,8 @@ Ogni tabella ha `id` TEXT (UUIDv7) come chiave primaria, salvo dove indicato; `c
 | Colonna | Tipo | Vincoli | Note |
 | --- | --- | --- | --- |
 | run\_id | TEXT | FK run, ON DELETE CASCADE |  |
-| user\_id | TEXT | FK user |  |
+| user\_id | TEXT | NULL, FK user | NULL per un **posto in attesa**: riservato a un invitato che non ha ancora accettato ([P2-11](#p2-11-posti-in-attesa)) |
+| display\_name | TEXT | NULL, 1–40 caratteri | Nome del posto in attesa; per i membri veri vale il nome dell'utente |
 | role | TEXT | CHECK in (owner, player, spectator) |  |
 | seat | INTEGER | UNIQUE con run\_id | Ordine dei giocatori nell'interfaccia |
 |  |  | UNIQUE (run\_id, user\_id) | Un utente compare una volta per run |
@@ -206,7 +207,7 @@ Valore predefinito proposto: **`invite`**, perché l'app è privata e raggiungib
 ### `app_setting` e `invite`
 
 - `app_setting(key TEXT PRIMARY KEY, value TEXT NOT NULL (JSON), updated_at INTEGER NOT NULL)`. Chiavi iniziali: `registration.mode`. Il valore si valida con uno schema per chiave.
-- `invite(id, token_hash UNIQUE, kind CHECK IN ('app','run'), run_id NULL FK run CASCADE, role NULL CHECK IN ('player','spectator'), created_by FK user, expires_at, max_uses, uses default 0, revoked_at NULL, created_at)`. Il token in chiaro si mostra una volta sola. Un invito `run` richiede `run_id` e `role`; un invito `app` no. Un invito è valido se non è revocato, non è scaduto e `uses < max_uses`.
+- `invite(id, token_hash UNIQUE, kind CHECK IN ('app','run'), run_id NULL FK run CASCADE, member_id NULL FK run_member (posto riservato a questo invito), role NULL CHECK IN ('player','spectator'), created_by FK user, expires_at, max_uses, uses default 0, revoked_at NULL, created_at)`. Il token in chiaro si mostra una volta sola. Un invito `run` richiede `run_id` e `role`; un invito `app` no. Un invito è valido se non è revocato, non è scaduto e `uses < max_uses`.
 
 ### Identificativi degli utenti
 
@@ -465,7 +466,7 @@ Tabella in sola aggiunta con `id` UUIDv7. Colonne: `run_id`, `actor_user_id` (NU
 | Tipo | Quando |
 | --- | --- |
 | `run.created`, `run.settings_changed`, `run.status_changed`, `run.owner_changed`, `run.deleted`, `run.restored` | Vita della run |
-| `member.joined`, `member.role_changed`, `member.removed` | Giocatori |
+| `member.joined`, `member.declined`, `member.role_changed`, `member.removed` | Giocatori |
 | `group.created`, `group.linked`, `group.skipped`, `group.moved`, `group.died`, `group.death_corrected` | Gruppi |
 | `encounter.recorded`, `encounter.corrected`, `encounter.deleted` | Incontri |
 | `specimen.created`, `specimen.updated`, `specimen.evolved`, `specimen.corrected` | Esemplari |
@@ -578,6 +579,17 @@ L'override è **uno solo per la run** (`run.level_cap_override`, 1–100). Si im
 ### Domande aperte
 
 Chi può registrare le tappe di un altro giocatore si decide in P2-08.
+
+## P2-11 Posti in attesa
+
+Aggiunta emersa dal flusso di creazione della run ([Flussi e schermate](17-Flussi-e-schermate.md#p2-11-flussi-creazione-run-inviti-run-già-iniziata)): quando il proprietario crea una run, spesso gli altri giocatori non hanno ancora accettato, ma i loro posti devono già esistere (il mockup mostra «Luca · invito inviato», e in una run già iniziata il proprietario inserisce i dati di tutti).
+
+- `run_member.user_id` può essere NULL: il membro è un **posto in attesa** con `display_name`, `role` (`player` o `spectator`) e `seat`. L'unicità (`run_id`, `user_id`) non è violata da più NULL.
+- Un posto in attesa conta come **giocatore attivo** nel ricalcolo dei gruppi (deve fare il suo incontro) e può avere incontri, esemplari, tappe e override, scritti dal proprietario.
+- L'invito alla run di un posto porta `invite.member_id`. Chi accetta valorizza `user_id` con il proprio utente e il posto diventa un membro vero; l'`id` del membro non cambia, quindi nessun dato si sposta.
+- Un utente non può occupare due posti della stessa run (controllo nel dominio: se è già membro, l'accettazione è rifiutata con `already_member`).
+- Il proprietario può togliere un posto in attesa (rimozione come per un giocatore) o assegnarlo a un altro invito.
+- Il proprietario ha sempre `user_id`.
 
 ## Invarianti
 
