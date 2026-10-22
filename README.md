@@ -33,9 +33,10 @@ Stack: SvelteKit 3 con adapter Node, TypeScript strict, Drizzle su libSQL (file 
 npm install        # dipendenze
 npm run dev        # server di sviluppo su http://localhost:5173
 npm run check      # controllo dei tipi (svelte-check)
-npm run lint       # Prettier (solo controllo) ed ESLint
+npm run lint       # Prettier (solo controllo), ESLint e controllo delle traduzioni
 npm run format     # riformatta il codice
 npm test           # test di unità (Vitest)
+npm run i18n:check # controlla che italiano e inglese abbiano gli stessi messaggi
 npm run build      # build di produzione in build/ (adapter Node)
 npm run preview    # prova la build
 npm run pokedex:fetch  # scarica i dati di PokeAPI/api-data (commit fissato in data/pokedex-source.json)
