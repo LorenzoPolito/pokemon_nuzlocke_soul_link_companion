@@ -47,7 +47,11 @@ export type NewInvite = {
 };
 
 /** Creates an invitation and returns its token, which is shown once and never stored. */
-export async function createInvite(db: Database, input: NewInvite, now: number): Promise<string> {
+export async function createInvite(
+	db: Pick<Database, 'insert'>,
+	input: NewInvite,
+	now: number
+): Promise<string> {
 	const token = randomBytes(24).toString('base64url');
 	await db.insert(invite).values({
 		id: input.id,
@@ -62,6 +66,26 @@ export async function createInvite(db: Database, input: NewInvite, now: number):
 		createdAt: now
 	});
 	return token;
+}
+
+/** The kind of a valid invitation (not revoked, expired or used up), or `null` for any other token. */
+export async function validInviteKind(
+	db: Database,
+	token: string,
+	now: number
+): Promise<'app' | 'run' | null> {
+	const [row] = await db
+		.select({ kind: invite.kind })
+		.from(invite)
+		.where(
+			and(
+				eq(invite.tokenHash, hashToken(token)),
+				isNull(invite.revokedAt),
+				gt(invite.expiresAt, now),
+				lt(invite.uses, invite.maxUses)
+			)
+		);
+	return row?.kind ?? null;
 }
 
 /** Whether a token belongs to an invitation that is not revoked, expired or used up. */

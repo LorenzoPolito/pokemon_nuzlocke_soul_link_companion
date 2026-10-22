@@ -102,6 +102,7 @@ Ogni tabella ha `id` TEXT (UUIDv7) come chiave primaria, salvo dove indicato; `c
 | display\_name | TEXT | NULL, 1–40 caratteri | Nome del posto in attesa; per i membri veri vale il nome dell'utente |
 | role | TEXT | CHECK in (owner, player, spectator) |  |
 | seat | INTEGER | UNIQUE con run\_id | Ordine dei giocatori nell'interfaccia |
+| removed\_at | INTEGER | NULL | Rimosso o uscito (P4-02): la riga resta per i suoi dati, ma non vede più la run, non segue il flusso e non conta come giocatore; con `role` spettatore e `seat` NULL. Un nuovo invito lo riporta sulla stessa riga |
 |  |  | UNIQUE (run\_id, user\_id) | Un utente compare una volta per run |
 
 ### link\_group

@@ -20,6 +20,9 @@
 		randomizer: false,
 		damageCalculator: true
 	});
+	let ownerPlays = $state(true);
+	let seats = $state<{ name: string; role: string }[]>([]);
+	let copied = $state('');
 	let restored = $state(false);
 	let ready = false;
 
@@ -36,6 +39,8 @@
 				gameId = data.games.some((g) => g.id === saved.gameId) ? saved.gameId : gameId;
 				difficulty = saved.difficulty ?? difficulty;
 				rules = { ...rules, ...saved.rules };
+				ownerPlays = saved.ownerPlays ?? ownerPlays;
+				seats = Array.isArray(saved.seats) ? saved.seats : seats;
 				restored = true;
 			}
 		} catch {
@@ -45,7 +50,15 @@
 	});
 
 	$effect(() => {
-		const draft = { at: Date.now(), name, gameId, difficulty, rules: { ...rules } };
+		const draft = {
+			at: Date.now(),
+			name,
+			gameId,
+			difficulty,
+			rules: { ...rules },
+			ownerPlays,
+			seats: seats.map((seat) => ({ ...seat }))
+		};
 		if (!ready) return;
 		try {
 			localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -62,6 +75,18 @@
 		}
 	};
 
+	const roleLabel = (role: string) =>
+		role === 'player' ? m.runs_role_player() : m.runs_role_spectator();
+
+	const copy = async (url: string) => {
+		try {
+			await navigator.clipboard.writeText(url);
+			copied = url;
+		} catch {
+			// the link stays visible in the field to copy by hand
+		}
+	};
+
 	const ruleRows = $derived([
 		{ id: 'dupesClause', label: m.runs_rule_dupes(), hint: m.runs_rule_dupes_hint() },
 		{ id: 'typeClause', label: m.runs_rule_type(), hint: m.runs_rule_type_hint() },
@@ -72,59 +97,142 @@
 	] as const);
 </script>
 
-<h1>{m.runs_create_title()}</h1>
+{#if form?.created}
+	<h1>{m.runs_created_title()}</h1>
+	<p class="hint" role="note">{m.runs_links_hint()}</p>
+	<ul class="links">
+		{#each form.created.links as link (link.url)}
+			<li>
+				<label class="field"
+					>{m.runs_link_for({ name: link.name })} · {roleLabel(link.role)}
+					<input readonly value={link.url} onfocus={(e) => e.currentTarget.select()} /></label
+				>
+				<button class="button secondary" type="button" onclick={() => copy(link.url)}
+					>{copied === link.url ? m.runs_copied() : m.runs_copy()}</button
+				>
+			</li>
+		{/each}
+	</ul>
+	<a class="button" href={resolve('/runs/[id]', { id: form.created.id })}>{m.runs_open_run()}</a>
+{:else}
+	<h1>{m.runs_create_title()}</h1>
 
-<form method="post" class="form" onsubmit={clearDraft}>
-	<input type="hidden" name="key" value={data.key} />
-	{#if form?.error}
-		<p class="error" role="alert">
-			{form.error === 'difficulty' ? m.runs_error_difficulty() : m.runs_error_validation()}
-		</p>
-	{/if}
-	{#if restored}<p class="hint" role="status">{m.runs_draft_restored()}</p>{/if}
+	<form method="post" class="form" onsubmit={clearDraft}>
+		<input type="hidden" name="key" value={data.key} />
+		{#if form?.error}
+			<p class="error" role="alert">
+				{form.error === 'difficulty'
+					? m.runs_error_difficulty()
+					: form.error === 'no_player'
+						? m.runs_error_no_player()
+						: m.runs_error_validation()}
+			</p>
+		{/if}
+		{#if restored}<p class="hint" role="status">{m.runs_draft_restored()}</p>{/if}
 
-	<label class="field"
-		>{m.runs_name()}<input name="name" bind:value={name} maxlength="60" required /></label
-	>
-	<label class="field"
-		>{m.runs_game()}
-		<select name="gameId" bind:value={gameId}>
-			{#each data.games as g (g.id)}
-				<option value={g.id}>{gameName(g.names)}</option>
-			{/each}
-		</select></label
-	>
-	{#if game?.hasDifficulty}
 		<label class="field"
-			>{m.runs_difficulty()}
-			<select name="difficulty" bind:value={difficulty}>
-				<option value="easy">{m.runs_difficulty_easy()}</option>
-				<option value="normal">{m.runs_difficulty_normal()}</option>
-				<option value="challenge">{m.runs_difficulty_challenge()}</option>
+			>{m.runs_name()}<input name="name" bind:value={name} maxlength="60" required /></label
+		>
+		<label class="field"
+			>{m.runs_game()}
+			<select name="gameId" bind:value={gameId}>
+				{#each data.games as g (g.id)}
+					<option value={g.id}>{gameName(g.names)}</option>
+				{/each}
 			</select></label
 		>
-	{/if}
+		{#if game?.hasDifficulty}
+			<label class="field"
+				>{m.runs_difficulty()}
+				<select name="difficulty" bind:value={difficulty}>
+					<option value="easy">{m.runs_difficulty_easy()}</option>
+					<option value="normal">{m.runs_difficulty_normal()}</option>
+					<option value="challenge">{m.runs_difficulty_challenge()}</option>
+				</select></label
+			>
+		{/if}
 
-	<fieldset>
-		<legend>{m.runs_rules()}</legend>
-		<p class="hint">{m.runs_always_on()}</p>
-		{#each ruleRows as rule (rule.id)}
+		<fieldset>
+			<legend>{m.runs_rules()}</legend>
+			<p class="hint">{m.runs_always_on()}</p>
+			{#each ruleRows as rule (rule.id)}
+				<label class="rule">
+					<input type="checkbox" name={rule.id} bind:checked={rules[rule.id]} />
+					<span>
+						{rule.label}
+						<span class="hint">{rule.hint}</span>
+					</span>
+				</label>
+			{/each}
+			<p class="hint">{m.runs_locked_notice()}</p>
+		</fieldset>
+
+		<fieldset>
+			<legend>{m.runs_seats()}</legend>
+			<p class="hint">{m.runs_seats_hint()}</p>
 			<label class="rule">
-				<input type="checkbox" name={rule.id} bind:checked={rules[rule.id]} />
-				<span>
-					{rule.label}
-					<span class="hint">{rule.hint}</span>
-				</span>
+				<input type="checkbox" name="ownerPlays" bind:checked={ownerPlays} />
+				<span>{m.runs_owner_plays()}</span>
 			</label>
-		{/each}
-		<p class="hint">{m.runs_locked_notice()}</p>
-	</fieldset>
+			{#each seats as seat, i (i)}
+				<div class="seat">
+					<label class="field"
+						>{m.runs_seat_name()}<input
+							name="seatName"
+							bind:value={seat.name}
+							maxlength="40"
+						/></label
+					>
+					<label class="field"
+						>{m.runs_seat_role()}
+						<select name="seatRole" bind:value={seat.role}>
+							<option value="player">{m.runs_role_player()}</option>
+							<option value="spectator">{m.runs_role_spectator()}</option>
+						</select></label
+					>
+					<button
+						class="button secondary"
+						type="button"
+						onclick={() => (seats = seats.filter((_, j) => j !== i))}>{m.runs_seat_remove()}</button
+					>
+				</div>
+			{/each}
+			<button
+				class="button secondary"
+				type="button"
+				onclick={() => (seats = [...seats, { name: '', role: 'player' }])}
+				>{m.runs_seat_add()}</button
+			>
+		</fieldset>
 
-	<button class="button" type="submit">{m.runs_create()}</button>
-	<a href={resolve('/')}>{m.runs_back()}</a>
-</form>
+		<button class="button" type="submit">{m.runs_create()}</button>
+		<a href={resolve('/')}>{m.runs_back()}</a>
+	</form>
+{/if}
 
 <style>
+	.seat {
+		display: grid;
+		gap: var(--space-2);
+		padding: var(--space-3);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-container);
+	}
+
+	.links {
+		list-style: none;
+		margin: 0 0 var(--space-4);
+		padding: 0;
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	a.button {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+	}
+
 	fieldset {
 		display: grid;
 		gap: var(--space-2);

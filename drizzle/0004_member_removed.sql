@@ -1,0 +1,1 @@
+ALTER TABLE `run_member` ADD `removed_at` integer;

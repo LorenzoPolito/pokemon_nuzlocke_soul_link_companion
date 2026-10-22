@@ -1,4 +1,4 @@
-import { asc, eq, sql } from 'drizzle-orm';
+import { and, asc, eq, isNull, sql } from 'drizzle-orm';
 import type { Database } from '../../../server/database/client';
 import { user } from '../../auth/infrastructure/schema';
 import type { RunContext } from '../../auth/index';
@@ -51,7 +51,7 @@ export async function getRun(
 		})
 		.from(runMember)
 		.leftJoin(user, eq(user.id, runMember.userId))
-		.where(eq(runMember.runId, runId))
+		.where(and(eq(runMember.runId, runId), isNull(runMember.removedAt)))
 		.orderBy(sql`${runMember.seat} is null`, asc(runMember.seat), asc(runMember.createdAt));
 
 	const mine = members.find((m) => m.userId === userId);

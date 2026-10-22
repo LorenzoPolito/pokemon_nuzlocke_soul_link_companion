@@ -1,9 +1,16 @@
 import { getDatabase } from '../../server/database/index.js';
 import { getHub } from '../realtime/runtime.js';
-import type { CreateRunDeps } from './application/create-run.js';
+import type { RunDeps } from './application/access.js';
 
-/** What the use cases need from the running app: the database and the hub's diary. */
-export async function runsDeps(): Promise<Required<Pick<CreateRunDeps, 'db' | 'publish'>>> {
+/** What the use cases need from the running app: the database, the diary and the stream. */
+export async function runsDeps(): Promise<
+	Required<Pick<RunDeps, 'db' | 'publish' | 'disconnect'>>
+> {
 	const { db } = await getDatabase();
-	return { db, publish: (event) => getHub().publish(event) };
+	const hub = getHub();
+	return {
+		db,
+		publish: (event) => hub.publish(event),
+		disconnect: (runId, userId) => hub.disconnectUser(runId, userId)
+	};
 }

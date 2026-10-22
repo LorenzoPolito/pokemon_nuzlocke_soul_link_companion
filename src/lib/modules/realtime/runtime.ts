@@ -2,7 +2,7 @@ import { building } from '$app/env';
 import { getDatabase } from '../../server/database/index.js';
 import { createHub, type Hub } from './application/hub';
 import { createDrizzleStore } from './infrastructure/drizzle-store';
-import { noRunsYet } from './infrastructure/run-access';
+import { runMemberAccess } from './infrastructure/run-access';
 
 let hub: Hub | undefined;
 
@@ -11,7 +11,7 @@ export async function startHub(): Promise<Hub> {
 	if (building) throw new Error('The hub must not start during the build');
 	if (!hub) {
 		const { db } = await getDatabase();
-		hub = createHub({ store: createDrizzleStore(db), access: noRunsYet });
+		hub = createHub({ store: createDrizzleStore(db), access: runMemberAccess(db) });
 	}
 	return hub;
 }

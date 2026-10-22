@@ -2,6 +2,8 @@ import { and, desc, eq } from 'drizzle-orm';
 import type { Database } from '../../../server/database/client';
 import type { Auth } from '../../auth/infrastructure/better-auth';
 import { account, invite, session, user } from '../../auth/infrastructure/schema';
+import type { NewRunEvent } from '../../realtime/index';
+import { handOverRuns } from '../../runs/index';
 import { leavesNoAdmin, type AccountSummary } from '../domain/last-admin';
 
 export type AdminUserRow = {
@@ -17,7 +19,13 @@ export type AdminUserRow = {
 export type AdminError = 'not_found' | 'last_admin' | 'self' | 'deleted';
 export type AdminResult = { ok: true } | { ok: false; error: AdminError };
 
-type Deps = { db: Database; auth: Auth; headers: Headers };
+type Deps = {
+	db: Database;
+	auth: Auth;
+	headers: Headers;
+	/** Writes entries in the diary of the runs the deletion changes (the hub). */
+	publish?: (event: NewRunEvent) => Promise<unknown>;
+};
 
 const summaries = async (db: Database): Promise<AccountSummary[]> =>
 	(await db.select({ id: user.id, role: user.role, banned: user.banned }).from(user)).map((u) => ({
@@ -145,7 +153,9 @@ export async function deleteUser(
 ): Promise<AdminResult> {
 	const refused = await guard(deps, actorId, targetId, 'delete');
 	if (refused) return refused;
-	await deps.db.transaction(async (tx) => {
+	const handedOver = await deps.db.transaction(async (tx) => {
+		// The runs it owned go to the player with the next seat; it stops playing in all runs.
+		const changes = await handOverRuns(tx, targetId, now);
 		await tx
 			.update(user)
 			.set({
@@ -162,7 +172,18 @@ export async function deleteUser(
 			.where(eq(user.id, targetId));
 		await tx.delete(account).where(eq(account.userId, targetId));
 		await tx.delete(session).where(eq(session.userId, targetId));
+		return changes;
 	});
+	for (const change of handedOver) {
+		await deps.publish?.({
+			runId: change.runId,
+			actorUserId: actorId,
+			type: 'run.owner_changed',
+			entity: 'run',
+			entityId: change.runId,
+			payload: { before: { ownerId: change.from }, after: { ownerId: change.to } }
+		});
+	}
 	return { ok: true };
 }
 

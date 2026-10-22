@@ -23,5 +23,23 @@ export async function openDatabase(config: DatabaseConfig): Promise<Connection> 
 		await client.execute('PRAGMA busy_timeout = 5000');
 	}
 	await client.execute('PRAGMA foreign_keys = ON');
-	return { client, db: drizzle(client, { schema }) };
+	const db = drizzle(client, { schema });
+	serializeTransactions(db);
+	return { client, db };
+}
+
+/**
+ * A transaction that starts while another is open gets a connection of its own without the busy
+ * timeout, and fails at once with SQLITE_BUSY. The transactions of the app are short, so they
+ * simply wait their turn: one at a time, in order. (Never open a transaction from inside another
+ * through `db`: it would wait for itself; use the `tx` it was given.)
+ */
+function serializeTransactions(db: Database): void {
+	const transaction = db.transaction.bind(db);
+	let tail: Promise<unknown> = Promise.resolve();
+	db.transaction = ((run, config) => {
+		const result = tail.then(() => transaction(run, config));
+		tail = result.catch(() => undefined);
+		return result;
+	}) as Database['transaction'];
 }

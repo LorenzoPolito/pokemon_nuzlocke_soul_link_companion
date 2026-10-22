@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { m } from '#lib/paraglide/messages.js';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 
 	let { data, form } = $props();
 	const errors = $derived({
@@ -43,4 +44,5 @@
 		<button class="button" type="submit">{m.auth_register_submit()}</button>
 	</form>
 {/if}
-<p><a href={resolve('/login')}>{m.auth_to_login()}</a></p>
+<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- resolve() plus the query that carries ?next= -->
+<p><a href={`${resolve('/login')}${page.url.search}`}>{m.auth_to_login()}</a></p>
