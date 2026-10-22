@@ -161,7 +161,7 @@ Nota di chiusura, 20 ottobre 2026: il client riceve entrambe le lingue (decine d
 
 ## P1-15 Prova: build del Pokédex SQLite
 
-Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-15-prova-build-del-pokédex-sqlite) e [`tools/prove/build_pokedex.py`](../../tools/prove/build_pokedex.py).
+Output: [Prove di fattibilità dello stack](../progetto/14-Prove-di-fattibilita.md#p1-15-prova-build-del-pokédex-sqlite) e `tools/prove/build_pokedex.py` (eliminato in P3-04, nella storia di git).
 
 - [x] Script che genera il file SQLite da PokeAPI/api-data.
 - [x] Dimensione del file e tempo di build misurati.

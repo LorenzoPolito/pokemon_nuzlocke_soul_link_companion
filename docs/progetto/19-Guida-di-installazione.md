@@ -35,6 +35,14 @@ L'app controlla le variabili all'avvio: se una è sbagliata si ferma e dice qual
 
 Le variabili dell'amministratore e dell'indirizzo pubblico si aggiungono con P3-08 e P3-13.
 
+## Usare Turso al posto del file locale
+
+1. Crea un database su [Turso](https://turso.tech) (il piano gratuito basta) e prendi l'URL (`libsql://…`) e un token di accesso.
+2. Avvia l'app con `TURSO_URL` e `TURSO_TOKEN`: il codice è lo stesso, cambiano solo le variabili. Le migrazioni si applicano al primo avvio.
+3. Per provare un database prima di usarlo: `TURSO_URL=… TURSO_TOKEN=… npm run turso:check` (usa un database di prova: ci crea le tabelle dell'app).
+
+Il token è un segreto: tienilo nelle variabili dell'ambiente, mai nel repository né in una chat.
+
 ## Il Pokédex
 
 L'immagine contiene il Pokédex (specie, mosse, abilità, evoluzioni, incontri) in un file SQLite di circa 42 MB, generato durante la build dai dati di [PokeAPI/api-data](https://github.com/PokeAPI/api-data) e aperto dall'app solo in lettura. Nessuna ricerca tocca internet. All'avvio il log dice da quale commit di api-data viene (`Pokédex ready (api-data 447bd5c, …)`). Per aggiornare i dati si cambia il commit in `data/pokedex-source.json` e si ricostruisce l'immagine. Se il file manca o ha una versione dello schema diversa, in produzione l'app non parte.

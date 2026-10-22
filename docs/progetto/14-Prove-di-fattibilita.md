@@ -255,7 +255,7 @@ Data: 20 ottobre 2026. Taglia M. Esito: **fattibile**.
 
 ### Metodo
 
-Lo script di prova [`tools/prove/build_pokedex.py`](../../tools/prove/build_pokedex.py) (Python 3, solo libreria standard) legge i file JSON di [PokeAPI/api-data](https://github.com/PokeAPI/api-data) (commit `447bd5c`, 20 ottobre 2026) e scrive un file SQLite. Il repository si prende con un clone parziale: `git clone --depth 1 --filter=blob:none --sparse` e `git sparse-checkout set` sulle cartelle `pokemon`, `pokemon-species`, `move`, `ability`, `type` di `data/api/v2` (399 MB di JSON, 5 secondi). Lo script è solo di prova: lo script vero nasce in fase 3, in TypeScript come il resto del progetto.
+Lo script di prova `tools/prove/build_pokedex.py` (eliminato in P3-04, nella storia di git) (Python 3, solo libreria standard) legge i file JSON di [PokeAPI/api-data](https://github.com/PokeAPI/api-data) (commit `447bd5c`, 20 ottobre 2026) e scrive un file SQLite. Il repository si prende con un clone parziale: `git clone --depth 1 --filter=blob:none --sparse` e `git sparse-checkout set` sulle cartelle `pokemon`, `pokemon-species`, `move`, `ability`, `type` di `data/api/v2` (399 MB di JSON, 5 secondi). Lo script è solo di prova: lo script vero nasce in fase 3, in TypeScript come il resto del progetto.
 
 Contenuto del file: tipi, abilità, mosse, specie e varietà con i nomi in italiano e in inglese; tipi e statistiche di ogni varietà con lo storico (colonna `until_generation`, 99 per i valori attuali, con la convenzione "ultima generazione con i valori vecchi" di P1-02); abilità per slot; learnset per version group (638 321 righe). Nomi con indice senza distinzione tra maiuscole e minuscole.
 
