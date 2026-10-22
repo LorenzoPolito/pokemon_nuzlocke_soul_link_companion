@@ -12,7 +12,7 @@
 | P2-06 | Modello dati: medaglie e level cap | P2-02, P1-07 | XS | Completato |
 | P2-07 | Schema del Pokédex SQLite | P1-15 | M | In verifica |
 | P2-08 | Modello dei permessi | P2-01, P2-02 | S | Completato |
-| P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | Da iniziare |
+| P2-09 | Catalogo delle API | P2-03, P2-04, P2-05, P2-06, P2-08 | M | In verifica |
 | P2-10 | Catalogo degli eventi SSE | P2-09 | S | Da iniziare |
 | P2-11 | Flussi: creazione run, inviti, run già iniziata | P2-02 | S | Da iniziare |
 | P2-12 | Bozze schermate: tracker | P2-11 | M | Da iniziare |
@@ -101,11 +101,13 @@ Nota di chiusura, 20 ottobre 2026: la regola sui dati di un altro giocatore (pro
 
 ## P2-09 Catalogo delle API
 
-Output: Architettura e API.
+Output: [Architettura e API](../progetto/16-Architettura-e-API.md#p2-09-catalogo-delle-api).
 
-- [ ] Ogni endpoint con metodo, percorso, input, output, errori e permesso richiesto.
-- [ ] Le regole Soul Link sono applicate dal server, non solo dall'interfaccia.
-- [ ] Ogni scrittura porta una chiave di idempotenza generata dal client, valida 24 ore ([ADR 0002](../adr/0002-rete-instabile.md)).
+- [x] Ogni endpoint con metodo, percorso, input, output, errori e permesso richiesto.
+- [x] Le regole Soul Link sono applicate dal server, non solo dall'interfaccia.
+- [x] Ogni scrittura porta una chiave di idempotenza generata dal client, valida 24 ore ([ADR 0002](../adr/0002-rete-instabile.md)).
+
+Nota, 20 ottobre 2026: la sezione degli eventi SSE è in P2-10.
 
 ## P2-10 Catalogo degli eventi SSE
 
