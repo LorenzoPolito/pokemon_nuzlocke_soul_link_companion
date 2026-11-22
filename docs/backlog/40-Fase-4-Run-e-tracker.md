@@ -52,9 +52,11 @@ Nota, 22 ottobre 2026: tabella `run_member` con la nuova colonna `removed_at` (m
 
 ## P4-03 Gioco unico della run
 
-- [ ] Il gioco si sceglie alla creazione della run ed è lo stesso per tutti i giocatori; impostazioni e regole valgono per tutti.
-- [ ] Il gioco non si può cambiare dopo il primo incontro registrato.
-- [ ] Il gioco è una versione (Nero, Bianco, Nero 2, Bianco 2) ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+- [x] Il gioco si sceglie alla creazione della run ed è lo stesso per tutti i giocatori; impostazioni e regole valgono per tutti.
+- [x] Il gioco non si può cambiare dopo il primo incontro registrato.
+- [x] Il gioco è una versione (Nero, Bianco, Nero 2, Bianco 2) ([ADR 0003](../adr/0003-giochi-aree-e-impostazioni-della-run.md)).
+
+Nota, 22 novembre 2026: `run.game_id` e `run.game_data_version` sono proprietà della run, non dei membri; gli inviti e il dettaglio della run li leggono dalla stessa riga. Il catalogo ammette solo `black`, `white`, `black-2` e `white-2`. Il predicato di dominio `canChangeRunGame` consente una correzione solo prima del primo incontro e restituisce `game_locked` dopo; il futuro caso d'uso di registrazione degli incontri deve passare questo controllo nella propria transazione. Test dedicati coprono il blocco e la condivisione del gioco a livello di run.
 
 ## P4-04 Lista delle aree in ordine di progressione
 
