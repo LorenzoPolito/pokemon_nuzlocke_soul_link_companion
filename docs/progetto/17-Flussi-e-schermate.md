@@ -47,7 +47,7 @@ Il testo della schermata «Puoi completare i dati mancanti anche dopo la creazio
 
 ### C. Invito e accettazione
 
-Un invito è un link `…/invito/<token>` ([P2-01](06-Modello-dati-bozza.md#app_setting-e-invite)).
+Un invito è un link `…/invite/<token>` (nell'app il percorso è in inglese, come le altre pagine) ([P2-01](06-Modello-dati-bozza.md#app_setting-e-invite)).
 
 ```text
 Apre il link

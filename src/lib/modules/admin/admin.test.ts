@@ -11,6 +11,8 @@ import { registerUser } from '../auth/application/register';
 import { createAuth, type Auth } from '../auth/infrastructure/better-auth';
 import { createInvite, setRegistrationMode } from '../auth/infrastructure/invites';
 import { account, session, user } from '../auth/infrastructure/schema';
+import { acceptInvite, createRun } from '../runs/index';
+import { run, runMember } from '../runs/infrastructure/schema';
 import {
 	deleteUser,
 	disableUser,
@@ -149,6 +151,108 @@ describe('resetPassword', () => {
 				.from(session)
 				.where(eq(session.userId, (await sara()).id))
 		).toHaveLength(1);
+	});
+});
+
+describe('registering with an invitation to a run', () => {
+	it('lets a newcomer register without using up the invitation, which they then accept', async () => {
+		await setRegistrationMode(connection.db, 'invite', now);
+		const created = await createRun({ db: connection.db, now: () => now }, adminId, {
+			name: 'Aperta',
+			gameId: 'black',
+			seats: [{ name: 'Nuovo', role: 'player' }]
+		});
+		if (!created.ok) throw new Error(created.error);
+		const token = created.run.invites[0]!.token;
+		const result = await registerUser(
+			{ db: connection.db, auth, now: () => now },
+			{
+				name: 'Nuovo',
+				email: 'nuovo@example.test',
+				password: 'password-lunga-1',
+				inviteToken: token
+			}
+		);
+		expect(result.ok).toBe(true);
+		const newcomer = (await find('nuovo@example.test'))!.id;
+		expect(
+			await acceptInvite({ db: connection.db, now: () => now }, newcomer, token)
+		).toMatchObject({ ok: true, role: 'player' });
+		// A token that does not work still does not let anyone register.
+		const bad = await registerUser(
+			{ db: connection.db, auth, now: () => now },
+			{ name: 'X', email: 'x@example.test', password: 'password-lunga-1', inviteToken: token }
+		);
+		expect(bad).toEqual({ ok: false, error: 'invite_invalid' });
+	});
+});
+
+describe('deleteUser and the runs of the account', () => {
+	const people = async () => {
+		await registerUser(
+			{ db: connection.db, auth, now: () => now },
+			{ name: 'Tom', email: 'tom@example.test', password: 'password-lunga-1' }
+		);
+		return { sara: (await sara()).id, tom: (await find('tom@example.test'))!.id };
+	};
+	const events: { type: string; runId: string }[] = [];
+
+	it('passes its runs to the player with the next seat and stops it playing elsewhere', async () => {
+		const { sara: saraId, tom } = await people();
+		const owned = await createRun({ db: connection.db }, saraId, {
+			name: 'Di Sara',
+			gameId: 'black',
+			seats: [{ name: 'Tom', role: 'player' }]
+		});
+		if (!owned.ok) throw new Error(owned.error);
+		await acceptInvite({ db: connection.db }, tom, owned.run.invites[0]!.token);
+		const other = await createRun({ db: connection.db }, adminId, {
+			name: 'Del admin',
+			gameId: 'white',
+			seats: [{ name: 'Sara', role: 'player' }]
+		});
+		if (!other.ok) throw new Error(other.error);
+		await acceptInvite({ db: connection.db }, saraId, other.run.invites[0]!.token);
+
+		const result = await deleteUser(
+			{
+				...deps(),
+				publish: async (e) => {
+					events.push(e);
+				}
+			},
+			adminId,
+			saraId,
+			now
+		);
+		expect(result).toEqual({ ok: true });
+
+		const rows = await connection.db.select().from(runMember);
+		const of = (runId: string, userId: string) =>
+			rows.find((r) => r.runId === runId && r.userId === userId);
+		expect(of(owned.run.id, tom)?.role).toBe('owner');
+		expect(of(owned.run.id, saraId)).toMatchObject({ role: 'spectator', seat: null });
+		expect(of(other.run.id, saraId)).toMatchObject({ role: 'spectator', seat: null });
+		expect(of(other.run.id, adminId)?.role).toBe('owner');
+		const [saved] = await connection.db.select().from(run).where(eq(run.id, owned.run.id));
+		expect(saved!.ownerId).toBe(tom);
+		expect(events).toEqual([
+			expect.objectContaining({ type: 'run.owner_changed', runId: owned.run.id })
+		]);
+	});
+
+	it('keeps a run with its anonymised owner when nobody else can take over', async () => {
+		const { sara: saraId } = await people();
+		const solo = await createRun({ db: connection.db }, saraId, { name: 'Sola', gameId: 'black' });
+		if (!solo.ok) throw new Error(solo.error);
+		await deleteUser(deps(), adminId, saraId, now);
+		const [saved] = await connection.db.select().from(run).where(eq(run.id, solo.run.id));
+		expect(saved!.ownerId).toBe(saraId);
+		const [row] = await connection.db
+			.select()
+			.from(runMember)
+			.where(eq(runMember.runId, solo.run.id));
+		expect(row?.role).toBe('owner');
 	});
 });
 

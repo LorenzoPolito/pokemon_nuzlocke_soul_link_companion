@@ -1,11 +1,12 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
+import { safeNext } from '#lib/modules/auth/domain/safe-next.js';
 import { createThrottle } from '#lib/modules/auth/domain/throttle.js';
 import { getAuth } from '#lib/modules/auth/runtime.js';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = ({ locals }) => {
-	if (locals.user) redirect(303, '/');
+export const load: PageServerLoad = ({ locals, url }) => {
+	if (locals.user) redirect(303, safeNext(url.searchParams.get('next')));
 };
 
 // At most 5 login attempts per minute and address (docs/backlog P3-07).
@@ -17,7 +18,7 @@ const schema = z.object({
 });
 
 export const actions: Actions = {
-	default: async ({ request, cookies, getClientAddress }) => {
+	default: async ({ request, cookies, getClientAddress, url }) => {
 		if (!throttle.hit(getClientAddress(), Date.now()).allowed) {
 			return fail(429, { error: 'too_many_attempts' as const });
 		}
@@ -35,6 +36,6 @@ export const actions: Actions = {
 			if (status === 403) return fail(403, { error: 'account_disabled' as const });
 			return fail(401, { error: 'invalid_credentials' as const });
 		}
-		redirect(303, '/');
+		redirect(303, safeNext(url.searchParams.get('next')));
 	}
 };

@@ -40,14 +40,42 @@ export const actions: Actions = {
 		if (typeof difficulty === 'string' && difficulty !== '' && /-2$/.test(gameId)) {
 			settings.difficulty = difficulty;
 		}
-		const body = JSON.stringify({ name: String(form.get('name') ?? ''), gameId, settings });
+		const seatNames = form.getAll('seatName').map(String);
+		const seatRoles = form.getAll('seatRole').map(String);
+		const seats = seatNames
+			.map((name, i) => ({ name, role: seatRoles[i] }))
+			.filter((seat) => seat.name.trim() !== '');
+		const body = JSON.stringify({
+			name: String(form.get('name') ?? ''),
+			gameId,
+			settings,
+			ownerPlays: form.get('ownerPlays') === 'on',
+			seats
+		});
 
 		const result = await createRunOnce(await runsDeps(), locals.user!.id, key, url.pathname, body);
 		const parsed = JSON.parse(result.body);
-		if (result.status === 201) redirect(303, `/runs/${parsed.id}`);
+		if (result.status === 201) {
+			if (parsed.invites.length === 0) redirect(303, `/runs/${parsed.id}`);
+			// The links are shown once, here: only their hash is stored.
+			return {
+				created: {
+					id: parsed.id as string,
+					links: (parsed.invites as { name: string; role: string; token: string }[]).map((i) => ({
+						name: i.name,
+						role: i.role,
+						url: `${url.origin}/invite/${i.token}`
+					}))
+				}
+			};
+		}
+		const code = parsed.error?.code;
 		return fail(result.status, {
-			error: (parsed.error?.code === 'difficulty_not_available' ? 'difficulty' : 'validation') as
-				'difficulty' | 'validation'
+			error: (code === 'difficulty_not_available'
+				? 'difficulty'
+				: code === 'no_player'
+					? 'no_player'
+					: 'validation') as 'difficulty' | 'no_player' | 'validation'
 		});
 	}
 };

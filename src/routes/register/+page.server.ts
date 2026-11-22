@@ -1,12 +1,12 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
-import { getRegistrationMode, registerUser } from '#lib/modules/auth/index.js';
+import { getRegistrationMode, registerUser, safeNext } from '#lib/modules/auth/index.js';
 import { getAuth } from '#lib/modules/auth/runtime.js';
 import { getDatabase } from '#lib/server/database/index.js';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
-	if (locals.user) redirect(303, '/');
+	if (locals.user) redirect(303, safeNext(url.searchParams.get('next')));
 	const { db } = await getDatabase();
 	return { mode: await getRegistrationMode(db), invite: url.searchParams.get('invite') ?? '' };
 };
@@ -19,7 +19,7 @@ const schema = z.object({
 });
 
 export const actions: Actions = {
-	default: async ({ request }) => {
+	default: async ({ request, url }) => {
 		const form = schema.safeParse(Object.fromEntries(await request.formData()));
 		if (!form.success) return fail(422, { error: 'validation' as const });
 		const { db } = await getDatabase();
@@ -40,6 +40,6 @@ export const actions: Actions = {
 			body: { email: form.data.email, password: form.data.password },
 			headers: request.headers
 		});
-		redirect(303, '/');
+		redirect(303, safeNext(url.searchParams.get('next')));
 	}
 };

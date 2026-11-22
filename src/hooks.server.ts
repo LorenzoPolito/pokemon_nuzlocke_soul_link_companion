@@ -62,6 +62,8 @@ const PUBLIC = [
 	/^\/register$/,
 	/^\/api\/health$/,
 	/^\/api\/auth\//,
+	/^\/invite\/[^/]+$/,
+	/^\/api\/invites\/[^/]+$/,
 	/^\/robots\.txt$/
 ];
 

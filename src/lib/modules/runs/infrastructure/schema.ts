@@ -57,6 +57,11 @@ export const runMember = sqliteTable(
 		displayName: text('display_name'),
 		role: text('role', { enum: ['owner', 'player', 'spectator'] }).notNull(),
 		seat: integer('seat'),
+		/**
+		 * Set when the person was removed or left: the row stays so that their data (encounters,
+		 * specimens, milestones) keep their author, but they no longer see or follow the run.
+		 */
+		removedAt: integer('removed_at'),
 		createdAt: integer('created_at').notNull(),
 		updatedAt: integer('updated_at').notNull()
 	},

@@ -3,7 +3,7 @@ import type { Auth } from '../infrastructure/better-auth';
 import {
 	consumeInvite,
 	getRegistrationMode,
-	isInviteValid,
+	validInviteKind,
 	releaseInvite
 } from '../infrastructure/invites';
 import { decideRegistration, type InviteState } from '../domain/registration';
@@ -32,17 +32,15 @@ export async function registerUser(
 	const now = (deps.now ?? Date.now)();
 	const mode = await getRegistrationMode(deps.db);
 	const token = input.inviteToken?.trim() || undefined;
-	const state: InviteState = !token
-		? 'none'
-		: (await isInviteValid(deps.db, token, now))
-			? 'valid'
-			: 'invalid';
+	const kind = token ? await validInviteKind(deps.db, token, now) : null;
+	const state: InviteState = !token ? 'none' : kind ? 'valid' : 'invalid';
 	const decision = decideRegistration(mode, state);
 	if (decision !== 'allow') return { ok: false, error: decision };
 
-	// A valid token is consumed first, atomically, so two registrations cannot share one use.
-	const consumed = token && state === 'valid' ? await consumeInvite(deps.db, token, now) : false;
-	if (state === 'valid' && !consumed && mode === 'invite')
+	// An invitation to the app is consumed first, atomically, so two registrations cannot share
+	// one use. One to a run is not: it lets the person register, and is used when they accept it.
+	const consumed = token && kind === 'app' ? await consumeInvite(deps.db, token, now) : false;
+	if (kind === 'app' && !consumed && mode === 'invite')
 		return { ok: false, error: 'invite_invalid' };
 
 	try {

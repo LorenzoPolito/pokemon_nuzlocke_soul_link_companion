@@ -32,7 +32,7 @@ export async function listRuns(
 	userId: string,
 	{ filter = 'all', deleted = false }: ListOptions = {}
 ): Promise<RunListItem[]> {
-	const conditions = [eq(runMember.userId, userId)];
+	const conditions = [eq(runMember.userId, userId), isNull(runMember.removedAt)];
 	if (deleted) conditions.push(isNotNull(run.deletedAt), eq(runMember.role, 'owner'));
 	else conditions.push(isNull(run.deletedAt));
 	if (filter === 'active') conditions.push(eq(run.status, 'active'));
@@ -47,7 +47,7 @@ export async function listRuns(
 			settings: run.settings,
 			updatedAt: run.updatedAt,
 			role: runMember.role,
-			players: sql<number>`(select count(*) from ${runMember} as m where m.run_id = ${run.id} and m.role <> 'spectator')`
+			players: sql<number>`(select count(*) from ${runMember} as m where m.run_id = ${run.id} and m.role <> 'spectator' and m.removed_at is null)`
 		})
 		.from(runMember)
 		.innerJoin(run, eq(run.id, runMember.runId))

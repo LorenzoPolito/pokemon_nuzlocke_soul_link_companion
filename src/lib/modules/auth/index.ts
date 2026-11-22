@@ -6,3 +6,7 @@ export type { RegistrationMode } from './domain/registration';
 export { registerUser } from './application/register';
 export type { RegisterError, RegisterInput } from './application/register';
 export { getRegistrationMode } from './infrastructure/invites';
+export { createInvite, hashToken } from './infrastructure/invites';
+export type { NewInvite } from './infrastructure/invites';
+export { invite } from './infrastructure/schema';
+export { safeNext } from './domain/safe-next';

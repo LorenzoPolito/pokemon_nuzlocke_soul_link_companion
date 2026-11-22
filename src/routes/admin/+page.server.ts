@@ -19,6 +19,7 @@ import {
 	setRegistrationMode
 } from '#lib/modules/auth/infrastructure/invites.js';
 import { getAuth } from '#lib/modules/auth/runtime.js';
+import { getHub } from '#lib/modules/realtime/runtime.js';
 import { getDatabase } from '#lib/server/database/index.js';
 import { getPokedex } from '#lib/server/pokedex/runtime.js';
 import type { Actions, PageServerLoad, RequestEvent } from './$types';
@@ -97,7 +98,12 @@ export const actions: Actions = {
 		const { op, id } = parsed.data;
 		const admin = require(event, required[op]!);
 		const { db } = await getDatabase();
-		const deps = { db, auth: getAuth(), headers: event.request.headers };
+		const deps = {
+			db,
+			auth: getAuth(),
+			headers: event.request.headers,
+			publish: (e: Parameters<ReturnType<typeof getHub>['publish']>[0]) => getHub().publish(e)
+		};
 		let result;
 		let temporary: string | undefined;
 		if (op === 'disable') result = await disableUser(deps, admin.id, id);

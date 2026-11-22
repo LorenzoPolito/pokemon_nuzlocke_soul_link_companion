@@ -1,6 +1,7 @@
 import { cpSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DatabaseConfig } from '../config';
 import { openDatabase, type Connection } from './client';
@@ -28,6 +29,34 @@ beforeEach(async () => {
 afterEach(() => {
 	connection.client.close();
 	rmSync(dir, { recursive: true, force: true });
+});
+
+describe('transactions', () => {
+	it('wait their turn instead of failing with SQLITE_BUSY when several run at once', async () => {
+		await connection.client.execute('create table t (n integer)');
+		const order: number[] = [];
+		await Promise.all(
+			[1, 2, 3, 4, 5].map((n) =>
+				connection.db.transaction(async (tx) => {
+					await tx.run(sql`insert into t values (${n})`);
+					await new Promise((resolve) => setTimeout(resolve, 5));
+					order.push(n);
+				})
+			)
+		);
+		expect(order).toEqual([1, 2, 3, 4, 5]);
+		const count = await connection.client.execute('select count(*) as c from t');
+		expect(Number(count.rows[0]?.c)).toBe(5);
+	});
+
+	it('go on after one of them fails', async () => {
+		await expect(
+			connection.db.transaction(async () => {
+				throw new Error('boom');
+			})
+		).rejects.toThrow('boom');
+		await expect(connection.db.transaction(async () => 'fine')).resolves.toBe('fine');
+	});
 });
 
 describe('openDatabase', () => {
