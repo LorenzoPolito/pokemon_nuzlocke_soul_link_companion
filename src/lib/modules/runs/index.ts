@@ -29,3 +29,5 @@ export {
 export type { InvitePreview, RunInviteRow } from './application/invites';
 export { changeMember, handOverRuns, removeMember, transferOwnership } from './application/members';
 export type { HandedOver, MemberResult } from './application/members';
+export { recordEncounter, encounterInputSchema } from './application/encounters';
+export type { EncounterError, EncounterInput, RecordedEncounter } from './application/encounters';

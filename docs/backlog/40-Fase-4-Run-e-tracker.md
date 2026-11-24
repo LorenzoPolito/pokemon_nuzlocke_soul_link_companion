@@ -8,7 +8,7 @@
 | P4-02 | Inviti e ruoli nella run | P4-01 | M | In verifica |
 | P4-03 | Gioco unico della run | P4-01 | XS | Da iniziare |
 | P4-04 | Lista delle aree in ordine di progressione | P4-01 | M | Da iniziare |
-| P4-05 | Registrazione dell'incontro per area | P4-02, P4-03, P4-04 | M | Da iniziare |
+| P4-05 | Registrazione dell'incontro per area | P4-02, P4-03, P4-04 | M | In verifica |
 | P4-06 | Collegamento Soul Link automatico | P4-05 | M | Da iniziare |
 | P4-07 | Area saltata per tutti | P4-06 | S | Da iniziare |
 | P4-08 | Dupes clause | P4-05 | S | Da iniziare |
@@ -67,9 +67,9 @@ Nota, 22 novembre 2026: `run.game_id` e `run.game_data_version` sono proprietà 
 
 ## P4-05 Registrazione dell'incontro per area
 
-- [ ] Esiti possibili: catturato, fallito, fuggito, saltato per dupe, regalo.
-- [ ] Un secondo incontro nella stessa area viene rifiutato, salvo dupes clause e regali.
-- [ ] Una cattura senza soprannome viene rifiutata.
+- [x] Esiti possibili: catturato, fallito, fuggito, saltato per dupe, regalo.
+- [x] Un secondo incontro nella stessa area viene rifiutato, salvo dupes clause e regali.
+- [x] Una cattura senza soprannome viene rifiutata.
 
 ## P4-06 Collegamento Soul Link automatico
 
