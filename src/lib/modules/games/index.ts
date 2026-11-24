@@ -19,6 +19,32 @@ export type GameInfo = {
 	hasDifficulty: boolean;
 };
 
+export type GameArea = {
+	key: string;
+	names: { en: string; it: string | null };
+	pokeapiLocation: string | null;
+	phase: 'story' | 'postgame';
+	hasWildEncounters: boolean;
+	starters?: string[];
+	parentAreaKey?: string;
+	additionalSpecies?: string[];
+};
+
+export type GameSpecialEncounter = {
+	key: string;
+	type: 'gift' | 'static' | 'trade' | 'grotto';
+	areaKey: string;
+	species: string | null;
+	candidates?: string[];
+	level: number | { min: number; max: number } | null;
+	conditions?: string[];
+};
+
+export type GameData = GameInfo & {
+	areas: readonly GameArea[];
+	specialEncounters: readonly GameSpecialEncounter[];
+};
+
 const files = { black, white, 'black-2': black2, 'white-2': white2 } as const;
 
 const GAMES: readonly GameInfo[] = GAME_IDS.map((id) => ({
@@ -36,3 +62,14 @@ export const isGameId = (value: unknown): value is GameId =>
 	typeof value === 'string' && (GAME_IDS as readonly string[]).includes(value);
 
 export const getGame = (id: GameId): GameInfo => GAMES.find((g) => g.id === id)!;
+
+export const getGameData = (id: GameId): GameData => ({
+	...getGame(id),
+	areas: files[id].areas as GameArea[],
+	specialEncounters: files[id].specialEncounters as GameSpecialEncounter[]
+});
+
+export { listRunAreas } from './application/areas';
+export type { RunArea } from './application/areas';
+export { createCustomArea, listCustomAreas, updateCustomArea } from './application/custom-areas';
+export type { CustomArea } from './application/custom-areas';

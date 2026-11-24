@@ -193,6 +193,28 @@ describe('idempotency', () => {
 		expect(mismatch.body).toContain('idempotency_mismatch');
 	});
 
+	it('executes only one handler when identical requests race', async () => {
+		let calls = 0;
+		const request = { userId: 'u-race', key: 'k-race', method: 'POST', path: '/p', body: '{}' };
+		const handler = async () => {
+			calls += 1;
+			await new Promise((resolve) => setTimeout(resolve, 10));
+			return { status: 201, body: JSON.stringify({ call: calls }) };
+		};
+
+		const [first, second] = await Promise.all([
+			runIdempotent(connection.db, request, handler, now),
+			runIdempotent(connection.db, request, handler, now)
+		]);
+
+		expect(calls).toBe(1);
+		expect([first, second].map(({ status, body }) => ({ status, body }))).toEqual([
+			{ status: 201, body: '{"call":1}' },
+			{ status: 201, body: '{"call":1}' }
+		]);
+		expect([first.replayed, second.replayed].sort()).toEqual([false, true]);
+	});
+
 	it('does not store server errors, so they can be retried', async () => {
 		let calls = 0;
 		const request = { userId: 'u', key: 'k5', method: 'POST', path: '/p', body: '' };

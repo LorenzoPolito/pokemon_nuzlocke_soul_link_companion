@@ -81,3 +81,96 @@ export const runMember = sqliteTable(
 		index('run_member_user_id').on(t.userId)
 	]
 );
+
+/** A Soul Link group: one area/slot shared by all players in a run. */
+export const linkGroup = sqliteTable(
+	'link_group',
+	{
+		id: text('id').primaryKey(),
+		runId: text('run_id')
+			.notNull()
+			.references(() => run.id, { onDelete: 'cascade' }),
+		areaKey: text('area_key').notNull(),
+		slot: text('slot', { enum: ['main', 'gift'] }).notNull(),
+		status: text('status', { enum: ['open', 'linked', 'skipped', 'untracked'] })
+			.notNull()
+			.default('open'),
+		position: text('position', { enum: ['team', 'box', 'dead'] }),
+		version: integer('version').notNull().default(1),
+		createdAt: integer('created_at').notNull(),
+		updatedAt: integer('updated_at').notNull()
+	},
+	(t) => [
+		uniqueIndex('link_group_run_area_slot').on(t.runId, t.areaKey, t.slot),
+		index('link_group_run_id').on(t.runId),
+		check('link_group_slot', sql`${t.slot} in ('main', 'gift')`),
+		check('link_group_status', sql`${t.status} in ('open', 'linked', 'skipped', 'untracked')`)
+	]
+);
+
+export const encounter = sqliteTable(
+	'encounter',
+	{
+		id: text('id').primaryKey(),
+		runId: text('run_id')
+			.notNull()
+			.references(() => run.id, { onDelete: 'cascade' }),
+		linkGroupId: text('link_group_id')
+			.notNull()
+			.references(() => linkGroup.id, { onDelete: 'cascade' }),
+		memberId: text('member_id')
+			.notNull()
+			.references(() => runMember.id),
+		specialKey: text('special_key'),
+		attempt: integer('attempt').notNull().default(1),
+		outcome: text('outcome', { enum: ['caught', 'failed', 'fled', 'dupe', 'untracked'] }).notNull(),
+		speciesId: integer('species_id'),
+		levelMet: integer('level_met'),
+		version: integer('version').notNull().default(1),
+		createdAt: integer('created_at').notNull(),
+		updatedAt: integer('updated_at').notNull()
+	},
+	(t) => [
+		uniqueIndex('encounter_group_member_attempt').on(t.linkGroupId, t.memberId, t.attempt),
+		uniqueIndex('encounter_group_member_valid')
+			.on(t.linkGroupId, t.memberId)
+			.where(sql`${t.outcome} <> 'dupe'`),
+		index('encounter_run_id').on(t.runId),
+		check(
+			'encounter_outcome',
+			sql`${t.outcome} in ('caught', 'failed', 'fled', 'dupe', 'untracked')`
+		),
+		check('encounter_level', sql`${t.levelMet} is null or ${t.levelMet} between 1 and 100`)
+	]
+);
+
+export const specimen = sqliteTable(
+	'specimen',
+	{
+		id: text('id').primaryKey(),
+		runId: text('run_id')
+			.notNull()
+			.references(() => run.id, { onDelete: 'cascade' }),
+		encounterId: text('encounter_id')
+			.notNull()
+			.unique()
+			.references(() => encounter.id, { onDelete: 'cascade' }),
+		memberId: text('member_id')
+			.notNull()
+			.references(() => runMember.id),
+		linkGroupId: text('link_group_id')
+			.notNull()
+			.references(() => linkGroup.id, { onDelete: 'cascade' }),
+		nickname: text('nickname').notNull(),
+		speciesId: integer('species_id').notNull(),
+		level: integer('level'),
+		version: integer('version').notNull().default(1),
+		createdAt: integer('created_at').notNull(),
+		updatedAt: integer('updated_at').notNull()
+	},
+	(t) => [
+		index('specimen_run_member').on(t.runId, t.memberId),
+		check('specimen_nickname', sql`length(${t.nickname}) between 1 and 20`),
+		check('specimen_level', sql`${t.level} is null or ${t.level} between 1 and 100`)
+	]
+);

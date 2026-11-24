@@ -6,6 +6,8 @@ export { listRuns } from './application/list-runs';
 export type { RunFilter, RunListItem } from './application/list-runs';
 export { getRun } from './application/get-run';
 export type { RunMemberView, RunView } from './application/get-run';
+export { canChangeRunGame } from './domain/game-selection';
+export type { GameChangeError } from './domain/game-selection';
 export {
 	buildSettings,
 	DEFAULT_SETTINGS,
@@ -27,3 +29,5 @@ export {
 export type { InvitePreview, RunInviteRow } from './application/invites';
 export { changeMember, handOverRuns, removeMember, transferOwnership } from './application/members';
 export type { HandedOver, MemberResult } from './application/members';
+export { recordEncounter, encounterInputSchema } from './application/encounters';
+export type { EncounterError, EncounterInput, RecordedEncounter } from './application/encounters';

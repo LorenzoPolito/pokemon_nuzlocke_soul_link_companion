@@ -42,9 +42,18 @@ npm run build      # build di produzione in build/ (adapter Node)
 npm run preview    # prova la build
 npm run pokedex:fetch  # scarica i dati di PokeAPI/api-data (commit fissato in data/pokedex-source.json)
 npm run pokedex:build  # genera data/pokedex/pokedex.sqlite (serve Node 22.18+)
+npm run test:system   # smoke harness P7-02 (requires Chromium; install with npm run test:system:install)
 ```
 
-Il codice sta in `src/`; i moduli seguono le [Linee guida di sviluppo](docs/progetto/05-Linee-guida-di-sviluppo.md). Gli import interni usano l'alias `#lib` (SvelteKit 3 ha rimosso `$lib`). `npm run verify` riunisce lint, tipi, test, build dell'app e dell'immagine (lo esegue anche l'hook pre-push).
+Il codice sta in `src/`; i moduli seguono le [Linee guida di sviluppo](docs/progetto/05-Linee-guida-di-sviluppo.md). Gli import interni usano l'alias `#lib` (SvelteKit 3 ha rimosso `$lib`). `npm run verify` riunisce lint, tipi, test, build dell'app e dell'immagine (lo esegue anche l'hook pre-push). Lo stesso comando è eseguito dalla CI ospitata su ogni pull request verso `develop` o `main`; il workflow pubblica un riepilogo della verifica nella pull request.
+
+### Browser QA prerequisite smoke
+
+The repository-supported browser prerequisite is Playwright + Chromium. On a fresh checkout, run
+`npm run pokedex:fetch && npm run pokedex:build`, then `npm run build`, install the browser with
+`npm run test:system:install`, and run `npm run test:system`. The P7-02 prerequisite smoke launches
+the production app, checks `/api/health`, loads a deterministic three-player fixture, and verifies
+the browser offline/reconnect control. It does not claim product QA cases passed.
 
 Dopo il clone, attiva l'hook pre-push versionato:
 

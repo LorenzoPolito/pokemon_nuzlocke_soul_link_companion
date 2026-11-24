@@ -11,5 +11,6 @@ node_modules/
 package-lock.json
 *.md
 project.inlang/cache/
+project.inlang/.meta.json
 src/lib/styles/tokens.css
 drizzle/meta/
