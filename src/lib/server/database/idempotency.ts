@@ -9,7 +9,15 @@ export const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000;
 export type StoredResponse = { status: number; body: string };
 
 export type IdempotencyOutcome =
-	{ kind: 'replay'; response: StoredResponse } | { kind: 'mismatch' } | { kind: 'fresh' };
+	| { kind: 'replay'; response: StoredResponse }
+	| { kind: 'mismatch' }
+	| { kind: 'fresh' }
+	| { kind: 'in_flight' };
+
+// HTTP status 0 cannot be returned by an HTTP response. It marks the row claimed by
+// a request whose handler is still running. The unique primary key makes claiming
+// the key atomic across concurrent processes and database connections.
+const IN_FLIGHT_STATUS = 0;
 
 /** Fingerprint of a request: the same key must always come with the same request. */
 export function hashRequest(method: string, path: string, body: string): string {
@@ -30,7 +38,72 @@ export async function checkKey(
 		.where(and(eq(requestKey.userId, userId), eq(requestKey.key, key)));
 	if (!row || now - row.createdAt >= IDEMPOTENCY_TTL_MS) return { kind: 'fresh' };
 	if (row.requestHash !== requestHash) return { kind: 'mismatch' };
+	if (row.status === IN_FLIGHT_STATUS) return { kind: 'in_flight' };
 	return { kind: 'replay', response: { status: row.status, body: row.response } };
+}
+
+/** Claims a key for one handler. Returns true only for the request that won the race. */
+async function claimKey(
+	db: Database,
+	userId: string,
+	key: string,
+	requestHash: string,
+	now: number
+): Promise<boolean> {
+	// An expired response (or abandoned in-flight claim) may be replaced, but only
+	// if it is still the same expired row. The primary key then arbitrates claimers.
+	await db
+		.delete(requestKey)
+		.where(
+			and(
+				eq(requestKey.userId, userId),
+				eq(requestKey.key, key),
+				lt(requestKey.createdAt, now - IDEMPOTENCY_TTL_MS)
+			)
+		);
+	const inserted = await db
+		.insert(requestKey)
+		.values({
+			userId,
+			key,
+			requestHash,
+			status: IN_FLIGHT_STATUS,
+			response: '',
+			createdAt: now
+		})
+		.onConflictDoNothing()
+		.returning({ key: requestKey.key });
+	return inserted.length > 0;
+}
+
+async function finishClaim(
+	db: Database,
+	userId: string,
+	key: string,
+	response: StoredResponse
+): Promise<void> {
+	await db
+		.update(requestKey)
+		.set({ status: response.status, response: response.body })
+		.where(
+			and(
+				eq(requestKey.userId, userId),
+				eq(requestKey.key, key),
+				eq(requestKey.status, IN_FLIGHT_STATUS)
+			)
+		);
+}
+
+async function releaseClaim(db: Database, userId: string, key: string): Promise<void> {
+	await db
+		.delete(requestKey)
+		.where(
+			and(
+				eq(requestKey.userId, userId),
+				eq(requestKey.key, key),
+				eq(requestKey.status, IN_FLIGHT_STATUS)
+			)
+		);
 }
 
 /** Stores the response of a request. If the key already exists (a race), the first one wins. */
@@ -88,16 +161,29 @@ export async function runIdempotent(
 	now: number = Date.now()
 ): Promise<IdempotentResult> {
 	const hash = hashRequest(request.method, request.path, request.body);
-	const outcome = await checkKey(db, request.userId, request.key, hash, now);
-	if (outcome.kind === 'replay') return { ...outcome.response, replayed: true };
-	if (outcome.kind === 'mismatch') {
-		const error = {
-			error: { code: 'idempotency_mismatch', message: 'The key was used for a different request' }
-		};
-		return { status: 409, body: JSON.stringify(error), replayed: false };
+	for (;;) {
+		const outcome = await checkKey(db, request.userId, request.key, hash, now);
+		if (outcome.kind === 'replay') return { ...outcome.response, replayed: true };
+		if (outcome.kind === 'mismatch') {
+			const error = {
+				error: { code: 'idempotency_mismatch', message: 'The key was used for a different request' }
+			};
+			return { status: 409, body: JSON.stringify(error), replayed: false };
+		}
+		if (outcome.kind === 'in_flight') {
+			await new Promise((resolve) => setTimeout(resolve, 5));
+			continue;
+		}
+		if (!(await claimKey(db, request.userId, request.key, hash, now))) continue;
+
+		try {
+			const response = await handler();
+			if (response.status < 500) await finishClaim(db, request.userId, request.key, response);
+			else await releaseClaim(db, request.userId, request.key);
+			return { ...response, replayed: false };
+		} catch (error) {
+			await releaseClaim(db, request.userId, request.key);
+			throw error;
+		}
 	}
-	const response = await handler();
-	if (response.status < 500)
-		await storeResponse(db, request.userId, request.key, hash, response, now);
-	return { ...response, replayed: false };
 }
