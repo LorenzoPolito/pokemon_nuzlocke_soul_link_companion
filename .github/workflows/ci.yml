@@ -33,6 +33,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browser
+        if: ${{ hashFiles('tests/system/**/*.spec.ts') != '' }}
         run: npm run test:system:install
 
       - name: Run required verification
@@ -49,7 +50,7 @@ jobs:
             echo
             echo '- Trigger: pull request targeting `develop` or `main`'
             echo '- Install: `npm ci` (lockfile-enforced)'
-            echo '- Browser prerequisite: `npm run test:system:install`'
+            echo '- Browser prerequisite: Playwright install runs only when committed system test specs exist.'
             echo '- Required checks: `npm run verify`'
             echo "- Result: **${VERIFY_OUTCOME}**"
             echo '- Audit policy: `npm audit --audit-level=high` is warning-only in `scripts/verify.ts`'
