@@ -52,7 +52,7 @@ Un commit per passo logico; ogni commit compila e passa i test.
 
 ## Verifica locale
 
-Non c'è CI. Prima di ogni push `npm run verify` esegue lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine. Dopo ogni unione su `develop` l'agente esegue la verifica e i test end-to-end all'inizio della sessione successiva. GitHub Actions esegue solo il controllo dei branch, nei minuti gratuiti.
+Prima di ogni push l'hook esegue `npm run verify`, che riunisce lint, controllo dei tipi, test di unità, test di sistema e build dell'immagine quando Docker è disponibile. GitHub Actions esegue lo stesso percorso su ogni pull request verso `develop` o `main` tramite `.github/workflows/ci.yml`; il riepilogo della run viene pubblicato nel riepilogo della pull request. Il controllo di sicurezza resta non bloccante.
 
 ## Backlog, bug e sessioni
 
